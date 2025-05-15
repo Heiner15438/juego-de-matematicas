@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Matematicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the game */
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* Modern system font stack */
+            line-height: 1.6;
+            color: #333;
+            background-color: #e0f7fa; /* Warm, light cyan-blue background */
+            padding: 20px;
+            display: flex; /* Use flexbox to center content */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Minimum height of the viewport */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        .container {
+            background-color: #ffffff; /* White background */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Subtler shadow */
+            text-align: center; /* Center text inside the container */
+            max-width: 500px; /* Increased max width */
+            width: 100%; /* Full width up to max-width */
+            box-sizing: border-box;
+        }
+
+        /* Styles for the Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .welcome-screen h1 {
+             color: #1a202c;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        .welcome-screen input[type="text"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-size: 1.2em;
+            width: 80%; /* Responsive width */
+            max-width: 250px; /* Max width for input */
+            text-align: center;
+            box-sizing: border-box;
+        }
+         .welcome-screen button {
+            background-color: #48bb78; /* Green button for start */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+        .welcome-screen button:hover {
+            background-color: #38a169; /* Darker green on hover */
+        }
+
+
+        /* Styles for the Game Screen */
+        .game-screen {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+        }
+        .player-name {
+            font-size: 1.1em;
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .level-info {
+            font-size: 1em;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        .problem {
+            font-size: 2.2em; /* Larger font size for the math problem */
+            margin-bottom: 20px;
+            color: #2d3748;
+            min-height: 1.5em; /* Reserve space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow problem to wrap on smaller screens */
+        }
+         .problem span {
+             margin: 0 5px; /* Space between numbers and operators */
+         }
+        .input-area {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow input area to wrap */
+        }
+        input[type="number"] {
+            padding: 10px;
+            margin: 5px; /* Adjusted margin for flex wrap */
+            border: 1px solid #cbd5e0; /* Light grey border */
+            border-radius: 4px;
+            font-size: 1.2em;
+            width: 100px; /* Increased width for input */
+            text-align: center;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4299e1; /* Moderate blue button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            margin: 5px; /* Adjusted margin for flex wrap */
+        }
+        button:hover {
+            background-color: #3182ce; /* Darker blue on hover */
+        }
+        .result {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-top: 20px;
+            min-height: 1.4em; /* Reserve space to prevent layout shift */
+        }
+        .result.correct {
+            color: #38a169; /* Green for correct */
+        }
+        .result.incorrect {
+            color: #e53e3e; /* Red for incorrect */
+        }
+         .result.level-up {
+             color: #d69e2e; /* Orange color for level up messages */
+         }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="welcome-screen" id="welcome-screen">
+            <h1>Bienvenido al Juego de Matemáticas</h1>
+            <p>Ingresa tu nombre para empezar:</p>
+            <input type="text" id="player-name-input" placeholder="Tu nombre">
+            <button onclick="startGame()">Empezar Juego</button>
+        </div>
+
+        <div class="game-screen" id="game-screen">
+            <div class="player-name">Jugador: <span id="display-player-name"></span></div>
+            <div class="level-info">Nivel: <span id="current-level">1</span> | Correctas en este nivel: <span id="correct-streak">0</span>/5</div>
+
+            <div class="problem" id="math-problem"></div>
+
+            <div class="input-area">
+                <input type="number" id="user-answer" placeholder="Tu respuesta">
+                <button onclick="checkAnswer()">Verificar</button>
+            </div>
+
+            <div class="result" id="game-result"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let playerName = '';
+        let currentLevel = 1;
+        let correctStreak = 0;
+        let correctAnswer;
+        let requiresIntegerResult = true; // Flag to track if integer result is needed
+        const maxLevel = 20; // Set max level to 20
+        const correctPerLevel = 5; // Answers needed to level up
+
+        // Array of congratulatory messages, increasing in enthusiasm
+        const congratulations = [
+            "¡Bien hecho! ¡Nivel {level} desbloqueado!", // Level 2
+            "¡Excelente! ¡Pasaste al Nivel {level}!", // Level 3
+            "¡Fantástico, {name}! ¡Ya estás en el Nivel {level}!", // Level 4
+            "¡Increíble! ¡El Nivel {level} te espera!", // Level 5
+            "¡Wow! ¡Eres imparable! ¡Nivel {level} alcanzado!", // Level 6-10
+            "¡Asombroso, {name}! ¡Dominando las matemáticas en el Nivel {level}!", // Level 11-15
+            "¡Fuera de serie! ¡El Nivel {level} no es rival para ti!", // Level 16-19
+            "¡¡¡IMPRESIONANTE, {name}!!! ¡Has llegado al ÚLTIMO Nivel {level}! ¡Demuestra de qué estás hecho!" // Level 20
+        ];
+
+        // Function to get a congratulatory message based on the level
+        function getCongratulationMessage(level, name) {
+            let message;
+            if (level === 2) message = congratulations[0];
+            else if (level === 3) message = congratulations[1];
+            else if (level === 4) message = congratulations[2];
+            else if (level === 5) message = congratulations[3];
+            else if (level >= 6 && level <= 10) message = congratulations[4];
+            else if (level >= 11 && level <= 15) message = congratulations[5];
+            else if (level >= 16 && level <= 19) message = congratulations[6];
+            else if (level === 20) message = congratulations[7];
+            else message = `¡Nivel ${level} desbloqueado!`; // Fallback message
+
+            // Replace placeholders
+            message = message.replace("{level}", level).replace("{name}", name);
+            return message;
+        }
+
+
+        // Function to start the game
+        function startGame() {
+            const nameInput = document.getElementById('player-name-input');
+            playerName = nameInput.value.trim(); // Get player name and remove whitespace
+
+            if (playerName === '') {
+                alert('Por favor, ingresa tu nombre para empezar.'); // Simple alert if name is empty
+                return; // Don't start the game if name is empty
+            }
+
+            // Display player name
+            document.getElementById('display-player-name').textContent = playerName;
+
+            // Hide welcome screen and show game screen
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex'; // Use flex to maintain layout
+
+            // Generate the first problem
+            generateProblem();
+        }
+
+
+        // Function to generate a random integer within a range
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Helper function to evaluate an expression string using eval
+        // WARNING: Use eval with caution. Only use for trusted input (like generated by this script).
+        function evaluateExpression(expression) {
+            try {
+                return eval(expression);
+            } catch (error) {
+                console.error("Error evaluating expression:", expression, error);
+                return NaN; // Return Not-a-Number on error
+            }
+        }
+
+
+        // Function to generate a math problem based on the current level
+        function generateProblem() {
+            let displayString; // String to show the user
+            let evalString;    // String for evaluation with eval()
+
+            requiresIntegerResult = currentLevel <= 10; // Require integer results up to level 10
+
+            // Determine complexity based on level (scaled for 20 levels)
+            if (currentLevel <= 3) {
+                // Level 1-3: Suma o Resta (números pequeños)
+                let num1 = getRandomInt(1, 15);
+                let num2 = getRandomInt(1, 15);
+                let operator1 = Math.random() < 0.5 ? '+' : '-';
+                if (operator1 === '-' && num1 < num2) { // Ensure positive result for subtraction
+                    [num1, num2] = [num2, num1]; // Swap
+                }
+                displayString = `${num1} ${operator1} ${num2}`;
+                evalString = displayString; // Same for display and eval
+
+            } else if (currentLevel <= 6) {
+                // Level 4-6: Suma, Resta, Multiplicación (números hasta 20)
+                let num1 = getRandomInt(1, 20);
+                let num2 = getRandomInt(1, 20);
+                const operators = ['+', '-', '*'];
+                let operator1 = operators[getRandomInt(0, 2)];
+                 if (operator1 === '-' && num1 < num2) { // Ensure positive result for subtraction
+                    [num1, num2] = [num2, num1]; // Swap
+                 }
+                displayString = `${num1} ${operator1} ${num2}`;
+                evalString = displayString; // Same for display and eval
+
+            } else if (currentLevel <= 9) {
+                // Level 7-9: Suma, Resta, Multiplicación, División (resultados enteros garantizados, números hasta 25)
+                let num1 = getRandomInt(1, 25);
+                let num2 = getRandomInt(1, 25);
+                 const operators = ['+', '-', '*', '/'];
+                let operator1 = operators[getRandomInt(0, 3)];
+
+                if (operator1 === '-') { // Ensure positive result for subtraction
+                    if (num1 < num2) [num1, num2] = [num2, num1];
+                } else if (operator1 === '/') { // Ensure integer result for division
+                    // Find a divisor for num1 (excluding 1 for more interesting problems if possible)
+                    let divisors = [];
+                    for (let i = 2; i <= num1; i++) { // Start from 2
+                        if (num1 % i === 0) {
+                            divisors.push(i);
+                        }
+                    }
+                    if (divisors.length > 0) {
+                         num2 = divisors[getRandomInt(0, divisors.length - 1)];
+                    } else {
+                        // If only 1 is a divisor (i.e., num1 is prime or 1), use num1 itself
+                         num2 = num1 > 1 ? num1 : 1;
+                    }
+                    if (num2 === 0) num2 = 1; // Avoid division by zero (shouldn't happen with this logic, but safe)
+                }
+
+                displayString = `${num1} ${operator1} ${num2}`;
+                evalString = displayString; // Same for display and eval
+
+
+            } else if (currentLevel <= 12) {
+                 // Level 10-12: Mezcla de las 4 operaciones básicas, números hasta 30, simple dos-pasos con paréntesis
+                 let num1 = getRandomInt(1, 30);
+                 let num2 = getRandomInt(1, 30);
+                 let num3 = getRandomInt(1, 30);
+                 const operators = ['+', '-', '*', '/'];
+                 let operator1 = operators[getRandomInt(0, 3)];
+                 let operator2 = operators[getRandomInt(0, 3)];
+                 requiresIntegerResult = currentLevel <= 10; // Allow decimals from level 11
+
+                 // Ensure valid intermediate and final steps for integer results (more complex with 2 steps)
+                 // For simplicity in this level range, we'll try to generate valid integer problems,
+                 // but the integer check/regenerate loop below is the main guarantee.
+                 // Avoid division by zero
+                 if (operator1 === '/' && num2 === 0) num2 = 1;
+                 if (operator2 === '/' && num3 === 0) num3 = 1;
+
+
+                 // Structure: (a op b) op c or a op (b op c)
+                 if (Math.random() < 0.5) { // (a op b) op c
+                     displayString = `(${num1} ${operator1} ${num2}) ${operator2} ${num3}`;
+                     evalString = displayString; // Same for display and eval
+
+                 } else { // a op (b op c)
+                     displayString = `${num1} ${operator1} (${num2} ${operator2} ${num3})`;
+                     evalString = displayString; // Same for display and eval
+                 }
+
+             } else if (currentLevel <= 15) {
+                 // Level 13-15: Increase number range (up to 50), more complex two-step or simple three-step, exponents
+                 let num1 = getRandomInt(1, 50);
+                 let num2 = getRandomInt(1, 50);
+                 let num3 = getRandomInt(1, 50);
+                 let num4 = getRandomInt(1, 50);
+                 const operators = ['+', '-', '*', '/'];
+                 let operator1 = operators[getRandomInt(0, 3)];
+                 let operator2 = operators[getRandomInt(0, 3)];
+                 let operator3 = operators[getRandomInt(0, 3)];
+                 requiresIntegerResult = false; // Allow decimals
+
+                 // Avoid division by zero
+                 if (operator1 === '/' && num2 === 0) num2 = 1;
+                 if (operator2 === '/' && num3 === 0) num3 = 1;
+                 if (operator3 === '/' && num4 === 0) num4 = 1;
+
+
+                 // Structures: ((a op b) op c) op d or (a op b) op (c op d) or with exponents
+                 const structureType = Math.random();
+
+                 if (structureType < 0.5) { // (((a op b) op c) op d)
+                     displayString = `((${num1} ${operator1} ${num2}) ${operator2} ${num3}) ${operator3} ${num4}`;
+                     evalString = displayString;
+
+                 } else if (structureType < 0.8) { // (a op b) op (c op d)
+                     // Avoid division by zero for intermediate results for robustness
+                     if (operator3 === '/' && num4 === 0) num4 = 1;
+                     displayString = `(${num1} ${operator1} ${num2}) ${operator2} (${num3} ${operator3} ${num4})`;
+                     evalString = displayString;
+
+                 } else { // Expression with exponents: base^exp op num or base^exp op base^exp
+                     let base1 = getRandomInt(1, 10); let exp1 = getRandomInt(2, 3);
+                     let base2 = getRandomInt(1, 10); let exp2 = getRandomInt(2, 3);
+                     let num = getRandomInt(1, 50);
+                     let op = operators[getRandomInt(0, 3)];
+
+                     if (Math.random() < 0.5 || currentLevel === 15) { // base^exp op num
+                         displayString = `${base1}^${exp1} ${op} ${num}`;
+                         // Use Math.pow for evaluation
+                         if (op === '/' && num === 0) num = 1; // Avoid division by zero
+                         evalString = `Math.pow(${base1}, ${exp1}) ${op} ${num}`;
+                     } else { // base1^exp1 op base2^exp2
+                          displayString = `${base1}^${exp1} ${op} ${base2}^${exp2}`;
+                          // Use Math.pow for evaluation
+                          let power2 = Math.pow(base2, exp2);
+                          if (op === '/' && power2 === 0) power2 = 1; // Avoid division by zero
+                          evalString = `Math.pow(${base1}, ${exp1}) ${op} Math.pow(${base2}, ${exp2})`;
+                     }
+                 }
+
+             } else if (currentLevel <= 20) {
+                 // Level 16-20: Very complex expressions ("genius" level arithmetic)
+                  let num1 = getRandomInt(1, 100);
+                  let num2 = getRandomInt(1, 100);
+                  let num3 = getRandomInt(1, 100);
+                  let num4 = getRandomInt(1, 100);
+                  let num5 = getRandomInt(1, 100);
+                  const operators = ['+', '-', '*', '/'];
+                  let operator1 = operators[getRandomInt(0, 3)];
+                  let operator2 = operators[getRandomInt(0, 3)];
+                  let operator3 = operators[getRandomInt(0, 3)];
+                  let operator4 = operators[getRandomInt(0, 3)];
+                  requiresIntegerResult = false; // Allow decimals
+
+                  // Avoid division by zero
+                  if (operator1 === '/' && num2 === 0) num2 = 1;
+                  if (operator2 === '/' && num3 === 0) num3 = 1;
+                  if (operator3 === '/' && num4 === 0) num4 = 1;
+                  if (operator4 === '/' && num5 === 0) num5 = 1;
+
+
+                  // Very complex nested structures or expressions with multiple terms and exponents
+                  const structureType = Math.random();
+
+                  if (structureType < 0.4) { // (((a op b) op c) op d) op e
+                      displayString = `(((${num1} ${operator1} ${num2}) ${operator2} ${num3}) ${operator3} ${num4}) ${operator4} ${num5}`;
+                      evalString = displayString;
+
+                  } else if (structureType < 0.7) { // (a op (b op c)) op (d op e)
+                       // Avoid division by zero for intermediate results for robustness
+                       if (operator2 === '/' && num3 === 0) num3 = 1;
+                       if (operator4 === '/' && num5 === 0) num5 = 1;
+                       // Avoid division by zero for the operator between groups
+                       let intermediate3 = evaluateExpression(`${num4} ${operator4} ${num5}`);
+                       if (operator3 === '/' && intermediate3 === 0) intermediate3 = 1; // Re-evaluate if needed to get new num5
+
+                       displayString = `(${num1} ${operator1} (${num2} ${operator2} ${num3})) ${operator3} (${num4} ${operator4} ${num5})`;
+                       evalString = displayString;
+
+
+                  } else { // Expression with multiple exponents and operations
+                      let base1 = getRandomInt(1, 10); let exp1 = getRandomInt(2, 3);
+                      let base2 = getRandomInt(1, 10); let exp2 = getRandomInt(2, 3);
+                      let base3 = getRandomInt(1, 10); let exp3 = getRandomInt(2, 3);
+                      let op1 = operators[getRandomInt(0, 3)];
+                      let op2 = operators[getRandomInt(0, 3)];
+                      let op3 = operators[getRandomInt(0, 3)]; // Added one more operator for complexity
+
+                      // Ensure no division by zero from powers
+                      let power2 = Math.pow(base2, exp2);
+                      if (op1 === '/' && power2 === 0) power2 = 1;
+                      let power3 = Math.pow(base3, exp3);
+                       if (op2 === '/' && power3 === 0) power3 = 1;
+
+
+                       // Structure: (base1^exp1 op base2^exp2) op base3^exp3 op num
+                       let num = getRandomInt(1, 100); // Added another number
+                       if (op3 === '/' && num === 0) num = 1;
+
+
+                       displayString = `(${base1}^${exp1} ${op1} ${base2}^${exp2}) ${op2} ${base3}^${exp3} ${op3} ${num}`;
+                       evalString = `(Math.pow(${base1}, ${exp1}) ${op1} Math.pow(${base2}, ${exp2})) ${op2} Math.pow(${base3}, ${exp3}) ${op3} ${num}`;
+
+                  }
+
+
+             } else {
+                 // Max level reached
+                 displayString = `¡Felicidades, ${playerName}! Has completado todos los niveles.`;
+                 evalString = null; // No more answers to check
+                 correctAnswer = null; // Set correctAnswer to null explicitly
+                 document.getElementById('user-answer').style.display = 'none';
+                 document.querySelector('.input-area button').style.display = 'none';
+                  document.getElementById('level-info').style.display = 'none'; // Hide level info
+                  document.getElementById('game-result').className = 'result correct'; // Make final message green
+             }
+
+             // Calculate the correct answer using the evaluator if there's an expression
+             if (evalString !== null) {
+                  correctAnswer = evaluateExpression(evalString);
+
+                  // Regenerate if integer result is required but the answer is a decimal or invalid
+                  if (requiresIntegerResult) {
+                      // Check if it's not a finite integer
+                      if (!Number.isFinite(correctAnswer) || correctAnswer !== Math.floor(correctAnswer)) {
+                           console.warn("Regenerating problem due to non-integer or invalid result:", displayString, "=", correctAnswer);
+                           generateProblem(); // Try generating again
+                           return; // Exit current call to prevent displaying/evaluating the invalid one
+                      }
+                  } else { // Allow decimals, ensure result is a finite number
+                      if (!Number.isFinite(correctAnswer)) {
+                           console.warn("Regenerating problem due to invalid result in decimal level:", displayString, "=", correctAnswer);
+                           generateProblem(); // Try generating again
+                           return; // Exit current call
+                      }
+                  }
+
+
+                  // Round decimal answers to a few decimal places for comparison
+                  if (!requiresIntegerResult && correctAnswer !== null && typeof correctAnswer === 'number') {
+                      correctAnswer = parseFloat(correctAnswer.toFixed(3)); // Round to 3 decimal places
+                  }
+             }
+
+
+            // Display the problem (always use the displayString)
+            document.getElementById('math-problem').textContent = displayString + (evalString !== null ? ' = ?' : '');
+
+
+            // Clear previous result and input
+            document.getElementById('user-answer').value = '';
+            document.getElementById('game-result').textContent = '';
+            document.getElementById('game-result').className = 'result'; // Reset result classes
+
+            // Update level info display
+            document.getElementById('current-level').textContent = currentLevel;
+            document.getElementById('correct-streak').textContent = correctStreak;
+        }
+
+        // Function to check the user's answer
+        function checkAnswer() {
+            // If max level reached, do nothing
+            if (correctAnswer === null) return;
+
+            const userAnswer = parseFloat(document.getElementById('user-answer').value); // Use parseFloat for decimals
+            const resultElement = document.getElementById('game-result');
+
+            // Check if the input is a valid number
+            if (isNaN(userAnswer)) {
+                resultElement.textContent = 'Por favor, ingresa un número válido.';
+                resultElement.className = 'result incorrect';
+                correctStreak = 0; // Reset streak on incorrect/invalid answer
+                 document.getElementById('correct-streak').textContent = correctStreak; // Update display immediately
+                return; // Exit the function
+            }
+
+            // Compare user's answer with the correct answer (allow for small floating point differences)
+            const tolerance = 0.001; // Tolerance for floating point comparisons
+            if (Math.abs(userAnswer - correctAnswer) < tolerance) {
+                resultElement.textContent = '¡Correcto!';
+                resultElement.className = 'result correct';
+                correctStreak++; // Increase streak
+
+                // Check if level should increase
+                if (correctStreak >= correctPerLevel && currentLevel < maxLevel) {
+                    // Level Up!
+                    correctStreak = 0; // Reset streak
+                    currentLevel++; // Increase level
+
+                    // Get and display congratulatory message
+                    const congratsMessage = getCongratulationMessage(currentLevel, playerName);
+                    resultElement.textContent = congratsMessage;
+                    resultElement.className = 'result level-up'; // Apply level-up style
+
+                    // Generate a new problem after a short delay (longer for level up message)
+                    setTimeout(generateProblem, 2500); // Wait 2.5 seconds for level up message
+
+                } else if (correctStreak >= correctPerLevel && currentLevel === maxLevel) {
+                     // Player completed the last level streak
+                     // The next problem generation will handle the max level message after the current 'Correcto!' message
+                     resultElement.textContent = '¡Correcto!'; // Show correct for the last problem
+                     resultElement.className = 'result correct';
+                     correctStreak++; // Increment streak display one last time to show X/5
+                     document.getElementById('correct-streak').textContent = correctStreak; // Update streak display immediately
+                     setTimeout(generateProblem, 1500); // Short delay before final message
+
+                } else {
+                    // Correct answer, but not enough for level up yet
+                    setTimeout(generateProblem, 1500); // Wait 1.5 seconds before new problem
+                }
+
+
+            } else {
+                resultElement.textContent = `Incorrecto. La respuesta correcta era ${correctAnswer}.`; // Show correct answer
+                resultElement.className = 'result incorrect';
+                correctStreak = 0; // Reset streak on incorrect answer
+                 // Update streak display immediately on incorrect answer
+                 document.getElementById('correct-streak').textContent = correctStreak;
+            }
+
+             // Update level info display after checking answer (except when leveling up, it updates after timeout)
+             // Also update if it was the last correct answer on the final level before the end message
+             if (!((correctStreak === 1 && currentLevel < maxLevel && Math.abs(userAnswer - correctAnswer) < tolerance)) ) { // Avoid updating immediately on a level up trigger
+                 document.getElementById('current-level').textContent = currentLevel;
+                 document.getElementById('correct-streak').textContent = correctStreak;
+             }
+        }
+
+        // Initial state: Show welcome screen
+        document.getElementById('welcome-screen').style.display = 'flex';
+        document.getElementById('game-screen').style.display = 'none';
+
+
+    </script>
+
+</body>
+</html>
