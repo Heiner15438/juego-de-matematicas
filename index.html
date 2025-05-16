@@ -3,147 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Matematicas</title>
+    <title>Juego de Matemáticas ¡Desafiante!</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
-        /* Custom styles for the game */
+        /* Estilos personalizados para el juego (sin cambios respecto a la v1, solo se añaden para timer, vidas y explicación) */
         body {
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* Modern system font stack */
+            font-family: 'Fredoka One', cursive, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             line-height: 1.6;
-            color: #333;
-            background-color: #e0f7fa; /* Warm, light cyan-blue background */
+            color: #4A5568;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
-            display: flex; /* Use flexbox to center content */
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Minimum height of the viewport */
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
         .container {
-            background-color: #ffffff; /* White background */
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Subtler shadow */
-            text-align: center; /* Center text inside the container */
-            max-width: 500px; /* Increased max width */
-            width: 100%; /* Full width up to max-width */
-            box-sizing: border-box;
-        }
-
-        /* Styles for the Welcome Screen */
-        .welcome-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .welcome-screen h1 {
-             color: #1a202c;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            font-weight: 700;
-        }
-        .welcome-screen input[type="text"] {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #cbd5e0;
-            border-radius: 4px;
-            font-size: 1.2em;
-            width: 80%; /* Responsive width */
-            max-width: 250px; /* Max width for input */
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 10px rgba(0,0,0,0.15);
             text-align: center;
+            max-width: 700px; /* Aumentado para más info */
+            width: 100%;
             box-sizing: border-box;
+            transition: transform 0.3s ease-out;
         }
-         .welcome-screen button {
-            background-color: #48bb78; /* Green button for start */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
-        }
-        .welcome-screen button:hover {
-            background-color: #38a169; /* Darker green on hover */
+        .container:hover {
+            transform: translateY(-5px);
         }
 
+        .welcome-screen { display: flex; flex-direction: column; align-items: center; }
+        .welcome-screen h1 { color: #5A67D8; margin-bottom: 25px; font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .welcome-screen p { font-size: 1.1em; margin-bottom: 15px; color: #4A5568; }
+        .welcome-screen input[type="text"] { padding: 12px 15px; margin-bottom: 20px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.2em; width: 90%; max-width: 300px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .welcome-screen input[type="text"]:focus { border-color: #5A67D8; box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.3); outline: none; }
+        .welcome-screen button, .game-screen button { color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.3em; transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .welcome-screen button { background-color: #48BB78; }
+        .welcome-screen button:hover { background-color: #38A169; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+        .name-error-message { color: #E53E3E; font-size: 0.9em; margin-top: -10px; margin-bottom: 10px; display: none; }
 
-        /* Styles for the Game Screen */
-        .game-screen {
-            display: none; /* Hidden by default */
-            flex-direction: column;
+        .game-screen { display: none; flex-direction: column; align-items: center; }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-        }
-        .player-name {
-            font-size: 1.1em;
-            color: #4a5568;
+            width: 100%;
             margin-bottom: 15px;
-            font-weight: 600;
+            font-size: 1em; /* Ajustado para consistencia */
+            color: #718096;
+            padding: 0 10px;
         }
-        .level-info {
+        .player-name-display { font-weight: 600; color: #5A67D8; font-size:1.1em; }
+        .lives-display, .timer-display { font-weight: 600; font-size:1.1em; color: #4A5568;}
+        .lives-display span, .timer-display span { color: #DD6B20; } /* Naranja para los números */
+
+
+        .level-info { font-size: 1.1em; color: #4A5568; margin-bottom: 5px; font-weight: 600; }
+        .progress-bar-container { width: 80%; max-width: 400px; height: 22px; background-color: #E2E8F0; border-radius: 11px; margin-bottom: 15px; overflow: hidden; border: 1px solid #CBD5E0; }
+        .progress-bar { height: 100%; width: 0%; background-color: #68D391; border-radius: 10px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85em; }
+        
+        .problem { font-size: 2.8em; margin-bottom: 20px; color: #2D3748; min-height: 1.5em; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; padding: 10px 15px; background-color: #edf2f7; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+        .problem span { margin: 0 8px; }
+        
+        .input-area { margin-bottom: 20px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+        input[type="number"] { padding: 12px 15px; margin: 5px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.4em; width: 130px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input[type="number"]:focus { border-color: #63B3ED; box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3); outline: none; }
+        .game-screen button { background-color: #4299E1; margin-left: 10px; }
+        .game-screen button:hover { background-color: #3182CE; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+        
+        .result-area {
+            margin-top: 15px;
+            width: 100%;
+        }
+        .result { font-size: 1.5em; font-weight: 600; min-height: 1.5em; transition: transform 0.3s ease-out, color 0.3s ease; padding: 10px 15px; border-radius: 8px; margin-bottom:10px; }
+        .result.correct { color: #38A169; background-color: #C6F6D5; transform: scale(1.05); }
+        .result.incorrect { color: #E53E3E; background-color: #FED7D7; animation: shake 0.5s; }
+        .result.level-up { color: #DD6B20; background-color: #FEEBC8; transform: scale(1.1); animation: pulse 1s 1; }
+        .result.level-down { color: #E53E3E; background-color: #FED7D7; animation: shake 0.8s; }
+
+
+        .explanation {
             font-size: 1em;
-            color: #4a5568;
-            margin-bottom: 15px;
-        }
-        .problem {
-            font-size: 2.2em; /* Larger font size for the math problem */
-            margin-bottom: 20px;
-            color: #2d3748;
-            min-height: 1.5em; /* Reserve space */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* Allow problem to wrap on smaller screens */
-        }
-         .problem span {
-             margin: 0 5px; /* Space between numbers and operators */
-         }
-        .input-area {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* Allow input area to wrap */
-        }
-        input[type="number"] {
+            color: #4A5568;
+            margin-top: 5px;
             padding: 10px;
-            margin: 5px; /* Adjusted margin for flex wrap */
-            border: 1px solid #cbd5e0; /* Light grey border */
-            border-radius: 4px;
-            font-size: 1.2em;
-            width: 100px; /* Increased width for input */
-            text-align: center;
-            box-sizing: border-box;
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: left;
+            line-height: 1.5;
+            max-height: 150px; /* Max height for explanation */
+            overflow-y: auto; /* Scroll if too long */
         }
-        button {
-            background-color: #4299e1; /* Moderate blue button */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease; /* Smooth hover effect */
-            margin: 5px; /* Adjusted margin for flex wrap */
+        .explanation strong { color: #2D3748; }
+        .explanation code { background-color: #edf2f7; padding: 2px 5px; border-radius: 4px; font-family: monospace;}
+
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
+        @keyframes pulse { 0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 10px 15px rgba(221, 107, 32, 0); } 100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
+
+        @media (max-width: 640px) {
+            .container { padding: 20px; max-width: 95%;}
+            .welcome-screen h1 { font-size: 2em; }
+            .problem { font-size: 2em; }
+            input[type="number"] { font-size: 1.2em; width: 100px; }
+            .welcome-screen button, .game-screen button { font-size: 1.1em; padding: 10px 20px; }
+            .result { font-size: 1.2em; }
+            .game-stats { flex-direction: column; align-items: center; gap: 5px; }
+            .player-name-display, .lives-display, .timer-display { font-size: 1em;}
         }
-        button:hover {
-            background-color: #3182ce; /* Darker blue on hover */
-        }
-        .result {
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-top: 20px;
-            min-height: 1.4em; /* Reserve space to prevent layout shift */
-        }
-        .result.correct {
-            color: #38a169; /* Green for correct */
-        }
-        .result.incorrect {
-            color: #e53e3e; /* Red for incorrect */
-        }
-         .result.level-up {
-             color: #d69e2e; /* Orange color for level up messages */
-         }
     </style>
 </head>
 <body>
@@ -151,26 +125,38 @@
     <div class="container">
 
         <div class="welcome-screen" id="welcome-screen">
-            <h1>Bienvenido al Juego de Matemáticas</h1>
-            <p>Ingresa tu nombre para empezar:</p>
-            <input type="text" id="player-name-input" placeholder="Tu nombre">
-            <button onclick="startGame()">Empezar Juego</button>
+            <h1>🚀 ¡Desafío Matemático Avanzado! 🧠</h1>
+            <p>Ingresa tu nombre para esta nueva aventura:</p>
+            <input type="text" id="player-name-input" placeholder="Tu Nombre de Campeón">
+            <p id="name-error-message" class="name-error-message">¡Tu nombre es esencial para la leyenda!</p>
+            <button onclick="startGame()">¡Comenzar Desafío!</button>
         </div>
 
         <div class="game-screen" id="game-screen">
-            <div class="player-name">Jugador: <span id="display-player-name"></span></div>
-            <div class="level-info">Nivel: <span id="current-level">1</span> | Correctas en este nivel: <span id="correct-streak">0</span>/5</div>
+            <div class="game-stats">
+                <div class="player-name-display">Jugador: <span id="display-player-name"></span></div>
+                <div class="lives-display">❤️ Vidas: <span id="player-lives">3</span></div>
+                <div class="timer-display">⏱️ Tiempo: <span id="time-left">0</span>s</div>
+            </div>
+            
+            <div class="level-info">Nivel: <span id="current-level">1</span></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar-fill">0%</div>
+            </div>
+            <div class="level-info">Racha: <span id="correct-streak">0</span>/<span id="correct-per-level-display">5</span></div>
 
             <div class="problem" id="math-problem"></div>
 
             <div class="input-area">
-                <input type="number" id="user-answer" placeholder="Tu respuesta">
-                <button onclick="checkAnswer()">Verificar</button>
+                <input type="number" id="user-answer" placeholder="Tu Respuesta">
+                <button onclick="checkAnswer()">Verificar ✨</button>
             </div>
-
-            <div class="result" id="game-result"></div>
+            
+            <div class="result-area">
+                <div class="result" id="game-result"></div>
+                <div class="explanation" id="answer-explanation" style="display: none;"></div>
+            </div>
         </div>
-
     </div>
 
     <script>
@@ -178,414 +164,487 @@
         let currentLevel = 1;
         let correctStreak = 0;
         let correctAnswer;
-        let requiresIntegerResult = true; // Flag to track if integer result is needed
-        const maxLevel = 20; // Set max level to 20
-        const correctPerLevel = 5; // Answers needed to level up
+        // let requiresIntegerResult = true; // Ya no es necesaria, siempre serán enteros
+        const maxLevel = 20;
+        const correctPerLevel = 5;
 
-        // Array of congratulatory messages, increasing in enthusiasm
-        const congratulations = [
-            "¡Bien hecho! ¡Nivel {level} desbloqueado!", // Level 2
-            "¡Excelente! ¡Pasaste al Nivel {level}!", // Level 3
-            "¡Fantástico, {name}! ¡Ya estás en el Nivel {level}!", // Level 4
-            "¡Increíble! ¡El Nivel {level} te espera!", // Level 5
-            "¡Wow! ¡Eres imparable! ¡Nivel {level} alcanzado!", // Level 6-10
-            "¡Asombroso, {name}! ¡Dominando las matemáticas en el Nivel {level}!", // Level 11-15
-            "¡Fuera de serie! ¡El Nivel {level} no es rival para ti!", // Level 16-19
-            "¡¡¡IMPRESIONANTE, {name}!!! ¡Has llegado al ÚLTIMO Nivel {level}! ¡Demuestra de qué estás hecho!" // Level 20
-        ];
+        let playerLives = 3;
+        let timerId = null;
+        let timeLeft = 0;
+        let baseTimePerQuestion = 5; // Segundos para el nivel 1
+        let timeBonusPerLevel = 2; // Segundos adicionales por nivel
 
-        // Function to get a congratulatory message based on the level
-        function getCongratulationMessage(level, name) {
-            let message;
-            if (level === 2) message = congratulations[0];
-            else if (level === 3) message = congratulations[1];
-            else if (level === 4) message = congratulations[2];
-            else if (level === 5) message = congratulations[3];
-            else if (level >= 6 && level <= 10) message = congratulations[4];
-            else if (level >= 11 && level <= 15) message = congratulations[5];
-            else if (level >= 16 && level <= 19) message = congratulations[6];
-            else if (level === 20) message = congratulations[7];
-            else message = `¡Nivel ${level} desbloqueado!`; // Fallback message
+        let currentProblemDetails = {}; // Para guardar los componentes del problema para la explicación
 
-            // Replace placeholders
-            message = message.replace("{level}", level).replace("{name}", name);
-            return message;
+
+        // Tone.js synths
+        let synthsInitialized = false;
+        let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, timerTickSound, lifeLostSound;
+
+        function initializeSynths() {
+            if (synthsInitialized) return;
+            correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
+            incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
+            levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
+            gameStartSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -8 }).toDestination();
+            levelDownSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.3 }, volume: -10 }).toDestination();
+            lifeLostSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -12 }).toDestination();
+            // timerTickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -20 }).toDestination(); // Sutil
+            synthsInitialized = true;
         }
 
+        const congratulations = [
+            "¡Bien hecho! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente! 🌟 ¡Pasaste al Nivel {level}!",
+            "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera!",
+            "¡Wow, {name}! 🏆 ¡Eres imparable! ¡Nivel {level} alcanzado!", "¡Asombroso! 🌠 ¡Dominando las mates en el Nivel {level}!",
+            "¡Fuera de serie, {name}! 💫 ¡El Nivel {level} no es rival para ti!", "¡¡¡ALUCINANTE, {name}!!! 👑 ¡Has llegado al ÚLTIMO Nivel {level}! ¡Pura maestría!"
+        ];
 
-        // Function to start the game
-        function startGame() {
+        function getCongratulationMessage(level, name) {
+            let message;
+            if (level <= 1) message = congratulations[0]; else if (level === 2) message = congratulations[0];
+            else if (level === 3) message = congratulations[1]; else if (level === 4) message = congratulations[2];
+            else if (level === 5) message = congratulations[3]; else if (level >= 6 && level <= 10) message = congratulations[4];
+            else if (level >= 11 && level <= 15) message = congratulations[5]; else if (level >= 16 && level <= 19) message = congratulations[6];
+            else if (level === 20) message = congratulations[7]; else message = `¡Nivel ${level} desbloqueado! 😎`;
+            return message.replace("{level}", level).replace("{name}", name);
+        }
+
+        async function startGame() {
+            if (Tone.context.state !== 'running') { await Tone.start(); console.log("AudioContext started!"); }
+            initializeSynths();
+
             const nameInput = document.getElementById('player-name-input');
-            playerName = nameInput.value.trim(); // Get player name and remove whitespace
+            const nameErrorMessage = document.getElementById('name-error-message');
+            playerName = nameInput.value.trim();
 
             if (playerName === '') {
-                alert('Por favor, ingresa tu nombre para empezar.'); // Simple alert if name is empty
-                return; // Don't start the game if name is empty
+                nameErrorMessage.style.display = 'block'; nameInput.focus();
+                if(incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
+                return;
             }
+            nameErrorMessage.style.display = 'none';
+            if(gameStartSound) gameStartSound.triggerAttackRelease("C4", "4n", Tone.now());
 
-            // Display player name
             document.getElementById('display-player-name').textContent = playerName;
-
-            // Hide welcome screen and show game screen
+            document.getElementById('correct-per-level-display').textContent = correctPerLevel;
             document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex'; // Use flex to maintain layout
-
-            // Generate the first problem
+            document.getElementById('game-screen').style.display = 'flex';
+            
+            currentLevel = 1; playerLives = 3; correctStreak = 0;
+            updateLivesDisplay(); updateProgressBar();
+            document.getElementById('answer-explanation').style.display = 'none';
             generateProblem();
         }
 
+        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-        // Function to generate a random integer within a range
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        // Helper function to evaluate an expression string using eval
-        // WARNING: Use eval with caution. Only use for trusted input (like generated by this script).
         function evaluateExpression(expression) {
             try {
+                // eslint-disable-next-line no-eval
                 return eval(expression);
             } catch (error) {
-                console.error("Error evaluating expression:", expression, error);
-                return NaN; // Return Not-a-Number on error
+                console.error("Error evaluating expression:", expression, error); return NaN;
             }
         }
+        
+        function updateProgressBar() {
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const progressPercentage = (correctStreak / correctPerLevel) * 100;
+            progressBarFill.style.width = `${progressPercentage}%`;
+            progressBarFill.textContent = `${Math.round(progressPercentage)}%`;
+        }
 
+        function updateLivesDisplay() {
+            document.getElementById('player-lives').textContent = playerLives;
+        }
 
-        // Function to generate a math problem based on the current level
+        function startTimer() {
+            clearTimeout(timerId); // Limpiar temporizador anterior
+            timeLeft = baseTimePerQuestion + (currentLevel - 1) * timeBonusPerLevel;
+            document.getElementById('time-left').textContent = timeLeft;
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time-left').textContent = timeLeft;
+                // if (timeLeft < 5 && timeLeft > 0 && timerTickSound) timerTickSound.triggerAttackRelease("C2", "16n", Tone.now());
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    handleIncorrectAnswer(true); // true indica que fue por tiempo agotado
+                }
+            }, 1000);
+        }
+        
+        // --- GENERACIÓN DE PROBLEMAS (MODIFICADO PARA RESULTADOS ENTEROS) ---
         function generateProblem() {
-            let displayString; // String to show the user
-            let evalString;    // String for evaluation with eval()
+            clearTimeout(timerId); // Detener cualquier temporizador activo
+            currentProblemDetails = {}; // Resetear detalles del problema
+            let displayString = "";
+            let evalString = "";
+            let regenerationCount = 0;
+            const MAX_REGEN = 20; // Límite de intentos para evitar bucles infinitos
 
-            requiresIntegerResult = currentLevel <= 10; // Require integer results up to level 10
-
-            // Determine complexity based on level (scaled for 20 levels)
-            if (currentLevel <= 3) {
-                // Level 1-3: Suma o Resta (números pequeños)
-                let num1 = getRandomInt(1, 15);
-                let num2 = getRandomInt(1, 15);
-                let operator1 = Math.random() < 0.5 ? '+' : '-';
-                if (operator1 === '-' && num1 < num2) { // Ensure positive result for subtraction
-                    [num1, num2] = [num2, num1]; // Swap
+            do {
+                regenerationCount++;
+                if (regenerationCount > MAX_REGEN) {
+                    console.error("Máximos intentos de regeneración alcanzados. Simplificando problema.");
+                    // Fallback a un problema muy simple si la generación compleja falla repetidamente
+                    let n1 = getRandomInt(1, 5), n2 = getRandomInt(1, 5);
+                    currentProblemDetails = { type: 'simple', num1: n1, op: '+', num2: n2, result: n1 + n2 };
+                    displayString = `${n1} + ${n2}`;
+                    evalString = `${n1} + ${n2}`;
+                    break; 
                 }
-                displayString = `${num1} ${operator1} ${num2}`;
-                evalString = displayString; // Same for display and eval
 
-            } else if (currentLevel <= 6) {
-                // Level 4-6: Suma, Resta, Multiplicación (números hasta 20)
-                let num1 = getRandomInt(1, 20);
-                let num2 = getRandomInt(1, 20);
-                const operators = ['+', '-', '*'];
-                let operator1 = operators[getRandomInt(0, 2)];
-                 if (operator1 === '-' && num1 < num2) { // Ensure positive result for subtraction
-                    [num1, num2] = [num2, num1]; // Swap
-                 }
-                displayString = `${num1} ${operator1} ${num2}`;
-                evalString = displayString; // Same for display and eval
-
-            } else if (currentLevel <= 9) {
-                // Level 7-9: Suma, Resta, Multiplicación, División (resultados enteros garantizados, números hasta 25)
-                let num1 = getRandomInt(1, 25);
-                let num2 = getRandomInt(1, 25);
-                 const operators = ['+', '-', '*', '/'];
-                let operator1 = operators[getRandomInt(0, 3)];
-
-                if (operator1 === '-') { // Ensure positive result for subtraction
-                    if (num1 < num2) [num1, num2] = [num2, num1];
-                } else if (operator1 === '/') { // Ensure integer result for division
-                    // Find a divisor for num1 (excluding 1 for more interesting problems if possible)
-                    let divisors = [];
-                    for (let i = 2; i <= num1; i++) { // Start from 2
-                        if (num1 % i === 0) {
-                            divisors.push(i);
-                        }
-                    }
-                    if (divisors.length > 0) {
-                         num2 = divisors[getRandomInt(0, divisors.length - 1)];
+                if (currentLevel <= 3) { // Nivel 1-3: Suma o Resta
+                    let num1 = getRandomInt(1, 15 + currentLevel * 3);
+                    let num2 = getRandomInt(1, 15 + currentLevel * 2);
+                    let operator = Math.random() < 0.6 ? '+' : '-';
+                    if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
+                    displayString = `${num1} ${operator} ${num2}`;
+                    evalString = displayString;
+                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (currentLevel <= 6) { // Nivel 4-6: Suma, Resta, Multiplicación
+                    let num1 = getRandomInt(1, 20 + currentLevel * 2);
+                    let num2 = getRandomInt(1, currentLevel <= 4 ? 10 : 15); // Números más pequeños para mult
+                    const operators = ['+', '-', '*'];
+                    let operator = operators[getRandomInt(0, 2)];
+                    if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
+                    if (operator === '*' && currentLevel <= 5) { num2 = getRandomInt(1, 9); } // Aún más pequeños
+                    displayString = `${num1} ${operator} ${num2}`;
+                    evalString = displayString;
+                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (currentLevel <= 9) { // Nivel 7-9: División (resultados enteros)
+                    const operators = ['+', '-', '*', '/'];
+                    let operator = operators[getRandomInt(0, 3)];
+                    let num1, num2;
+                    if (operator === '/') {
+                        num2 = getRandomInt(2, 10 + currentLevel);
+                        let quotient = getRandomInt(1, 10 + currentLevel);
+                        num1 = num2 * quotient;
                     } else {
-                        // If only 1 is a divisor (i.e., num1 is prime or 1), use num1 itself
-                         num2 = num1 > 1 ? num1 : 1;
+                        num1 = getRandomInt(1, 25 + currentLevel * 3);
+                        num2 = getRandomInt(1, (operator === '*') ? 12 : (20 + currentLevel));
+                        if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
                     }
-                    if (num2 === 0) num2 = 1; // Avoid division by zero (shouldn't happen with this logic, but safe)
+                    displayString = `${num1} ${operator} ${num2}`;
+                    evalString = displayString;
+                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (currentLevel <= 12) { // Nivel 10-12: Dos pasos con paréntesis
+                    let numA = getRandomInt(1, 15 + currentLevel);
+                    let numB = getRandomInt(1, 10 + currentLevel);
+                    let numC = getRandomInt(1, 10 + currentLevel);
+                    const ops = ['+', '-', '*']; // División se maneja con cuidado
+                    let op1 = ops[getRandomInt(0, 2)];
+                    let op2 = ops[getRandomInt(0, 2)];
+                    let intermediateResult;
+
+                    if (Math.random() < 0.5) { // (A op1 B) op2 C
+                        if (op1 === '/' ) { // Asegurar A divisible por B
+                             numB = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numA = numB * intermediateResult;
+                             op1 = '/'; // Forzar division
+                        } else {
+                            intermediateResult = evaluateExpression(`${numA} ${op1} ${numB}`);
+                        }
+                        
+                        if (op2 === '/') { // Asegurar intermediateResult divisible por C
+                            numC = getRandomInt(2, Math.abs(intermediateResult) > 1 ? Math.min(8, Math.abs(intermediateResult)) : 5);
+                            if (intermediateResult % numC !== 0) { // Si no es divisible, cambiar op2 o regenerar
+                                op2 = (Math.random() < 0.5 && intermediateResult !==0 && numC !==0) ? '*' : '+'; // Evitar division por cero
+                                if (intermediateResult === 0 || numC === 0) op2 = '+';
+                            } else {
+                                op2 = '/'; // Forzar division
+                            }
+                        }
+                        displayString = `(${numA} ${op1} ${numB}) ${op2} ${numC}`;
+                        evalString = displayString;
+                        currentProblemDetails = { type: 'twoStepParenLeft', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numA} ${op1} ${numB})`), finalResult: evaluateExpression(evalString) };
+
+                    } else { // A op1 (B op2 C)
+                        if (op2 === '/') { // Asegurar B divisible por C
+                            numC = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numB = numC * intermediateResult;
+                            op2 = '/';
+                        } else {
+                             intermediateResult = evaluateExpression(`${numB} ${op2} ${numC}`);
+                        }
+
+                        if (op1 === '/') { // Asegurar A divisible por intermediateResult
+                            if (intermediateResult === 0) { // Evitar division por cero
+                                op1 = ops[getRandomInt(1,2)]; // Cambiar a - o *
+                                if (op1 === '-' && numA < intermediateResult) {[numA, intermediateResult] = [intermediateResult, numA];}
+                            } else {
+                                numA = intermediateResult * getRandomInt(1, 5); // Hacer A múltiplo
+                                op1 = '/';
+                            }
+                        }
+                        displayString = `${numA} ${op1} (${numB} ${op2} ${numC})`;
+                        evalString = displayString;
+                        currentProblemDetails = { type: 'twoStepParenRight', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numB} ${op2} ${numC})`), finalResult: evaluateExpression(evalString) };
+                    }
+                } else if (currentLevel <= 15) { // Nivel 13-15: Exponentes simples y dos/tres pasos
+                    if (Math.random() < 0.4 && currentLevel >= 14) { // Problema con exponente
+                        let base = getRandomInt(2, 7);
+                        let exp = getRandomInt(2, 3);
+                        let term = getRandomInt(1, 50);
+                        let op = (Math.random() < 0.5) ? '+' : '-';
+                        let powerResult = Math.pow(base, exp);
+                        if (op === '-' && powerResult < term) {
+                            displayString = `${term} ${op} ${base}^${exp}`;
+                            evalString = `${term} ${op} Math.pow(${base}, ${exp})`;
+                            currentProblemDetails = { type: 'exponent', term1: term, op, base, exp, term2: powerResult, result: evaluateExpression(evalString) };
+                        } else {
+                            displayString = `${base}^${exp} ${op} ${term}`;
+                            evalString = `Math.pow(${base}, ${exp}) ${op} ${term}`;
+                            currentProblemDetails = { type: 'exponent', base, exp, term1: powerResult, op, term2: term, result: evaluateExpression(evalString) };
+                        }
+                    } else { // Problema de tres pasos simples (A op B op C)
+                        let n1 = getRandomInt(5, 30), n2 = getRandomInt(2, 15), n3 = getRandomInt(2, 10);
+                        let o1 = ['+','-','*'][getRandomInt(0,2)];
+                        let o2 = ['+','-','*'][getRandomInt(0,2)];
+                        if (o1 === '/' || o2 === '/') { // Forzar enteros en divisiones intermedias
+                            // Simplificado: si hay division, se hace al final y se asegura divisibilidad
+                            let interm = evaluateExpression(`${n1} ${o1} ${n2}`);
+                            if (o2 === '/') {
+                                n3 = getRandomInt(2, Math.min(10, Math.abs(interm) || 1)); // Evitar divisor 0 o muy grande
+                                if (interm % n3 !== 0) interm = n3 * getRandomInt(1,5); // Ajustar para que sea divisible
+                                n1 = getRandomInt(1,10); n2 = getRandomInt(1,10); o1 = '+'; // Resetear primer parte para simplificar
+                                displayString = `(${n1} ${o1} ${n2}) * ${interm/n3} / ${interm/n3}`; // Truco para mantener entero
+                                evalString = `((${n1} ${o1} ${n2}) * ${interm/n3}) / ${interm/n3}`; // Esto es solo un ejemplo de cómo se complica
+                                // La lógica de arriba para dos pasos es más robusta para enteros. Tres pasos es más complejo.
+                                // Por ahora, para tres pasos, priorizamos +, -, *
+                                o2 = (Math.random() < 0.5) ? '+' : '*';
+                            }
+                        }
+                        displayString = `${n1} ${o1} ${n2} ${o2} ${n3}`; // Sin paréntesis, orden de operaciones aplica
+                        evalString = displayString;
+                        currentProblemDetails = { type: 'threeStep', n1, o1, n2, o2, n3, result: evaluateExpression(evalString) };
+                    }
+                } else if (currentLevel <= 20) { // Nivel 16-20: Más complejo, pero aún entero
+                    // Similar a nivel 13-15 pero con números más grandes o más anidación simple
+                    // Se prioriza la generación de problemas que naturalmente den enteros.
+                    // Ejemplo: (A*B) + (C*D) o (A*B) - C
+                    let n1 = getRandomInt(10,50), n2 = getRandomInt(2,10), n3 = getRandomInt(5,30), n4 = getRandomInt(2,8);
+                    let ops = ['+','-','*'];
+                    let o1 = ops[getRandomInt(0,2)], o2 = ops[getRandomInt(0,2)], o3 = ops[getRandomInt(0,2)];
+
+                    if (currentLevel <= 18) {
+                        displayString = `(${n1} ${o1} ${n2}) ${o2} ${n3}`;
+                        evalString = displayString;
+                        currentProblemDetails = { type: 'complexTwoStep', n1,o1,n2,o2,n3, result: evaluateExpression(evalString) };
+                    } else { // Nivel 19-20
+                         displayString = `(${n1} ${o1} ${n2}) ${o2} (${n3} ${o3} ${n4})`;
+                         evalString = displayString;
+                         currentProblemDetails = { type: 'complexNested', n1,o1,n2,o2,n3,o3,n4, result: evaluateExpression(evalString) };
+                    }
+                } else { // Nivel Máximo
+                    displayString = `🏆 ¡Felicidades Supremas, ${playerName}! 🏆 Has conquistado TODOS los niveles. ¡Eres una leyenda matemática!`;
+                    evalString = null; correctAnswer = null;
+                    document.getElementById('user-answer').style.display = 'none';
+                    document.querySelector('.input-area button').style.display = 'none';
+                    document.getElementById('level-info').style.display = 'none';
+                    document.querySelector('.progress-bar-container').style.display = 'none';
+                    document.querySelector('.game-stats .timer-display').style.display = 'none';
+                    document.getElementById('game-result').className = 'result level-up';
+                    if(levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n", Tone.now());
+                    return; // Salir de la función
+                }
+                
+                // Verificar si el resultado es entero
+                if (evalString) {
+                    correctAnswer = evaluateExpression(evalString.replace(/\^/g, '**')); // Usar ** para eval
+                } else {
+                    correctAnswer = null; // Para el mensaje final
                 }
 
-                displayString = `${num1} ${operator1} ${num2}`;
-                evalString = displayString; // Same for display and eval
+            } while (evalString && (!Number.isFinite(correctAnswer) || correctAnswer !== Math.floor(correctAnswer)) && regenerationCount <= MAX_REGEN);
 
+            if (evalString) {
+                document.getElementById('math-problem').innerHTML = displayString.replace(/\*\*/g, '^') + ' = <span class="text-blue-500">?</span>';
+            } else {
+                 document.getElementById('math-problem').innerHTML = displayString; // Mensaje final
+            }
 
-            } else if (currentLevel <= 12) {
-                 // Level 10-12: Mezcla de las 4 operaciones básicas, números hasta 30, simple dos-pasos con paréntesis
-                 let num1 = getRandomInt(1, 30);
-                 let num2 = getRandomInt(1, 30);
-                 let num3 = getRandomInt(1, 30);
-                 const operators = ['+', '-', '*', '/'];
-                 let operator1 = operators[getRandomInt(0, 3)];
-                 let operator2 = operators[getRandomInt(0, 3)];
-                 requiresIntegerResult = currentLevel <= 10; // Allow decimals from level 11
-
-                 // Ensure valid intermediate and final steps for integer results (more complex with 2 steps)
-                 // For simplicity in this level range, we'll try to generate valid integer problems,
-                 // but the integer check/regenerate loop below is the main guarantee.
-                 // Avoid division by zero
-                 if (operator1 === '/' && num2 === 0) num2 = 1;
-                 if (operator2 === '/' && num3 === 0) num3 = 1;
-
-
-                 // Structure: (a op b) op c or a op (b op c)
-                 if (Math.random() < 0.5) { // (a op b) op c
-                     displayString = `(${num1} ${operator1} ${num2}) ${operator2} ${num3}`;
-                     evalString = displayString; // Same for display and eval
-
-                 } else { // a op (b op c)
-                     displayString = `${num1} ${operator1} (${num2} ${operator2} ${num3})`;
-                     evalString = displayString; // Same for display and eval
-                 }
-
-             } else if (currentLevel <= 15) {
-                 // Level 13-15: Increase number range (up to 50), more complex two-step or simple three-step, exponents
-                 let num1 = getRandomInt(1, 50);
-                 let num2 = getRandomInt(1, 50);
-                 let num3 = getRandomInt(1, 50);
-                 let num4 = getRandomInt(1, 50);
-                 const operators = ['+', '-', '*', '/'];
-                 let operator1 = operators[getRandomInt(0, 3)];
-                 let operator2 = operators[getRandomInt(0, 3)];
-                 let operator3 = operators[getRandomInt(0, 3)];
-                 requiresIntegerResult = false; // Allow decimals
-
-                 // Avoid division by zero
-                 if (operator1 === '/' && num2 === 0) num2 = 1;
-                 if (operator2 === '/' && num3 === 0) num3 = 1;
-                 if (operator3 === '/' && num4 === 0) num4 = 1;
-
-
-                 // Structures: ((a op b) op c) op d or (a op b) op (c op d) or with exponents
-                 const structureType = Math.random();
-
-                 if (structureType < 0.5) { // (((a op b) op c) op d)
-                     displayString = `((${num1} ${operator1} ${num2}) ${operator2} ${num3}) ${operator3} ${num4}`;
-                     evalString = displayString;
-
-                 } else if (structureType < 0.8) { // (a op b) op (c op d)
-                     // Avoid division by zero for intermediate results for robustness
-                     if (operator3 === '/' && num4 === 0) num4 = 1;
-                     displayString = `(${num1} ${operator1} ${num2}) ${operator2} (${num3} ${operator3} ${num4})`;
-                     evalString = displayString;
-
-                 } else { // Expression with exponents: base^exp op num or base^exp op base^exp
-                     let base1 = getRandomInt(1, 10); let exp1 = getRandomInt(2, 3);
-                     let base2 = getRandomInt(1, 10); let exp2 = getRandomInt(2, 3);
-                     let num = getRandomInt(1, 50);
-                     let op = operators[getRandomInt(0, 3)];
-
-                     if (Math.random() < 0.5 || currentLevel === 15) { // base^exp op num
-                         displayString = `${base1}^${exp1} ${op} ${num}`;
-                         // Use Math.pow for evaluation
-                         if (op === '/' && num === 0) num = 1; // Avoid division by zero
-                         evalString = `Math.pow(${base1}, ${exp1}) ${op} ${num}`;
-                     } else { // base1^exp1 op base2^exp2
-                          displayString = `${base1}^${exp1} ${op} ${base2}^${exp2}`;
-                          // Use Math.pow for evaluation
-                          let power2 = Math.pow(base2, exp2);
-                          if (op === '/' && power2 === 0) power2 = 1; // Avoid division by zero
-                          evalString = `Math.pow(${base1}, ${exp1}) ${op} Math.pow(${base2}, ${exp2})`;
-                     }
-                 }
-
-             } else if (currentLevel <= 20) {
-                 // Level 16-20: Very complex expressions ("genius" level arithmetic)
-                  let num1 = getRandomInt(1, 100);
-                  let num2 = getRandomInt(1, 100);
-                  let num3 = getRandomInt(1, 100);
-                  let num4 = getRandomInt(1, 100);
-                  let num5 = getRandomInt(1, 100);
-                  const operators = ['+', '-', '*', '/'];
-                  let operator1 = operators[getRandomInt(0, 3)];
-                  let operator2 = operators[getRandomInt(0, 3)];
-                  let operator3 = operators[getRandomInt(0, 3)];
-                  let operator4 = operators[getRandomInt(0, 3)];
-                  requiresIntegerResult = false; // Allow decimals
-
-                  // Avoid division by zero
-                  if (operator1 === '/' && num2 === 0) num2 = 1;
-                  if (operator2 === '/' && num3 === 0) num3 = 1;
-                  if (operator3 === '/' && num4 === 0) num4 = 1;
-                  if (operator4 === '/' && num5 === 0) num5 = 1;
-
-
-                  // Very complex nested structures or expressions with multiple terms and exponents
-                  const structureType = Math.random();
-
-                  if (structureType < 0.4) { // (((a op b) op c) op d) op e
-                      displayString = `(((${num1} ${operator1} ${num2}) ${operator2} ${num3}) ${operator3} ${num4}) ${operator4} ${num5}`;
-                      evalString = displayString;
-
-                  } else if (structureType < 0.7) { // (a op (b op c)) op (d op e)
-                       // Avoid division by zero for intermediate results for robustness
-                       if (operator2 === '/' && num3 === 0) num3 = 1;
-                       if (operator4 === '/' && num5 === 0) num5 = 1;
-                       // Avoid division by zero for the operator between groups
-                       let intermediate3 = evaluateExpression(`${num4} ${operator4} ${num5}`);
-                       if (operator3 === '/' && intermediate3 === 0) intermediate3 = 1; // Re-evaluate if needed to get new num5
-
-                       displayString = `(${num1} ${operator1} (${num2} ${operator2} ${num3})) ${operator3} (${num4} ${operator4} ${num5})`;
-                       evalString = displayString;
-
-
-                  } else { // Expression with multiple exponents and operations
-                      let base1 = getRandomInt(1, 10); let exp1 = getRandomInt(2, 3);
-                      let base2 = getRandomInt(1, 10); let exp2 = getRandomInt(2, 3);
-                      let base3 = getRandomInt(1, 10); let exp3 = getRandomInt(2, 3);
-                      let op1 = operators[getRandomInt(0, 3)];
-                      let op2 = operators[getRandomInt(0, 3)];
-                      let op3 = operators[getRandomInt(0, 3)]; // Added one more operator for complexity
-
-                      // Ensure no division by zero from powers
-                      let power2 = Math.pow(base2, exp2);
-                      if (op1 === '/' && power2 === 0) power2 = 1;
-                      let power3 = Math.pow(base3, exp3);
-                       if (op2 === '/' && power3 === 0) power3 = 1;
-
-
-                       // Structure: (base1^exp1 op base2^exp2) op base3^exp3 op num
-                       let num = getRandomInt(1, 100); // Added another number
-                       if (op3 === '/' && num === 0) num = 1;
-
-
-                       displayString = `(${base1}^${exp1} ${op1} ${base2}^${exp2}) ${op2} ${base3}^${exp3} ${op3} ${num}`;
-                       evalString = `(Math.pow(${base1}, ${exp1}) ${op1} Math.pow(${base2}, ${exp2})) ${op2} Math.pow(${base3}, ${exp3}) ${op3} ${num}`;
-
-                  }
-
-
-             } else {
-                 // Max level reached
-                 displayString = `¡Felicidades, ${playerName}! Has completado todos los niveles.`;
-                 evalString = null; // No more answers to check
-                 correctAnswer = null; // Set correctAnswer to null explicitly
-                 document.getElementById('user-answer').style.display = 'none';
-                 document.querySelector('.input-area button').style.display = 'none';
-                  document.getElementById('level-info').style.display = 'none'; // Hide level info
-                  document.getElementById('game-result').className = 'result correct'; // Make final message green
-             }
-
-             // Calculate the correct answer using the evaluator if there's an expression
-             if (evalString !== null) {
-                  correctAnswer = evaluateExpression(evalString);
-
-                  // Regenerate if integer result is required but the answer is a decimal or invalid
-                  if (requiresIntegerResult) {
-                      // Check if it's not a finite integer
-                      if (!Number.isFinite(correctAnswer) || correctAnswer !== Math.floor(correctAnswer)) {
-                           console.warn("Regenerating problem due to non-integer or invalid result:", displayString, "=", correctAnswer);
-                           generateProblem(); // Try generating again
-                           return; // Exit current call to prevent displaying/evaluating the invalid one
-                      }
-                  } else { // Allow decimals, ensure result is a finite number
-                      if (!Number.isFinite(correctAnswer)) {
-                           console.warn("Regenerating problem due to invalid result in decimal level:", displayString, "=", correctAnswer);
-                           generateProblem(); // Try generating again
-                           return; // Exit current call
-                      }
-                  }
-
-
-                  // Round decimal answers to a few decimal places for comparison
-                  if (!requiresIntegerResult && correctAnswer !== null && typeof correctAnswer === 'number') {
-                      correctAnswer = parseFloat(correctAnswer.toFixed(3)); // Round to 3 decimal places
-                  }
-             }
-
-
-            // Display the problem (always use the displayString)
-            document.getElementById('math-problem').textContent = displayString + (evalString !== null ? ' = ?' : '');
-
-
-            // Clear previous result and input
             document.getElementById('user-answer').value = '';
-            document.getElementById('game-result').textContent = '';
-            document.getElementById('game-result').className = 'result'; // Reset result classes
+            const resultEl = document.getElementById('game-result');
+            resultEl.textContent = ''; resultEl.className = 'result'; resultEl.style.animation = 'none';
+            document.getElementById('answer-explanation').style.display = 'none';
+            document.getElementById('answer-explanation').textContent = '';
 
-            // Update level info display
+
             document.getElementById('current-level').textContent = currentLevel;
             document.getElementById('correct-streak').textContent = correctStreak;
+            updateProgressBar();
+            if (evalString) startTimer(); // Iniciar temporizador solo si hay problema
         }
 
-        // Function to check the user's answer
-        function checkAnswer() {
-            // If max level reached, do nothing
-            if (correctAnswer === null) return;
 
-            const userAnswer = parseFloat(document.getElementById('user-answer').value); // Use parseFloat for decimals
+        function generateExplanation(details, userAnswer) {
+            let explanationText = `Tu respuesta fue ${userAnswer}. La respuesta correcta es <strong>${details.result}</strong>.<br>`;
+            switch (details.type) {
+                case 'simple':
+                    explanationText += `Para resolver <code>${details.num1} ${details.op} ${details.num2}</code>, simplemente realizas la operación: ${details.num1} ${details.op} ${details.num2} = ${details.result}.`;
+                    break;
+                case 'twoStepParenLeft':
+                    explanationText += `En <code>(${details.numA} ${details.op1} ${details.numB}) ${details.op2} ${details.numC}</code>:<br>`;
+                    explanationText += `1. Primero resolvemos el paréntesis: <code>${details.numA} ${details.op1} ${details.numB} = ${details.intermediate}</code>.<br>`;
+                    explanationText += `2. Luego, usamos ese resultado: <code>${details.intermediate} ${details.op2} ${details.numC} = ${details.finalResult}</code>.`;
+                    break;
+                case 'twoStepParenRight':
+                    explanationText += `En <code>${details.numA} ${details.op1} (${details.numB} ${details.op2} ${details.numC})</code>:<br>`;
+                    explanationText += `1. Primero resolvemos el paréntesis: <code>${details.numB} ${details.op2} ${details.numC} = ${details.intermediate}</code>.<br>`;
+                    explanationText += `2. Luego, usamos ese resultado: <code>${details.numA} ${details.op1} ${details.intermediate} = ${details.finalResult}</code>.`;
+                    break;
+                case 'exponent':
+                    explanationText += `Para <code>${details.base ? details.base + '^' + details.exp : details.term1} ${details.op} ${details.base ? details.term2 : details.base + '^' + details.exp}</code>:<br>`;
+                    if (details.base) { // Si el primer término es la potencia
+                        explanationText += `1. Calculamos la potencia: <code>${details.base}^${details.exp} = ${details.term1}</code>.<br>`;
+                        explanationText += `2. Luego operamos: <code>${details.term1} ${details.op} ${details.term2} = ${details.result}</code>.`;
+                    } else { // Si el segundo término es la potencia
+                         explanationText += `1. Calculamos la potencia: <code>${details.exp_base}^${details.exp_val} = ${details.term2}</code> (asumiendo que guardaste base y exp para el segundo).<br>`; // Necesitarías guardar base y exp del segundo término
+                         explanationText += `2. Luego operamos: <code>${details.term1} ${details.op} ${details.term2} = ${details.result}</code>.`;
+                         // Simplificación si solo un exponente:
+                         let baseVal = details.base || (currentProblemDetails.num1 === details.term1 ? currentProblemDetails.num2_base : currentProblemDetails.num1_base); // Esto es un hack, mejorar almacenamiento de detalles
+                         let expVal = details.exp || (currentProblemDetails.num1 === details.term1 ? currentProblemDetails.num2_exp : currentProblemDetails.num1_exp);
+                         let powerTerm = Math.pow(baseVal, expVal);
+                         explanationText = `Calculamos la potencia <code>${baseVal}^${expVal} = ${powerTerm}</code>. Luego <code>${details.term1} ${details.op} ${details.term2}</code> (donde una de las partes es ${powerTerm}) da ${details.result}.`;
+                    }
+                    break;
+                case 'threeStep': // Ejemplo: A op B op C (sin paréntesis explícitos, se usa orden de operaciones)
+                    let step1Res = evaluateExpression(`${details.n1} ${details.o1} ${details.n2}`);
+                    if ((details.o1 === '+' || details.o1 === '-') && (details.o2 === '*' || details.o2 === '/')) { // B op C primero
+                        step1Res = evaluateExpression(`${details.n2} ${details.o2} ${details.n3}`);
+                        explanationText += `Por orden de operaciones, primero <code>${details.n2} ${details.o2} ${details.n3} = ${step1Res}</code>.<br>`;
+                        explanationText += `Luego <code>${details.n1} ${details.o1} ${step1Res} = ${details.result}</code>.`;
+                    } else { // A op B primero
+                        explanationText += `Por orden de operaciones, primero <code>${details.n1} ${details.o1} ${details.n2} = ${step1Res}</code>.<br>`;
+                        explanationText += `Luego <code>${step1Res} ${details.o2} ${details.n3} = ${details.result}</code>.`;
+                    }
+                    break;
+                default: // complexTwoStep, complexNested
+                    explanationText += `Este es un problema más complejo. La secuencia de operaciones es: <code>${document.getElementById('math-problem').textContent.replace(' = ?','')}</code>, lo que da como resultado ${details.result}. Intenta seguir el orden de operaciones (paréntesis, exponentes, multiplicación/división, suma/resta).`;
+            }
+            return explanationText;
+        }
+
+        function handleIncorrectAnswer(isTimeout = false) {
+            clearTimeout(timerId);
+            playerLives--;
+            updateLivesDisplay();
+            correctStreak = 0;
+            updateProgressBar();
+
             const resultElement = document.getElementById('game-result');
+            const explanationDiv = document.getElementById('answer-explanation');
+            const userAnswerInput = document.getElementById('user-answer');
+            const userAnswerValue = isTimeout ? "N/A (tiempo agotado)" : userAnswerInput.value;
 
-            // Check if the input is a valid number
-            if (isNaN(userAnswer)) {
-                resultElement.textContent = 'Por favor, ingresa un número válido.';
+
+            if (playerLives > 0) {
+                if(lifeLostSound) lifeLostSound.triggerAttackRelease("A3", "16n", Tone.now() + 0.1);
+                resultElement.textContent = isTimeout ? `¡Tiempo Agotado! 😟 Vidas: ${playerLives}` : `Incorrecto. 😟 Vidas: ${playerLives}`;
                 resultElement.className = 'result incorrect';
-                correctStreak = 0; // Reset streak on incorrect/invalid answer
-                 document.getElementById('correct-streak').textContent = correctStreak; // Update display immediately
-                return; // Exit the function
+                explanationDiv.innerHTML = generateExplanation(currentProblemDetails, userAnswerValue);
+                explanationDiv.style.display = 'block';
+                setTimeout(generateProblem, 4500); // Más tiempo para leer explicación
+            } else {
+                if(levelDownSound) levelDownSound.triggerAttackRelease("8n", Tone.now() + 0.1);
+                resultElement.textContent = `¡Oh no! Te quedaste sin vidas. Regresas al nivel anterior.`;
+                resultElement.className = 'result level-down';
+                explanationDiv.innerHTML = generateExplanation(currentProblemDetails, userAnswerValue);
+                explanationDiv.style.display = 'block';
+                
+                if (currentLevel > 1) {
+                    currentLevel--;
+                }
+                playerLives = 3; // Reset vidas para el nivel (anterior o actual si era N1)
+                updateLivesDisplay();
+                setTimeout(() => {
+                    resultElement.textContent = `Volviendo al Nivel ${currentLevel}...`;
+                    resultElement.className = 'result'; // Neutral
+                    explanationDiv.style.display = 'none';
+                    generateProblem();
+                }, 4000);
+            }
+            // Trigger reflow for animation
+            void resultElement.offsetWidth;
+            resultElement.style.animation = 'shake 0.5s';
+            userAnswerInput.value = '';
+        }
+
+
+        function checkAnswer() {
+            if (correctAnswer === null && currentLevel > maxLevel) return; 
+
+            clearTimeout(timerId); // Detener temporizador al verificar
+            const userAnswerInput = document.getElementById('user-answer');
+            const userAnswer = parseFloat(userAnswerInput.value);
+            const resultElement = document.getElementById('game-result');
+            const explanationDiv = document.getElementById('answer-explanation');
+            
+            resultElement.style.animation = 'none'; 
+            explanationDiv.style.display = 'none'; // Ocultar explicación anterior
+
+            if (isNaN(userAnswer)) {
+                resultElement.textContent = '🤔 Por favor, ingresa un número válido.';
+                resultElement.className = 'result incorrect';
+                if(incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now() + 0.1);
+                // No perder vida por input inválido, pero reiniciar timer
+                startTimer(); 
+                userAnswerInput.focus();
+                void resultElement.offsetWidth; resultElement.style.animation = 'shake 0.5s';
+                return;
             }
 
-            // Compare user's answer with the correct answer (allow for small floating point differences)
-            const tolerance = 0.001; // Tolerance for floating point comparisons
+            const tolerance = 0.0001; // Tolerancia muy pequeña ya que son enteros
             if (Math.abs(userAnswer - correctAnswer) < tolerance) {
-                resultElement.textContent = '¡Correcto!';
+                resultElement.textContent = '¡Correcto! 🎉';
                 resultElement.className = 'result correct';
-                correctStreak++; // Increase streak
+                if(correctSound) correctSound.triggerAttackRelease("C5", "8n", Tone.now() + 0.1);
+                correctStreak++;
 
-                // Check if level should increase
                 if (correctStreak >= correctPerLevel && currentLevel < maxLevel) {
-                    // Level Up!
-                    correctStreak = 0; // Reset streak
-                    currentLevel++; // Increase level
-
-                    // Get and display congratulatory message
+                    correctStreak = 0; 
+                    currentLevel++;
+                    playerLives = 3; // Reset vidas al subir de nivel
+                    updateLivesDisplay();
                     const congratsMessage = getCongratulationMessage(currentLevel, playerName);
                     resultElement.textContent = congratsMessage;
-                    resultElement.className = 'result level-up'; // Apply level-up style
-
-                    // Generate a new problem after a short delay (longer for level up message)
-                    setTimeout(generateProblem, 2500); // Wait 2.5 seconds for level up message
-
+                    resultElement.className = 'result level-up';
+                    void resultElement.offsetWidth; resultElement.style.animation = 'pulse 1s 1';
+                    if(levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "2n", Tone.now() + 0.2, 0.8);
+                    setTimeout(generateProblem, 2800);
                 } else if (correctStreak >= correctPerLevel && currentLevel === maxLevel) {
-                     // Player completed the last level streak
-                     // The next problem generation will handle the max level message after the current 'Correcto!' message
-                     resultElement.textContent = '¡Correcto!'; // Show correct for the last problem
-                     resultElement.className = 'result correct';
-                     correctStreak++; // Increment streak display one last time to show X/5
-                     document.getElementById('correct-streak').textContent = correctStreak; // Update streak display immediately
-                     setTimeout(generateProblem, 1500); // Short delay before final message
-
+                    resultElement.textContent = '¡Correcto! 🔥 Última racha completada...';
+                    resultElement.className = 'result correct';
+                    correctStreak++; 
+                    updateProgressBar(); 
+                    setTimeout(generateProblem, 2000); // Esto activará el mensaje de fin de juego
                 } else {
-                    // Correct answer, but not enough for level up yet
-                    setTimeout(generateProblem, 1500); // Wait 1.5 seconds before new problem
+                    setTimeout(generateProblem, 1800);
                 }
-
-
             } else {
-                resultElement.textContent = `Incorrecto. La respuesta correcta era ${correctAnswer}.`; // Show correct answer
-                resultElement.className = 'result incorrect';
-                correctStreak = 0; // Reset streak on incorrect answer
-                 // Update streak display immediately on incorrect answer
-                 document.getElementById('correct-streak').textContent = correctStreak;
+                handleIncorrectAnswer(false); // false indica que no fue por tiempo agotado
             }
-
-             // Update level info display after checking answer (except when leveling up, it updates after timeout)
-             // Also update if it was the last correct answer on the final level before the end message
-             if (!((correctStreak === 1 && currentLevel < maxLevel && Math.abs(userAnswer - correctAnswer) < tolerance)) ) { // Avoid updating immediately on a level up trigger
-                 document.getElementById('current-level').textContent = currentLevel;
-                 document.getElementById('correct-streak').textContent = correctStreak;
-             }
+            
+            updateProgressBar();
+            document.getElementById('current-level').textContent = currentLevel;
+            document.getElementById('correct-streak').textContent = correctStreak;
+            userAnswerInput.value = ''; 
+            userAnswerInput.focus(); 
         }
+        
+        document.getElementById('user-answer').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { event.preventDefault(); checkAnswer(); }
+        });
+        document.getElementById('player-name-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { event.preventDefault(); startGame(); }
+        });
 
-        // Initial state: Show welcome screen
         document.getElementById('welcome-screen').style.display = 'flex';
         document.getElementById('game-screen').style.display = 'none';
-
-
+        document.getElementById('correct-per-level-display').textContent = correctPerLevel;
     </script>
-
 </body>
 </html>
+
