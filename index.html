@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Matemáticas ¡Desafiante!</title>
+    <title>Desafíos Mentales - Edición Estratégica</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
-        /* Estilos personalizados para el juego (sin cambios respecto a la v1, solo se añaden para timer, vidas y explicación) */
+        /* Estilos Generales */
         body {
             font-family: 'Fredoka One', cursive, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             line-height: 1.6;
@@ -28,95 +29,435 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 10px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 700px; /* Aumentado para más info */
+            max-width: 700px;
             width: 100%;
             box-sizing: border-box;
             transition: transform 0.3s ease-out;
+            min-height: 650px; /* Aumentado para nuevos elementos */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Para elementos flotantes como notificaciones */
         }
         .container:hover {
             transform: translateY(-5px);
         }
 
+        /* Estilos Comunes de Botones */
+        button {
+             color: white;
+             padding: 12px 25px;
+             border: none;
+             border-radius: 8px;
+             cursor: pointer;
+             font-size: 1.1em; /* Ajustado ligeramente */
+             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+             text-transform: uppercase;
+             letter-spacing: 0.5px;
+             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+             margin: 8px; /* Margen para separar botones */
+             font-family: 'Fredoka One', cursive; /* Usar la fuente principal */
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Pantalla de Bienvenida */
         .welcome-screen { display: flex; flex-direction: column; align-items: center; }
         .welcome-screen h1 { color: #5A67D8; margin-bottom: 25px; font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .welcome-screen p { font-size: 1.1em; margin-bottom: 15px; color: #4A5568; }
         .welcome-screen input[type="text"] { padding: 12px 15px; margin-bottom: 20px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.2em; width: 90%; max-width: 300px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
         .welcome-screen input[type="text"]:focus { border-color: #5A67D8; box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.3); outline: none; }
-        .welcome-screen button, .game-screen button { color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.3em; transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .welcome-screen button { background-color: #48BB78; }
-        .welcome-screen button:hover { background-color: #38A169; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
+        .welcome-screen button:hover { background-color: #38A169; }
         .name-error-message { color: #E53E3E; font-size: 0.9em; margin-top: -10px; margin-bottom: 10px; display: none; }
 
-        .game-screen { display: none; flex-direction: column; align-items: center; }
-        
-        .game-stats {
+        /* Pantalla de Selección de Juego */
+        .selection-screen { display: none; flex-direction: column; align-items: center; }
+        .selection-screen h2 { color: #2D3748; margin-bottom: 30px; font-size: 2em; }
+        .selection-screen .game-selection-buttons button { background-color: #4299E1; }
+        .selection-screen .game-selection-buttons button:hover { background-color: #3182CE; }
+        .selection-screen .game-selection-buttons button:nth-of-type(2) { background-color: #ED8936; }
+        .selection-screen .game-selection-buttons button:nth-of-type(2):hover { background-color: #DD6B20; }
+        .selection-screen .player-stats-summary { margin-top: 20px; font-size: 1em; color: #4A5568; text-align: left; width: 100%; max-width: 400px; }
+        .selection-screen .player-stats-summary strong { color: #2D3748; }
+
+
+        /* Contenedor del Juego de Matemáticas */
+        #math-game-container { display: none; flex-direction: column; align-items: center; width: 100%; }
+        /* Estilos específicos del juego de matemáticas */
+        #math-game-container .game-stats {
+            display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;
+            font-size: 1em; color: #718096; padding: 0 10px;
+        }
+        #math-game-container .player-name-display { font-weight: 600; color: #5A67D8; font-size:1.1em; }
+        #math-game-container .lives-display, #math-game-container .timer-display { font-weight: 600; font-size:1.1em; color: #4A5568;}
+        #math-game-container .lives-display span, #math-game-container .timer-display span { color: #DD6B20; }
+
+        #math-game-container .level-info { font-size: 1.1em; color: #4A5568; margin-bottom: 5px; font-weight: 600; }
+        #math-game-container .progress-bar-container { width: 80%; max-width: 400px; height: 22px; background-color: #E2E8F0; border-radius: 11px; margin-bottom: 15px; overflow: hidden; border: 1px solid #CBD5E0; }
+        #math-game-container .progress-bar { height: 100%; width: 0%; background-color: #68D391; border-radius: 10px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85em; }
+
+        #math-game-container .problem { font-size: 2.2em; /* Ajustado */ margin-bottom: 20px; color: #2D3748; min-height: 1.5em; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; padding: 10px 15px; background-color: #edf2f7; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+        #math-game-container .problem span { margin: 0 8px; }
+
+        #math-game-container .input-area { margin-bottom: 20px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+        #math-game-container input[type="number"] { padding: 12px 15px; margin: 5px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.4em; width: 130px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        #math-game-container input[type="number"]:focus { border-color: #63B3ED; box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3); outline: none; }
+        #math-game-container .input-area button { background-color: #4299E1; margin-left: 10px; }
+        #math-game-container .input-area button:hover { background-color: #3182CE; }
+
+        #math-game-container .result-area { margin-top: 15px; width: 100%; }
+        #math-game-container .result { font-size: 1.2em; /* Ajustado */ font-weight: 600; min-height: 1.5em; transition: transform 0.3s ease-out, color 0.3s ease; padding: 10px 15px; border-radius: 8px; margin-bottom:10px; }
+        #math-game-container .result.correct { color: #38A169; background-color: #C6F6D5; transform: scale(1.05); }
+        #math-game-container .result.incorrect { color: #E53E3E; background-color: #FED7D7; animation: shake 0.5s; }
+        #math-game-container .result.level-up { color: #DD6B20; background-color: #FEEBC8; transform: scale(1.1); animation: pulse 1s 1; }
+        #math-game-container .result.level-down { color: #E53E3E; background-color: #FED7D7; animation: shake 0.8s; }
+
+        #math-game-container .explanation {
+            font-size: 0.9em; /* Ajustado */ color: #4A5568; margin-top: 5px; padding: 10px; background-color: #f7fafc;
+            border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; line-height: 1.5;
+            max-height: 100px; /* Ajustado */ overflow-y: auto;
+        }
+        #math-game-container .explanation strong { color: #2D3748; }
+        #math-game-container .explanation code { background-color: #edf2f7; padding: 2px 5px; border-radius: 4px; font-family: monospace;}
+
+
+        /* Contenedor del Juego de Acertijos Visuales */
+        #mind-twist-game-container { display: none; flex-direction: column; align-items: center; width: 100%; }
+        /* Estilos específicos del juego de acertijos */
+        #mind-twist-game-container h2 { color: #ED8936; margin-bottom: 20px; font-size: 2em; }
+        #mind-twist-game-container #mind-twist-question {
+            font-size: 1.2em; color: #555; margin-bottom: 25px; min-height: 1.5em;
+        }
+        #mind-twist-game-container #mind-twist-puzzle-area {
+            display: flex; justify-content: center; align-items: center; height: 300px;
+            position: relative; margin-bottom: 20px; overflow: hidden; width: 100%;
+        }
+         #mind-twist-game-container #mind-twist-feedback {
+            font-weight: bold; margin-top: 15px; min-height: 1.5em;
+        }
+        #mind-twist-game-container #mind-twist-next-level-btn {
+            background-color: #4CAF50; color: white; border: none; padding: 12px 25px;
+            border-radius: 8px; cursor: pointer; font-size: 1.1em; margin-top: 20px;
+            transition: background-color 0.3s ease; display: none;
+        }
+        #mind-twist-game-container #mind-twist-next-level-btn:hover {
+            background-color: #45a049;
+        }
+         #mind-twist-game-container .back-to-selection-btn {
+             background-color: #A0AEC0; /* Gris */
+             margin-top: 20px;
+             font-size: 1em;
+             padding: 8px 15px;
+         }
+         #mind-twist-game-container .back-to-selection-btn:hover {
+             background-color: #718096;
+         }
+
+        /* Estilos específicos para los niveles del juego de acertijos */
+        /* Nivel 1: El objeto más grande */
+        #mind-twist-game-container .level1-object {
+            cursor: pointer; border: 2px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; user-select: none;
+        }
+        #mind-twist-game-container .level1-object:hover { transform: scale(1.05); }
+        #mind-twist-game-container #apple {
+            width: 80px; height: 80px; background-color: #e74c3c; border-radius: 50%; position: absolute; left: 15%; top: 50%; transform: translateY(-50%);
+        }
+        #mind-twist-game-container #car {
+            width: 150px; height: 70px; background-color: #3498db; border-radius: 10px; position: absolute; left: 40%; top: 50%; transform: translateY(-50%);
+        }
+        #mind-twist-game-container #sun {
+            width: 50px; height: 50px; background-color: #f1c40f; border-radius: 50%; position: absolute; right: 10%; top: 20%; transform: translateY(-50%);
+        }
+
+        /* Nivel 2: El obstáculo del coche */
+        #mind-twist-game-container #road {
+            width: 100%; height: 50px; background-color: #666; position: absolute; bottom: 0; left: 0;
+        }
+        #mind-twist-game-container #ice {
+            width: 150px; height: 30px; background-color: #aed6f1; border-radius: 5px; position: absolute; bottom: 50px; left: calc(50% - 75px); z-index: 1; box-shadow: 0 0 10px rgba(174, 214, 241, 0.7);
+        }
+        #mind-twist-game-container #car-level2 {
+            width: 120px; height: 60px; background-color: #2ecc71; border-radius: 10px; position: absolute; bottom: 50px; left: calc(50% - 60px - 75px); z-index: 2; transition: left 1s ease-out;
+        }
+        #mind-twist-game-container #cloud {
+            width: 100px; height: 60px; background-color: #ecf0f1; border-radius: 30px; position: absolute; top: 20px; left: calc(50% - 50px); cursor: grab; z-index: 3; transition: opacity 0.5s ease;
+        }
+        #mind-twist-game-container #sun-hidden {
+            width: 80px; height: 80px; background-color: #f39c12; border-radius: 50%; position: absolute; top: 10px; left: calc(50% - 40px); opacity: 0; z-index: 0; transition: opacity 0.5s ease;
+        }
+
+        /* Nivel 3: Encuentra la diferencia */
+        #mind-twist-game-container .image-pair-container {
+            display: flex; justify-content: space-around; width: 100%;
+        }
+        #mind-twist-game-container .image-box {
+            width: 45%; height: 200px; background-color: #ddd; display: flex; justify-content: center;
+            align-items: center; border: 2px solid #ccc; font-size: 1.5em; color: #666; user-select: none;
+            background-image: url('https://via.placeholder.com/200x200?text=Imagen+A'); /* Placeholder */
+            background-size: cover; background-position: center;
+        }
+        #mind-twist-game-container #difference-word {
+            cursor: pointer; color: blue; text-decoration: underline;
+        }
+        #mind-twist-game-container #difference-word:hover { color: darkblue; }
+
+
+        /* Loot Box */
+        .loot-box-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .loot-box-container.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .loot-box-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+         .loot-box-container.visible .loot-box-content {
+             transform: scale(1);
+         }
+        .loot-box-content h3 {
+            color: #DD6B20;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .loot-box-content .loot-box-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: bounce 0.8s infinite alternate;
+        }
+        .loot-box-content .loot-box-reward {
+            font-size: 1.2em;
+            color: #4A5568;
+            margin-bottom: 20px;
+        }
+         .loot-box-content button {
+             background-color: #4299E1;
+         }
+         .loot-box-content button:hover {
+             background-color: #3182CE;
+         }
+
+        /* Leaderboard */
+        .leaderboard-container {
+            margin-top: 30px;
+            width: 100%;
+            text-align: left;
+            max-width: 400px; /* Alinear con summary */
+        }
+        .leaderboard-container h3 {
+            color: #2D3748;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .leaderboard-item {
+            background-color: #edf2f7;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-            font-size: 1em; /* Ajustado para consistencia */
-            color: #718096;
-            padding: 0 10px;
-        }
-        .player-name-display { font-weight: 600; color: #5A67D8; font-size:1.1em; }
-        .lives-display, .timer-display { font-weight: 600; font-size:1.1em; color: #4A5568;}
-        .lives-display span, .timer-display span { color: #DD6B20; } /* Naranja para los números */
-
-
-        .level-info { font-size: 1.1em; color: #4A5568; margin-bottom: 5px; font-weight: 600; }
-        .progress-bar-container { width: 80%; max-width: 400px; height: 22px; background-color: #E2E8F0; border-radius: 11px; margin-bottom: 15px; overflow: hidden; border: 1px solid #CBD5E0; }
-        .progress-bar { height: 100%; width: 0%; background-color: #68D391; border-radius: 10px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85em; }
-        
-        .problem { font-size: 2.8em; margin-bottom: 20px; color: #2D3748; min-height: 1.5em; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; padding: 10px 15px; background-color: #edf2f7; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
-        .problem span { margin: 0 8px; }
-        
-        .input-area { margin-bottom: 20px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
-        input[type="number"] { padding: 12px 15px; margin: 5px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.4em; width: 130px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        input[type="number"]:focus { border-color: #63B3ED; box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3); outline: none; }
-        .game-screen button { background-color: #4299E1; margin-left: 10px; }
-        .game-screen button:hover { background-color: #3182CE; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.15); }
-        
-        .result-area {
-            margin-top: 15px;
-            width: 100%;
-        }
-        .result { font-size: 1.5em; font-weight: 600; min-height: 1.5em; transition: transform 0.3s ease-out, color 0.3s ease; padding: 10px 15px; border-radius: 8px; margin-bottom:10px; }
-        .result.correct { color: #38A169; background-color: #C6F6D5; transform: scale(1.05); }
-        .result.incorrect { color: #E53E3E; background-color: #FED7D7; animation: shake 0.5s; }
-        .result.level-up { color: #DD6B20; background-color: #FEEBC8; transform: scale(1.1); animation: pulse 1s 1; }
-        .result.level-down { color: #E53E3E; background-color: #FED7D7; animation: shake 0.8s; }
-
-
-        .explanation {
             font-size: 1em;
-            color: #4A5568;
-            margin-top: 5px;
-            padding: 10px;
-            background-color: #f7fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            text-align: left;
-            line-height: 1.5;
-            max-height: 150px; /* Max height for explanation */
-            overflow-y: auto; /* Scroll if too long */
         }
-        .explanation strong { color: #2D3748; }
-        .explanation code { background-color: #edf2f7; padding: 2px 5px; border-radius: 4px; font-family: monospace;}
+        .leaderboard-item strong {
+            color: #5A67D8;
+        }
+        .leaderboard-item span {
+            font-weight: 600;
+            color: #4A5568;
+        }
+        .leaderboard-item.you {
+            background-color: #fffacd; /* Light yellow for the current player */
+            border-color: #f0e68c;
+            font-weight: bold;
+        }
+
+        /* Medals */
+        .medals-container {
+            margin-top: 30px;
+            width: 100%;
+            text-align: center;
+             max-width: 400px; /* Alinear con summary */
+        }
+        .medals-container h3 {
+             color: #2D3748;
+             font-size: 1.5em;
+             margin-bottom: 15px;
+        }
+        .medals-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .medal-item {
+            font-size: 2.5em;
+            cursor: help; /* Indicate hover for info */
+            transition: transform 0.2s ease;
+        }
+        .medal-item:hover {
+            transform: scale(1.2);
+        }
+         .medal-item.locked {
+             filter: grayscale(100%);
+             opacity: 0.5;
+         }
 
 
+        /* Daily Bonus */
+        .daily-bonus-container {
+             margin-top: 20px;
+             padding: 15px;
+             background-color: #fefcbf; /* Light yellow */
+             border: 2px dashed #f6e05e; /* Darker yellow dashed border */
+             border-radius: 8px;
+             text-align: center;
+             color: #744210; /* Brownish text */
+             font-weight: 600;
+             display: none; /* Initially hidden */
+             max-width: 400px; /* Alinear con summary */
+             width: 100%;
+        }
+         .daily-bonus-container h4 {
+             font-size: 1.2em;
+             margin-bottom: 10px;
+             color: #b7791f; /* Darker brown */
+         }
+         .daily-bonus-container button {
+             background-color: #f6ad55; /* Orange */
+             font-size: 1em;
+             padding: 8px 15px;
+             margin-top: 10px;
+         }
+         .daily-bonus-container button:hover {
+             background-color: #ed8936; /* Darker orange */
+         }
+
+        /* Notifications (Simple Modal/Toast) */
+        .notification {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #48BB78; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transform: translateX(100%);
+        }
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+         .notification.event {
+             background-color: #9F7AEA; /* Purple for events */
+         }
+         .notification.streak {
+             background-color: #F687B3; /* Pink for streaks */
+         }
+         .notification.medal {
+             background-color: #ECC94B; /* Yellow for medals */
+         }
+
+
+        /* Animaciones */
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
         @keyframes pulse { 0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 10px 15px rgba(221, 107, 32, 0); } 100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
+         @keyframes bounce {
+             0%, 100% { transform: translateY(0); }
+             50% { transform: translateY(-10px); }
+         }
 
+        /* Media Queries para Responsividad */
         @media (max-width: 640px) {
-            .container { padding: 20px; max-width: 95%;}
+            .container { padding: 20px; max-width: 95%; min-height: 550px; }
             .welcome-screen h1 { font-size: 2em; }
-            .problem { font-size: 2em; }
-            input[type="number"] { font-size: 1.2em; width: 100px; }
-            .welcome-screen button, .game-screen button { font-size: 1.1em; padding: 10px 20px; }
-            .result { font-size: 1.2em; }
-            .game-stats { flex-direction: column; align-items: center; gap: 5px; }
-            .player-name-display, .lives-display, .timer-display { font-size: 1em;}
+            .selection-screen h2 { font-size: 1.8em; }
+            button { font-size: 1em; padding: 10px 15px; margin: 5px;}
+
+            /* Math Game Responsiveness */
+            #math-game-container .problem { font-size: 1.8em; }
+            #math-game-container input[type="number"] { font-size: 1.1em; width: 80px; padding: 8px 10px;}
+            #math-game-container .input-area button { margin-left: 5px; }
+            #math-game-container .result { font-size: 1.1em; }
+            #math-game-container .game-stats { flex-direction: column; align-items: center; gap: 5px; }
+            #math-game-container .player-name-display, #math-game-container .lives-display, #math-game-container .timer-display { font-size: 1em;}
+             #math-game-container .explanation { font-size: 0.8em; max-height: 80px;}
+
+            /* Mind Twist Game Responsiveness */
+            #mind-twist-game-container #mind-twist-puzzle-area { height: 200px; }
+            #mind-twist-game-container #apple { width: 50px; height: 50px; }
+            #mind-twist-game-container #car { width: 80px; height: 40px; }
+            #mind-twist-game-container #sun { width: 30px; height: 30px; }
+            #mind-twist-game-container #ice { width: 80px; bottom: 40px; left: calc(50% - 40px); }
+            #mind-twist-game-container #car-level2 { width: 60px; height: 30px; bottom: 40px; left: calc(50% - 30px - 40px); }
+            #mind-twist-game-container #cloud { width: 60px; height: 40px; top: 5px; left: calc(50% - 30px); }
+            #mind-twist-game-container #sun-hidden { width: 50px; height: 50px; top: 0px; left: calc(50% - 25px); }
+            #mind-twist-game-container .image-box { height: 120px; font-size: 1em; }
+             #mind-twist-game-container #mind-twist-question { font-size: 1em;}
+             #mind-twist-game-container #mind-twist-feedback { font-size: 0.9em;}
+
+            /* Loot Box Responsiveness */
+             .loot-box-content { padding: 20px; }
+             .loot-box-content h3 { font-size: 1.5em; }
+             .loot-box-content .loot-box-icon { font-size: 2em; }
+             .loot-box-content .loot-box-reward { font-size: 1em; }
+
+            /* Leaderboard Responsiveness */
+             .leaderboard-item { padding: 8px 10px; font-size: 0.9em; }
+
+            /* Medals Responsiveness */
+             .medals-list { gap: 10px; }
+             .medal-item { font-size: 2em; }
+
+            /* Daily Bonus Responsiveness */
+             .daily-bonus-container { padding: 10px; }
+             .daily-bonus-container h4 { font-size: 1.1em; }
+
+            /* Notification Responsiveness */
+             .notification {
+                 top: 10px;
+                 right: 10px;
+                 padding: 8px 15px;
+                 font-size: 0.9em;
+             }
         }
     </style>
 </head>
@@ -125,72 +466,175 @@
     <div class="container">
 
         <div class="welcome-screen" id="welcome-screen">
-            <h1>🚀 ¡Desafío Matemático Avanzado! 🧠</h1>
-            <p>Ingresa tu nombre para esta nueva aventura:</p>
+            <h1>🚀 ¡Desafíos Mentales! 🧠</h1>
+            <p>Ingresa tu nombre para comenzar esta aventura:</p>
             <input type="text" id="player-name-input" placeholder="Tu Nombre de Campeón">
             <p id="name-error-message" class="name-error-message">¡Tu nombre es esencial para la leyenda!</p>
-            <button onclick="startGame()">¡Comenzar Desafío!</button>
+            <button onclick="handleStartClick()">¡Comenzar Aventura!</button>
         </div>
 
-        <div class="game-screen" id="game-screen">
+        <div class="selection-screen" id="selection-screen">
+            <h2>¡Hola, <span id="display-player-name-selection"></span>!</h2>
+            <p>Elige tu desafío:</p>
+            <div class="game-selection-buttons">
+                 <button onclick="selectGame('math')">Juego de Matemáticas 🧮</button>
+                 <button onclick="selectGame('mindtwist')">Acertijos Visuales 🤔</button>
+            </div>
+
+            <div class="player-stats-summary">
+                 <p>Mejor Racha (Mates): <strong id="summary-math-best-streak">0</strong></p>
+                 <p>Acertijos Resueltos: <strong id="summary-mindtwist-solved">0</strong></p>
+                 <p>Total Correctas (Mates): <strong id="summary-math-total-correct">0</strong></p>
+                 <p>Total Juegos (Mates): <strong id="summary-math-total-games">0</strong></p>
+                 </div>
+
+             <div class="leaderboard-container">
+                 <h3>Tabla de Posiciones (Mejor Racha Mates)</h3>
+                 <ul class="leaderboard-list" id="leaderboard-list">
+                     </ul>
+             </div>
+
+             <div class="medals-container">
+                 <h3>Tus Medallas</h3>
+                 <div class="medals-list" id="medals-list">
+                     </div>
+             </div>
+
+             <div class="daily-bonus-container" id="daily-bonus-container">
+                 <h4>🎁 ¡Bonificación Diaria Disponible! 🎁</h4>
+                 <p id="daily-bonus-message"></p>
+                 <button onclick="collectDailyBonus()">¡Reclamar!</button>
+             </div>
+
+        </div>
+
+        <div id="math-game-container">
             <div class="game-stats">
-                <div class="player-name-display">Jugador: <span id="display-player-name"></span></div>
-                <div class="lives-display">❤️ Vidas: <span id="player-lives">3</span></div>
-                <div class="timer-display">⏱️ Tiempo: <span id="time-left">0</span>s</div>
+                <div class="player-name-display">Jugador: <span id="math-display-player-name"></span></div>
+                <div class="lives-display">❤️ Vidas: <span id="math-player-lives">3</span></div>
+                <div class="timer-display">⏱️ Tiempo: <span id="math-time-left">0</span>s</div>
             </div>
-            
-            <div class="level-info">Nivel: <span id="current-level">1</span></div>
+
+            <div class="level-info">Nivel: <span id="math-current-level">1</span></div>
             <div class="progress-bar-container">
-                <div class="progress-bar" id="progress-bar-fill">0%</div>
+                <div class="progress-bar" id="math-progress-bar-fill">0%</div>
             </div>
-            <div class="level-info">Racha: <span id="correct-streak">0</span>/<span id="correct-per-level-display">5</span></div>
+            <div class="level-info">Racha Actual: <span id="math-correct-streak">0</span>/<span id="math-correct-per-level-display">5</span></div>
+            <div class="level-info">Mejor Racha: <span id="math-best-streak">0</span></div>
+
 
             <div class="problem" id="math-problem"></div>
 
             <div class="input-area">
-                <input type="number" id="user-answer" placeholder="Tu Respuesta">
-                <button onclick="checkAnswer()">Verificar ✨</button>
+                <input type="number" id="math-user-answer" placeholder="Tu Respuesta">
+                <button onclick="checkMathAnswer()">Verificar ✨</button>
             </div>
-            
+
             <div class="result-area">
-                <div class="result" id="game-result"></div>
-                <div class="explanation" id="answer-explanation" style="display: none;"></div>
+                <div class="result" id="math-game-result"></div>
+                <div class="explanation" id="math-answer-explanation" style="display: none;"></div>
+            </div>
+             <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
+        </div>
+
+        <div id="mind-twist-game-container">
+             <h2>Acertijos Visuales 🤔</h2>
+             <p id="mind-twist-question"></p>
+             <div id="mind-twist-puzzle-area">
+                 </div>
+             <p id="mind-twist-feedback"></p>
+             <button id="mind-twist-next-level-btn">Siguiente Acertijo</button>
+             <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
+        </div>
+
+        <div class="loot-box-container" id="loot-box-modal">
+            <div class="loot-box-content">
+                <h3>¡Caja de Recompensas!</h3>
+                <div class="loot-box-icon">📦</div>
+                <p class="loot-box-reward" id="loot-box-reward-text">Abriendo...</p>
+                <button onclick="closeLootBox()">¡Genial!</button>
             </div>
         </div>
+
+        <div class="notification" id="notification-display"></div>
+
+
     </div>
 
     <script>
+        // --- Estado Global del Juego ---
         let playerName = '';
-        let currentLevel = 1;
-        let correctStreak = 0;
-        let correctAnswer;
-        // let requiresIntegerResult = true; // Ya no es necesaria, siempre serán enteros
-        const maxLevel = 20;
-        const correctPerLevel = 5;
+        let activeGame = null; // 'math' or 'mindtwist'
+        let playerStats = {
+            math: {
+                currentLevel: 1,
+                correctStreak: 0,
+                bestStreak: 0,
+                playerLives: 3,
+                totalCorrect: 0,
+                totalIncorrect: 0,
+                totalGamesPlayed: 0
+            },
+            mindtwist: {
+                currentLevel: 0,
+                solvedCount: 0,
+                totalAttempts: 0
+            },
+            inventory: [], // Para futuras recompensas de loot box
+            medals: [], // IDs de medallas obtenidas
+            lastPlayed: null, // Timestamp de la última vez que jugó
+            dailyBonusDay: 0
+        };
+        const mathCorrectPerLevel = 5;
+        const mathMaxLevel = 20;
 
-        let playerLives = 3;
-        let timerId = null;
-        let timeLeft = 0;
-        let baseTimePerQuestion = 5; // Segundos para el nivel 1
-        let timeBonusPerLevel = 2; // Segundos adicionales por nivel
 
-        let currentProblemDetails = {}; // Para guardar los componentes del problema para la explicación
+        // --- Variables de Control de Juego Activo ---
+        let mathCorrectAnswer;
+        let mathTimerId = null;
+        let mathTimeLeft = 0;
+        let mathBaseTimePerQuestion = 7;
+        let mathTimeBonusPerLevel = 1;
+        let mathCurrentProblemDetails = {};
+
+        // mindTwistCurrentLevel will use playerStats.mindtwist.currentLevel directly
+        const mindTwistLevels = [
+            { question: "¿Cuál es el objeto más grande?", setup: setupMindTwistLevel1, checkAnswer: checkMindTwistLevel1 },
+            { question: "Haz que el coche avance.", setup: setupMindTwistLevel2, checkAnswer: checkMindTwistLevel2 },
+            { question: "Encuentra la <span id='difference-word'>diferencia</span>.", setup: setupMindTwistLevel3, checkAnswer: checkMindTwistLevel3 },
+            // TODO: Add more visual puzzle levels here
+        ];
+        // Store references to event listeners for Mind Twist Level 2 to remove them later
+        let mindTwistLevel2Listeners = {};
 
 
-        // Tone.js synths
+        // --- Tone.js Synths (Shared) ---
         let synthsInitialized = false;
-        let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, timerTickSound, lifeLostSound;
+        let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, lifeLostSound, mindTwistCorrectSound, mindTwistIncorrectSound, lootBoxSound, dailyBonusSound, medalSound;
 
-        function initializeSynths() {
+        async function initializeSynths() {
             if (synthsInitialized) return;
-            correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
-            incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
-            levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
-            gameStartSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -8 }).toDestination();
-            levelDownSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.3 }, volume: -10 }).toDestination();
-            lifeLostSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -12 }).toDestination();
-            // timerTickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -20 }).toDestination(); // Sutil
-            synthsInitialized = true;
+            try {
+                await Tone.start();
+                console.log("AudioContext started!");
+                correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
+                incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
+                levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
+                gameStartSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -8 }).toDestination();
+                levelDownSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.3 }, volume: -10 }).toDestination();
+                lifeLostSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -12 }).toDestination();
+                mindTwistCorrectSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 }, volume: -15 }).toDestination();
+                mindTwistIncorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -18 }).toDestination();
+                lootBoxSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.05, decay: 0.4, sustain: 0.1, release: 0.5 }, volume: -7 }).toDestination();
+                dailyBonusSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -6 }).toDestination();
+                medalSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -8 }).toDestination();
+
+
+                synthsInitialized = true;
+            } catch (e) {
+                console.error("Error initializing AudioContext:", e);
+                synthsInitialized = false; // Continue without sound
+            }
         }
 
         const congratulations = [
@@ -210,31 +654,493 @@
             return message.replace("{level}", level).replace("{name}", name);
         }
 
-        async function startGame() {
-            if (Tone.context.state !== 'running') { await Tone.start(); console.log("AudioContext started!"); }
-            initializeSynths();
+        // --- Data Persistence (localStorage) ---
+        function saveGameData() {
+            localStorage.setItem('mentalChallengesGameData', JSON.stringify({ playerName, playerStats }));
+        }
 
-            const nameInput = document.getElementById('player-name-input');
-            const nameErrorMessage = document.getElementById('name-error-message');
-            playerName = nameInput.value.trim();
+        function loadGameData() {
+            const savedData = localStorage.getItem('mentalChallengesGameData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const nameInput = document.getElementById('player-name-input');
+                // Load data only if the player name matches the saved data
+                if (data.playerName === nameInput.value.trim()) {
+                     playerName = data.playerName;
+                     // Merge saved stats with current structure to include new properties
+                     playerStats = { ...playerStats, ...data.playerStats };
+                     // Ensure nested properties are also merged and have default values if missing
+                     playerStats.math = { ...playerStats.math, ...(data.playerStats ? data.playerStats.math : {}) };
+                     playerStats.math.totalGamesPlayed = playerStats.math.totalGamesPlayed || 0; // Default to 0
+                     playerStats.mindtwist = { ...playerStats.mindtwist, ...(data.playerStats ? data.playerStats.mindtwist : {}) };
+                     playerStats.mindtwist.solvedCount = playerStats.mindtwist.solvedCount || 0; // Default to 0
+                     playerStats.mindtwist.totalAttempts = playerStats.mindtwist.totalAttempts || 0; // Default to 0
+                     playerStats.inventory = data.playerStats.inventory || [];
+                     playerStats.medals = data.playerStats.medals || [];
+                     playerStats.lastPlayed = data.playerStats.lastPlayed || null;
+                     playerStats.dailyBonusDay = playerStats.dailyBonusDay || 0; // Default to 0
 
-            if (playerName === '') {
-                nameErrorMessage.style.display = 'block'; nameInput.focus();
-                if(incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
-                return;
+                     console.log("Game data loaded for", playerName, ":", playerStats);
+                } else {
+                    console.log("No saved data found for this player name.");
+                }
             }
-            nameErrorMessage.style.display = 'none';
-            if(gameStartSound) gameStartSound.triggerAttackRelease("C4", "4n", Tone.now());
+        }
 
-            document.getElementById('display-player-name').textContent = playerName;
-            document.getElementById('correct-per-level-display').textContent = correctPerLevel;
+        // --- Notifications (Simulated) ---
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notificationEl = document.getElementById('notification-display');
+            notificationEl.textContent = message;
+            notificationEl.className = `notification show ${type}`; // Add type class for styling
+            setTimeout(() => {
+                notificationEl.className = 'notification'; // Hide after duration
+            }, duration);
+             // Request permission if not granted (for actual push notifications, requires service worker)
+             if ('Notification' in window && Notification.permission !== 'granted') {
+                 Notification.requestPermission().then(permission => {
+                     if (permission === 'granted') {
+                         console.log("Notification permission granted.");
+                         // Here you would typically register a service worker for actual push notifications
+                     }
+                 });
+             }
+             // For actual push notifications, you'd use a service worker here
+        }
+
+        // --- Medals ---
+        const allMedals = [
+            { id: 'math_level_5', name: 'Novato Matemático', icon: '🥉', description: 'Completa el Nivel 5 en el Juego de Matemáticas' },
+            { id: 'math_level_10', name: 'Matemático Avanzado', icon: '🥈', description: 'Completa el Nivel 10 en el Juego de Matemáticas' },
+            { id: 'math_level_20', name: 'Maestro Matemático', icon: '🥇', description: 'Completa el Nivel 20 en el Juego de Matemáticas' },
+            { id: 'mindtwist_solved_1', name: 'Primer Acertijo', icon: '✨', description: 'Resuelve tu primer acertijo visual' }, // New medal
+            { id: 'mindtwist_solved_5', name: 'Pensador Lateral', icon: '🧠', description: 'Resuelve 5 acertijos visuales' },
+            { id: 'mindtwist_solved_10', name: 'Mente Retorcida', icon: '💡', description: 'Resuelve 10 acertijos visuales' },
+            { id: 'math_streak_5', name: 'Racha Imparable', icon: '🔥', description: 'Consigue una racha de 5 respuestas correctas en Matemáticas' },
+            { id: 'math_total_100_correct', name: 'Cien Respuestas Correctas', icon: '💯', description: 'Resuelve 100 problemas de matemáticas en total' },
+             // TODO: Add more medal definitions
+        ];
+
+        function checkMedalUnlocked(medalId) {
+            if (playerStats.medals.includes(medalId)) {
+                return true; // Already unlocked
+            }
+
+            const medal = allMedals.find(m => m.id === medalId);
+            if (!medal) return false;
+
+            let unlocked = false;
+            switch (medalId) {
+                case 'math_level_5': unlocked = playerStats.math.currentLevel >= 5; break;
+                case 'math_level_10': unlocked = playerStats.math.currentLevel >= 10; break;
+                case 'math_level_20': unlocked = playerStats.math.currentLevel >= 20; break;
+                case 'mindtwist_solved_1': unlocked = playerStats.mindtwist.solvedCount >= 1; break; // Check for 1 solved
+                case 'mindtwist_solved_5': unlocked = playerStats.mindtwist.solvedCount >= 5; break;
+                case 'mindtwist_solved_10': unlocked = playerStats.mindtwist.solvedCount >= 10; break;
+                case 'math_streak_5': unlocked = playerStats.math.bestStreak >= 5; break;
+                case 'math_total_100_correct': unlocked = playerStats.math.totalCorrect >= 100; break;
+                 // TODO: Add logic for new medals
+            }
+
+            if (unlocked) {
+                playerStats.medals.push(medalId);
+                showNotification(`🏅 ¡Medalla desbloqueada: ${medal.name}!`, 'medal'); // Use 'medal' type
+                 if(synthsInitialized && medalSound) medalSound.triggerAttackRelease(["C6", "E6", "G6"], "8n", Tone.now());
+                updateMedalsDisplay();
+                saveGameData();
+                return true;
+            }
+            return false;
+        }
+
+        function updateMedalsDisplay() {
+            const medalsListEl = document.getElementById('medals-list');
+            medalsListEl.innerHTML = ''; // Clear current display
+
+            allMedals.forEach(medal => {
+                const isUnlocked = playerStats.medals.includes(medal.id);
+                const medalSpan = document.createElement('span');
+                medalSpan.className = `medal-item ${isUnlocked ? '' : 'locked'}`;
+                medalSpan.textContent = medal.icon;
+                medalSpan.title = `${medal.name}: ${medal.description}`;
+                medalsListEl.appendChild(medalSpan);
+            });
+        }
+
+
+        // --- Loot Boxes ---
+        // Default function, can be temporarily overridden by events
+        let tryTriggerLootBox = () => {
+             // Example: 25% chance to get a loot box
+             if (Math.random() < 0.25) {
+                 openLootBox();
+             }
+        };
+
+
+        function openLootBox() {
+            const lootBoxModal = document.getElementById('loot-box-modal');
+            const rewardTextEl = document.getElementById('loot-box-reward-text');
+            const lootBoxIconEl = lootBoxModal.querySelector('.loot-box-icon');
+
+            lootBoxIconEl.textContent = '📦'; // Closed box icon
+            rewardTextEl.textContent = 'Abriendo...';
+            lootBoxModal.classList.add('visible');
+             if(synthsInitialized && lootBoxSound) lootBoxSound.triggerAttackRelease(["C4", "E4", "G4"], "8n", Tone.now());
+
+
+            setTimeout(() => {
+                // Logic to determine the reward (simplified)
+                const possibleRewards = [
+                    { text: "+1 Vida (Mates)", type: 'life_math', icon: '❤️' },
+                    { text: "Bonus de Tiempo (Mates)", type: 'time_bonus_math', icon: '⏱️' },
+                    { text: "Pista para Acertijos", type: 'hint_mindtwist', icon: '🔍' },
+                    { text: "Bonificación de Racha", type: 'streak_bonus', icon: '🔥' },
+                    { text: "Pequeño Bonus XP (Simulado)", type: 'xp_bonus', icon: '✨' },
+                    { text: "Nada (¡mala suerte!)", type: 'none', icon: '💩' }
+                ];
+                const randomReward = possibleRewards[getRandomInt(0, possibleRewards.length - 1)];
+
+                rewardTextEl.textContent = `¡Obtuviste: ${randomReward.text}!`;
+                lootBoxIconEl.textContent = randomReward.icon; // Reward icon
+                 if(synthsInitialized && lootBoxSound) lootBoxSound.triggerAttackRelease(["C5", "G5"], "8n", Tone.now() + 0.3);
+
+
+                // Apply the reward
+                applyReward(randomReward.type);
+
+            }, 1500); // Time for the opening animation
+        }
+
+        function applyReward(rewardType) {
+            switch (rewardType) {
+                case 'life_math':
+                    playerStats.math.playerLives++;
+                    updateMathLivesDisplay();
+                    showNotification("Ganaste +1 Vida en Matemáticas!", 'info');
+                    break;
+                case 'time_bonus_math':
+                    // Implement how a time bonus is used (could be automatic on the next problem)
+                    // For now, just notify
+                    showNotification("Ganaste un Bonus de Tiempo para el siguiente problema de Matemáticas!", 'info');
+                    // You could save a flag in playerStats and use it in startMathTimer
+                    break;
+                case 'hint_mindtwist':
+                    playerStats.inventory.push('hint_mindtwist'); // Add to inventory
+                    showNotification("Ganaste una Pista para Acertijos Visuales!", 'info');
+                    // You would need UI to use hints in the mind twist game
+                    break;
+                 case 'streak_bonus':
+                     playerStats.math.correctStreak = Math.min(playerStats.math.correctStreak + 2, mathCorrectPerLevel); // Add 2 to current streak, cap at max per level
+                     showNotification("¡Bonus de Racha aplicado!", 'info');
+                     // Ensure this is reflected in the UI if math game is active
+                     if (activeGame === 'math') {
+                         document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
+                         updateMathProgressBar();
+                     }
+                     break;
+                 case 'xp_bonus':
+                     // Simulate gaining XP or points
+                     showNotification("Ganaste un Pequeño Bonus de XP (Simulado)!", 'info');
+                     // You could add an XP counter to playerStats
+                     break;
+                case 'none':
+                    // Bad luck, no reward
+                    showNotification("La caja estaba vacía... ¡mejor suerte la próxima!", 'info'); // Notify even if no reward
+                    break;
+            }
+            saveGameData();
+        }
+
+        function closeLootBox() {
+            document.getElementById('loot-box-modal').classList.remove('visible');
+        }
+
+        // --- Leaderboard (Local) ---
+        function updateLeaderboardDisplay() {
+            const leaderboardListEl = document.getElementById('leaderboard-list');
+            leaderboardListEl.innerHTML = ''; // Clear current list
+
+            // Use best math streak as score for this simple example
+            let leaderboardData = JSON.parse(localStorage.getItem('mathLeaderboard') || '[]');
+
+            // Update or add current player's score
+            const existingEntryIndex = leaderboardData.findIndex(entry => entry.name === playerName);
+            if (existingEntryIndex > -1) {
+                // Update if the new best streak is higher
+                if (playerStats.math.bestStreak > leaderboardData[existingEntryIndex].score) {
+                     leaderboardData[existingEntryIndex].score = playerStats.math.bestStreak;
+                     leaderboardData[existingEntryIndex].lastUpdated = new Date().toISOString();
+                }
+            } else {
+                // Add new entry if it doesn't exist
+                leaderboardData.push({
+                    name: playerName,
+                    score: playerStats.math.bestStreak,
+                    lastUpdated: new Date().toISOString()
+                });
+            }
+
+            // Sort by score descending
+            leaderboardData.sort((a, b) => b.score - a.score);
+
+            // Limit to top N (e.g., 10)
+            leaderboardData = leaderboardData.slice(0, 10);
+
+            // Save the updated leaderboard (locally)
+            localStorage.setItem('mathLeaderboard', JSON.stringify(leaderboardData));
+
+            // Display in the UI
+            leaderboardData.forEach((entry, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = `leaderboard-item ${entry.name === playerName ? 'you' : ''}`;
+                listItem.innerHTML = `
+                    <span>${index + 1}. <strong>${entry.name}</strong></span>
+                    <span>Racha: ${entry.score}</span>
+                `;
+                leaderboardListEl.appendChild(listItem);
+            });
+        }
+
+        // --- Daily Bonus and Day Streak ---
+        function checkDailyBonus() {
+             const today = new Date();
+             today.setHours(0, 0, 0, 0); // Reset time to start of day
+
+             const lastPlayedDate = playerStats.lastPlayed ? new Date(playerStats.lastPlayed) : null;
+             let showBonus = false;
+             let bonusMessage = "";
+             let nextBonusDay = playerStats.dailyBonusDay + 1;
+
+             if (!lastPlayedDate) {
+                 // First time playing or old data without lastPlayed
+                 showBonus = true;
+                 bonusMessage = "¡Bienvenido! Reclama tu primera bonificación diaria.";
+                 nextBonusDay = 1;
+             } else {
+                 const yesterday = new Date(today);
+                 yesterday.setDate(yesterday.getDate() - 1);
+
+                 if (lastPlayedDate.getTime() < today.getTime()) { // Hasn't played today
+                     if (lastPlayedDate.getTime() === yesterday.getTime()) {
+                         // Played yesterday, streak continues
+                         showBonus = true;
+                         bonusMessage = `¡Racha de ${nextBonusDay} días! Reclama tu bonificación creciente.`;
+                     } else {
+                         // Streak broken
+                         showBonus = true;
+                         bonusMessage = "¡Bonificación diaria disponible! Racha reiniciada.";
+                         nextBonusDay = 1; // Reset streak
+                     }
+                 } else {
+                     // Already played today
+                     showBonus = false; // Don't show bonus if already claimed today
+                 }
+             }
+
+             const dailyBonusContainer = document.getElementById('daily-bonus-container');
+             const dailyBonusMessageEl = document.getElementById('daily-bonus-message');
+
+             if (showBonus) {
+                 dailyBonusMessageEl.textContent = bonusMessage;
+                 dailyBonusContainer.style.display = 'block';
+                 // Store the next expected bonus day (not yet claimed)
+                 dailyBonusContainer.dataset.nextBonusDay = nextBonusDay;
+             } else {
+                 dailyBonusContainer.style.display = 'none';
+             }
+        }
+
+        function collectDailyBonus() {
+             const dailyBonusContainer = document.getElementById('daily-bonus-container');
+             const nextBonusDay = parseInt(dailyBonusContainer.dataset.nextBonusDay || '1');
+
+             // Logic for increasing reward (simple example)
+             let rewardAmount = nextBonusDay * 10; // 10 points per streak day
+
+             let bonusType = 'points';
+             if (nextBonusDay >= 3) bonusType = 'lootbox'; // Loot box every 3 days
+             if (nextBonusDay >= 7) bonusType = 'life_math'; // Extra life every 7 days
+             if (nextBonusDay >= 15) bonusType = 'super_lootbox'; // Super loot box every 15 days (simulated as 2 loot boxes)
+
+
+             let rewardMessage = "";
+
+             switch (bonusType) {
+                 case 'points':
+                     // playerStats.points = (playerStats.points || 0) + rewardAmount; // You need to add points to playerStats
+                     rewardMessage = `Has reclamado tu bonificación diaria del Día ${nextBonusDay}. (+${rewardAmount} puntos simulados)`;
+                     showNotification(rewardMessage, 'info');
+                     break;
+                 case 'lootbox':
+                      rewardMessage = `¡Bonificación del Día ${nextBonusDay}! ¡Una Caja de Recompensas!`;
+                      showNotification(rewardMessage, 'info');
+                      openLootBox(); // Open one loot box
+                     break;
+                 case 'life_math':
+                     playerStats.math.playerLives++;
+                     updateMathLivesDisplay();
+                     rewardMessage = `¡Bonificación del Día ${nextBonusDay}! ¡+1 Vida en Matemáticas!`;
+                     showNotification(rewardMessage, 'info');
+                     break;
+                 case 'super_lootbox':
+                      rewardMessage = `¡Bonificación Épica del Día ${nextBonusDay}! ¡Dos Cajas de Recompensas!`;
+                      showNotification(rewardMessage, 'info');
+                      openLootBox(); // Open the first
+                      setTimeout(openLootBox, 1000); // Open the second with a small delay
+                     break;
+             }
+
+             if(synthsInitialized && dailyBonusSound) dailyBonusSound.triggerAttackRelease(["E5", "G5", "C6"], "8n", Tone.now());
+
+
+             // Update state
+             playerStats.dailyBonusDay = nextBonusDay;
+             playerStats.lastPlayed = new Date().toISOString(); // Record that they played today
+             saveGameData();
+
+             dailyBonusContainer.style.display = 'none'; // Hide after claiming
+             // Optional: show a "Already claimed today" message
+        }
+
+
+        // --- Temporary Events (Simulated) ---
+        function checkTemporaryEvents() {
+            // This could be more sophisticated, based on real dates or an internal "calendar"
+            const now = new Date();
+            const eventActive = now.getDate() % 5 === 0; // Example: event active every 5th day of the month
+
+            if (eventActive) {
+                const lastEventNotification = localStorage.getItem('lastEventNotification');
+                const today = new Date().toDateString();
+                if (lastEventNotification !== today) {
+                    showNotification("¡Evento Especial Activo! ¡Probabilidad de Loot Box aumentada!", 'event', 5000);
+                    localStorage.setItem('lastEventNotification', today);
+                }
+                // Temporarily override the loot box trigger function during the event
+                 tryTriggerLootBox = () => {
+                     if (Math.random() < 0.4) { // Increased probability to 40%
+                         openLootBox();
+                     }
+                 };
+            } else {
+                 // Restore the normal loot box probability if no event is active
+                 tryTriggerLootBox = () => {
+                     if (Math.random() < 0.25) { // Normal probability 25%
+                         openLootBox();
+                     }
+                 };
+            }
+        }
+
+
+        // --- Screen Control Functions ---
+        function showScreen(screenId) {
             document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'flex';
-            
-            currentLevel = 1; playerLives = 3; correctStreak = 0;
-            updateLivesDisplay(); updateProgressBar();
-            document.getElementById('answer-explanation').style.display = 'none';
-            generateProblem();
+            document.getElementById('selection-screen').style.display = 'none';
+            document.getElementById('math-game-container').style.display = 'none';
+            document.getElementById('mind-twist-game-container').style.display = 'none';
+
+            // Stop timers and clean up states when changing screens
+            if (activeGame === 'math') {
+                clearTimeout(mathTimerId);
+            } else if (activeGame === 'mindtwist') {
+                // Clean up Mind Twist specific listeners, especially drag events
+                removeMindTwistLevel2Listeners();
+            }
+            activeGame = null; // Reset active game
+
+            if (screenId === 'welcome') {
+                 document.getElementById('welcome-screen').style.display = 'flex';
+            } else if (screenId === 'selection') {
+                 document.getElementById('selection-screen').style.display = 'flex';
+                 document.getElementById('display-player-name-selection').textContent = playerName;
+                 updatePlayerStatsSummary();
+                 updateLeaderboardDisplay(); // Update leaderboard when returning to selection
+                 updateMedalsDisplay(); // Update medals when returning to selection
+                 checkDailyBonus(); // Check for daily bonus
+                 checkTemporaryEvents(); // Check for temporary events
+            } else if (screenId === 'math') {
+                 document.getElementById('math-game-container').style.display = 'flex';
+                 activeGame = 'math';
+                 startMathGame(); // Start or resume
+            } else if (screenId === 'mindtwist') {
+                 document.getElementById('mind-twist-game-container').style.display = 'flex';
+                 activeGame = 'mindtwist';
+                 startMindTwistGame(); // Start or resume
+            }
+             saveGameData(); // Save data when changing screens
+        }
+
+        async function handleStartClick() {
+             await initializeSynths(); // Initialize synths on first user click
+             const nameInput = document.getElementById('player-name-input');
+             const nameErrorMessage = document.getElementById('name-error-message');
+             const enteredName = nameInput.value.trim();
+
+             if (enteredName === '') {
+                 nameErrorMessage.style.display = 'block'; nameInput.focus();
+                 if(synthsInitialized && incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
+                 return;
+             }
+             nameErrorMessage.style.display = 'none';
+
+             // Attempt to load data for the entered name
+             playerName = enteredName; // Set playerName before loading
+             loadGameData();
+
+             // If loadGameData didn't find data for this name, playerStats will be in its initial state.
+             // If it found data, playerStats will already be loaded.
+             // Ensure playerStats.playerName is set correctly
+             playerStats.playerName = playerName;
+
+
+             if(synthsInitialized && gameStartSound) gameStartSound.triggerAttackRelease("C4", "4n", Tone.now());
+
+             showScreen('selection');
+        }
+
+        function selectGame(gameType) {
+             if (gameType === 'math') {
+                 showScreen('math');
+             } else if (gameType === 'mindtwist') {
+                 showScreen('mindtwist');
+             }
+        }
+
+        function updatePlayerStatsSummary() {
+             document.getElementById('summary-math-best-streak').textContent = playerStats.math.bestStreak;
+             document.getElementById('summary-mindtwist-solved').textContent = playerStats.mindtwist.solvedCount;
+             document.getElementById('summary-math-total-correct').textContent = playerStats.math.totalCorrect;
+             document.getElementById('summary-math-total-games').textContent = playerStats.math.totalGamesPlayed;
+             // Update other stats if added
+        }
+
+
+        // --- Math Game Logic ---
+        function startMathGame() {
+             document.getElementById('math-display-player-name').textContent = playerName;
+             document.getElementById('math-correct-per-level-display').textContent = mathCorrectPerLevel;
+
+             // Load player stats for the math game
+             // They are already loaded into playerStats when entering the selection screen
+             // Just update the UI elements from playerStats
+
+             document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
+             document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
+             document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak;
+             updateMathLivesDisplay();
+             updateMathProgressBar();
+             document.getElementById('math-answer-explanation').style.display = 'none';
+
+             // Increment games played counter if it's the start of a new math session
+             // A new session starts if streak is 0 and lives are full (assuming they don't start a new game with less than max lives)
+             if (playerStats.math.correctStreak === 0 && playerStats.math.playerLives === 3) {
+                 playerStats.math.totalGamesPlayed++;
+                 saveGameData(); // Save the increment
+             }
+
+
+             generateMathProblem(); // Generate the first problem or continue
         }
 
         function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -247,143 +1153,158 @@
                 console.error("Error evaluating expression:", expression, error); return NaN;
             }
         }
-        
-        function updateProgressBar() {
-            const progressBarFill = document.getElementById('progress-bar-fill');
-            const progressPercentage = (correctStreak / correctPerLevel) * 100;
+
+        function updateMathProgressBar() {
+            const progressBarFill = document.getElementById('math-progress-bar-fill');
+            const progressPercentage = (playerStats.math.correctStreak / mathCorrectPerLevel) * 100;
             progressBarFill.style.width = `${progressPercentage}%`;
             progressBarFill.textContent = `${Math.round(progressPercentage)}%`;
         }
 
-        function updateLivesDisplay() {
-            document.getElementById('player-lives').textContent = playerLives;
+        function updateMathLivesDisplay() {
+            document.getElementById('math-player-lives').textContent = playerStats.math.playerLives;
         }
 
-        function startTimer() {
-            clearTimeout(timerId); // Limpiar temporizador anterior
-            timeLeft = baseTimePerQuestion + (currentLevel - 1) * timeBonusPerLevel;
-            document.getElementById('time-left').textContent = timeLeft;
+        function startMathTimer() {
+            clearTimeout(mathTimerId); // Clear previous timer
+            mathTimeLeft = mathBaseTimePerQuestion + (playerStats.math.currentLevel - 1) * mathTimeBonusPerLevel;
+            document.getElementById('math-time-left').textContent = mathTimeLeft;
 
-            timerId = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time-left').textContent = timeLeft;
-                // if (timeLeft < 5 && timeLeft > 0 && timerTickSound) timerTickSound.triggerAttackRelease("C2", "16n", Tone.now());
+            mathTimerId = setInterval(() => {
+                mathTimeLeft--;
+                document.getElementById('math-time-left').textContent = mathTimeLeft;
 
-                if (timeLeft <= 0) {
-                    clearInterval(timerId);
-                    handleIncorrectAnswer(true); // true indica que fue por tiempo agotado
+                if (mathTimeLeft <= 0) {
+                    clearInterval(mathTimerId);
+                    handleMathIncorrectAnswer(true); // true indicates it was due to timeout
                 }
             }, 1000);
         }
-        
-        // --- GENERACIÓN DE PROBLEMAS (MODIFICADO PARA RESULTADOS ENTEROS) ---
-        function generateProblem() {
-            clearTimeout(timerId); // Detener cualquier temporizador activo
-            currentProblemDetails = {}; // Resetear detalles del problema
+
+        // --- MATH PROBLEM GENERATION (Your code + Adaptation) ---
+        function generateMathProblem() {
+            clearTimeout(mathTimerId); // Stop any active timer
+            mathCurrentProblemDetails = {}; // Reset problem details
             let displayString = "";
             let evalString = "";
             let regenerationCount = 0;
-            const MAX_REGEN = 20; // Límite de intentos para evitar bucles infinitos
+            const MAX_REGEN = 30; // Increased retry limit
+
+            // Simulate adaptive personalization: adjust difficulty or problem type
+            // based on current streak or best streak.
+            // If streak is high, maybe generate slightly more complex problems for the level.
+            // If streak is low or lives lost, maybe generate slightly simpler problems.
+            let effectiveLevel = playerStats.math.currentLevel;
+            // Simple adjustment: if current streak is high, simulate a higher level for generation
+            if (playerStats.math.correctStreak >= mathCorrectPerLevel / 2 && playerStats.math.currentLevel < mathMaxLevel) {
+                 effectiveLevel = Math.min(playerStats.math.currentLevel + 1, mathMaxLevel);
+            }
+            // Simple adjustment: if lives are low, simulate a lower level for generation (only if not on Level 1)
+            if (playerStats.math.playerLives <= 1 && playerStats.math.currentLevel > 1) {
+                 effectiveLevel = Math.max(playerStats.math.currentLevel - 1, 1);
+            }
+             // Note: This is a simple simulation. A real adaptive system would be more granular and based on history.
+
 
             do {
                 regenerationCount++;
                 if (regenerationCount > MAX_REGEN) {
-                    console.error("Máximos intentos de regeneración alcanzados. Simplificando problema.");
-                    // Fallback a un problema muy simple si la generación compleja falla repetidamente
+                    console.error("Max regeneration attempts reached. Simplifying problem.");
                     let n1 = getRandomInt(1, 5), n2 = getRandomInt(1, 5);
-                    currentProblemDetails = { type: 'simple', num1: n1, op: '+', num2: n2, result: n1 + n2 };
+                    mathCurrentProblemDetails = { type: 'simple', num1: n1, op: '+', num2: n2, result: n1 + n2 };
                     displayString = `${n1} + ${n2}`;
                     evalString = `${n1} + ${n2}`;
-                    break; 
+                    break;
                 }
 
-                if (currentLevel <= 3) { // Nivel 1-3: Suma o Resta
-                    let num1 = getRandomInt(1, 15 + currentLevel * 3);
-                    let num2 = getRandomInt(1, 15 + currentLevel * 2);
+                // Problem generation logic based on effectiveLevel
+                if (effectiveLevel <= 3) { // Level 1-3: Addition or Subtraction
+                    let num1 = getRandomInt(1, 15 + effectiveLevel * 3);
+                    let num2 = getRandomInt(1, 15 + effectiveLevel * 2);
                     let operator = Math.random() < 0.6 ? '+' : '-';
                     if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
                     displayString = `${num1} ${operator} ${num2}`;
                     evalString = displayString;
-                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (currentLevel <= 6) { // Nivel 4-6: Suma, Resta, Multiplicación
-                    let num1 = getRandomInt(1, 20 + currentLevel * 2);
-                    let num2 = getRandomInt(1, currentLevel <= 4 ? 10 : 15); // Números más pequeños para mult
+                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (effectiveLevel <= 6) { // Level 4-6: Addition, Subtraction, Multiplication
+                    let num1 = getRandomInt(1, 20 + effectiveLevel * 2);
+                    let num2 = getRandomInt(1, effectiveLevel <= 4 ? 10 : 15);
                     const operators = ['+', '-', '*'];
                     let operator = operators[getRandomInt(0, 2)];
                     if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
-                    if (operator === '*' && currentLevel <= 5) { num2 = getRandomInt(1, 9); } // Aún más pequeños
+                    if (operator === '*' && effectiveLevel <= 5) { num2 = getRandomInt(1, 9); }
                     displayString = `${num1} ${operator} ${num2}`;
                     evalString = displayString;
-                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (currentLevel <= 9) { // Nivel 7-9: División (resultados enteros)
+                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (effectiveLevel <= 9) { // Level 7-9: Division (integer results)
                     const operators = ['+', '-', '*', '/'];
                     let operator = operators[getRandomInt(0, 3)];
                     let num1, num2;
                     if (operator === '/') {
-                        num2 = getRandomInt(2, 10 + currentLevel);
-                        let quotient = getRandomInt(1, 10 + currentLevel);
+                        num2 = getRandomInt(2, 10 + effectiveLevel);
+                        let quotient = getRandomInt(1, 10 + effectiveLevel);
                         num1 = num2 * quotient;
                     } else {
-                        num1 = getRandomInt(1, 25 + currentLevel * 3);
-                        num2 = getRandomInt(1, (operator === '*') ? 12 : (20 + currentLevel));
+                        num1 = getRandomInt(1, 25 + effectiveLevel * 3);
+                        num2 = getRandomInt(1, (operator === '*') ? 12 : (20 + effectiveLevel));
                         if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
                     }
                     displayString = `${num1} ${operator} ${num2}`;
                     evalString = displayString;
-                    currentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (currentLevel <= 12) { // Nivel 10-12: Dos pasos con paréntesis
-                    let numA = getRandomInt(1, 15 + currentLevel);
-                    let numB = getRandomInt(1, 10 + currentLevel);
-                    let numC = getRandomInt(1, 10 + currentLevel);
-                    const ops = ['+', '-', '*']; // División se maneja con cuidado
+                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
+                } else if (effectiveLevel <= 12) { // Level 10-12: Two steps with parentheses
+                    let numA = getRandomInt(1, 15 + effectiveLevel);
+                    let numB = getRandomInt(1, 10 + effectiveLevel);
+                    let numC = getRandomInt(1, 10 + effectiveLevel);
+                    const ops = ['+', '-', '*'];
                     let op1 = ops[getRandomInt(0, 2)];
                     let op2 = ops[getRandomInt(0, 2)];
                     let intermediateResult;
 
                     if (Math.random() < 0.5) { // (A op1 B) op2 C
-                        if (op1 === '/' ) { // Asegurar A divisible por B
+                         if (op1 === '/' ) {
                              numB = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numA = numB * intermediateResult;
-                             op1 = '/'; // Forzar division
-                        } else {
-                            intermediateResult = evaluateExpression(`${numA} ${op1} ${numB}`);
-                        }
-                        
-                        if (op2 === '/') { // Asegurar intermediateResult divisible por C
-                            numC = getRandomInt(2, Math.abs(intermediateResult) > 1 ? Math.min(8, Math.abs(intermediateResult)) : 5);
-                            if (intermediateResult % numC !== 0) { // Si no es divisible, cambiar op2 o regenerar
-                                op2 = (Math.random() < 0.5 && intermediateResult !==0 && numC !==0) ? '*' : '+'; // Evitar division por cero
-                                if (intermediateResult === 0 || numC === 0) op2 = '+';
-                            } else {
-                                op2 = '/'; // Forzar division
-                            }
-                        }
-                        displayString = `(${numA} ${op1} ${numB}) ${op2} ${numC}`;
-                        evalString = displayString;
-                        currentProblemDetails = { type: 'twoStepParenLeft', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numA} ${op1} ${numB})`), finalResult: evaluateExpression(evalString) };
+                             op1 = '/';
+                         } else {
+                             intermediateResult = evaluateExpression(`${numA} ${op1} ${numB}`);
+                         }
+
+                         if (op2 === '/') {
+                             numC = getRandomInt(2, Math.abs(intermediateResult) > 1 ? Math.min(8, Math.abs(intermediateResult)) : 5);
+                             if (intermediateResult % numC !== 0) {
+                                 op2 = (Math.random() < 0.5 && intermediateResult !==0 && numC !==0) ? '*' : '+';
+                                 if (intermediateResult === 0 || numC === 0) op2 = '+';
+                             } else {
+                                 op2 = '/';
+                             }
+                         }
+                         displayString = `(${numA} ${op1} ${numB}) ${op2} ${numC}`;
+                         evalString = displayString;
+                         mathCurrentProblemDetails = { type: 'twoStepParenLeft', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numA} ${op1} ${numB})`), finalResult: evaluateExpression(evalString) };
 
                     } else { // A op1 (B op2 C)
-                        if (op2 === '/') { // Asegurar B divisible por C
-                            numC = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numB = numC * intermediateResult;
-                            op2 = '/';
-                        } else {
-                             intermediateResult = evaluateExpression(`${numB} ${op2} ${numC}`);
-                        }
+                         if (op2 === '/') {
+                             numC = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numB = numC * intermediateResult;
+                             op2 = '/';
+                         } else {
+                              intermediateResult = evaluateExpression(`${numB} ${op2} ${numC}`);
+                         }
 
-                        if (op1 === '/') { // Asegurar A divisible por intermediateResult
-                            if (intermediateResult === 0) { // Evitar division por cero
-                                op1 = ops[getRandomInt(1,2)]; // Cambiar a - o *
-                                if (op1 === '-' && numA < intermediateResult) {[numA, intermediateResult] = [intermediateResult, numA];}
-                            } else {
-                                numA = intermediateResult * getRandomInt(1, 5); // Hacer A múltiplo
-                                op1 = '/';
-                            }
-                        }
-                        displayString = `${numA} ${op1} (${numB} ${op2} ${numC})`;
-                        evalString = displayString;
-                        currentProblemDetails = { type: 'twoStepParenRight', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numB} ${op2} ${numC})`), finalResult: evaluateExpression(evalString) };
+                         if (op1 === '/') {
+                             if (intermediateResult === 0) {
+                                 op1 = ops[getRandomInt(1,2)];
+                                 if (op1 === '-' && numA < intermediateResult) {[numA, intermediateResult] = [intermediateResult, numA];}
+                             } else {
+                                 numA = intermediateResult * getRandomInt(1, 5);
+                                 op1 = '/';
+                             }
+                         }
+                         displayString = `${numA} ${op1} (${numB} ${op2} ${numC})`;
+                         evalString = displayString;
+                         mathCurrentProblemDetails = { type: 'twoStepParenRight', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numB} ${op2} ${numC})`), finalResult: evaluateExpression(evalString) };
                     }
-                } else if (currentLevel <= 15) { // Nivel 13-15: Exponentes simples y dos/tres pasos
-                    if (Math.random() < 0.4 && currentLevel >= 14) { // Problema con exponente
+                } else if (effectiveLevel <= 15) { // Level 13-15: Simple exponents and two/three steps
+                    if (Math.random() < 0.4 && effectiveLevel >= 14) { // Problem with exponent
                         let base = getRandomInt(2, 7);
                         let exp = getRandomInt(2, 3);
                         let term = getRandomInt(1, 50);
@@ -392,94 +1313,92 @@
                         if (op === '-' && powerResult < term) {
                             displayString = `${term} ${op} ${base}^${exp}`;
                             evalString = `${term} ${op} Math.pow(${base}, ${exp})`;
-                            currentProblemDetails = { type: 'exponent', term1: term, op, base, exp, term2: powerResult, result: evaluateExpression(evalString) };
+                            mathCurrentProblemDetails = { type: 'exponent', term1: term, op, base, exp, term2: powerResult, result: evaluateExpression(evalString) };
                         } else {
                             displayString = `${base}^${exp} ${op} ${term}`;
                             evalString = `Math.pow(${base}, ${exp}) ${op} ${term}`;
-                            currentProblemDetails = { type: 'exponent', base, exp, term1: powerResult, op, term2: term, result: evaluateExpression(evalString) };
+                            mathCurrentProblemDetails = { type: 'exponent', base, exp, term1: powerResult, op, term2: term, result: evaluateExpression(evalString) };
                         }
-                    } else { // Problema de tres pasos simples (A op B op C)
+                    } else { // Simple three-step problem (A op B op C)
                         let n1 = getRandomInt(5, 30), n2 = getRandomInt(2, 15), n3 = getRandomInt(2, 10);
                         let o1 = ['+','-','*'][getRandomInt(0,2)];
                         let o2 = ['+','-','*'][getRandomInt(0,2)];
-                        if (o1 === '/' || o2 === '/') { // Forzar enteros en divisiones intermedias
-                            // Simplificado: si hay division, se hace al final y se asegura divisibilidad
-                            let interm = evaluateExpression(`${n1} ${o1} ${n2}`);
-                            if (o2 === '/') {
-                                n3 = getRandomInt(2, Math.min(10, Math.abs(interm) || 1)); // Evitar divisor 0 o muy grande
-                                if (interm % n3 !== 0) interm = n3 * getRandomInt(1,5); // Ajustar para que sea divisible
-                                n1 = getRandomInt(1,10); n2 = getRandomInt(1,10); o1 = '+'; // Resetear primer parte para simplificar
-                                displayString = `(${n1} ${o1} ${n2}) * ${interm/n3} / ${interm/n3}`; // Truco para mantener entero
-                                evalString = `((${n1} ${o1} ${n2}) * ${interm/n3}) / ${interm/n3}`; // Esto es solo un ejemplo de cómo se complica
-                                // La lógica de arriba para dos pasos es más robusta para enteros. Tres pasos es más complejo.
-                                // Por ahora, para tres pasos, priorizamos +, -, *
-                                o2 = (Math.random() < 0.5) ? '+' : '*';
-                            }
+                        // Simplified logic for integer results in three steps
+                        if (o1 === '/' || o2 === '/') {
+                             // Avoid division in three-step problems for simplicity and guaranteed integers
+                             o1 = ['+','-','*'][getRandomInt(0,2)];
+                             o2 = ['+','-','*'][getRandomInt(0,2)];
                         }
-                        displayString = `${n1} ${o1} ${n2} ${o2} ${n3}`; // Sin paréntesis, orden de operaciones aplica
+                        displayString = `${n1} ${o1} ${n2} ${o2} ${n3}`;
                         evalString = displayString;
-                        currentProblemDetails = { type: 'threeStep', n1, o1, n2, o2, n3, result: evaluateExpression(evalString) };
+                        mathCurrentProblemDetails = { type: 'threeStep', n1, o1, n2, o2, n3, result: evaluateExpression(evalString) };
                     }
-                } else if (currentLevel <= 20) { // Nivel 16-20: Más complejo, pero aún entero
-                    // Similar a nivel 13-15 pero con números más grandes o más anidación simple
-                    // Se prioriza la generación de problemas que naturalmente den enteros.
-                    // Ejemplo: (A*B) + (C*D) o (A*B) - C
+                } else if (effectiveLevel <= 20) { // Level 16-20: More complex, but still integer
                     let n1 = getRandomInt(10,50), n2 = getRandomInt(2,10), n3 = getRandomInt(5,30), n4 = getRandomInt(2,8);
                     let ops = ['+','-','*'];
                     let o1 = ops[getRandomInt(0,2)], o2 = ops[getRandomInt(0,2)], o3 = ops[getRandomInt(0,2)];
+                     // Avoid division in complex problems for simplicity and guaranteed integers
+                     if (o1 === '/' || o2 === '/' || o3 === '/') {
+                         o1 = ops[getRandomInt(0,2)];
+                         o2 = ops[getRandomInt(0,2)];
+                         o3 = ops[getRandomInt(0,2)];
+                     }
 
-                    if (currentLevel <= 18) {
+                    if (effectiveLevel <= 18) {
                         displayString = `(${n1} ${o1} ${n2}) ${o2} ${n3}`;
                         evalString = displayString;
-                        currentProblemDetails = { type: 'complexTwoStep', n1,o1,n2,o2,n3, result: evaluateExpression(evalString) };
-                    } else { // Nivel 19-20
+                        mathCurrentProblemDetails = { type: 'complexTwoStep', n1,o1,n2,o2,n3, result: evaluateExpression(evalString) };
+                    } else { // Level 19-20
                          displayString = `(${n1} ${o1} ${n2}) ${o2} (${n3} ${o3} ${n4})`;
                          evalString = displayString;
-                         currentProblemDetails = { type: 'complexNested', n1,o1,n2,o2,n3,o3,n4, result: evaluateExpression(evalString) };
+                         mathCurrentProblemDetails = { type: 'complexNested', n1,o1,n2,o2,n3,o3,n4, result: evaluateExpression(evalString) };
                     }
-                } else { // Nivel Máximo
+                } else { // Max Level
                     displayString = `🏆 ¡Felicidades Supremas, ${playerName}! 🏆 Has conquistado TODOS los niveles. ¡Eres una leyenda matemática!`;
-                    evalString = null; correctAnswer = null;
-                    document.getElementById('user-answer').style.display = 'none';
-                    document.querySelector('.input-area button').style.display = 'none';
-                    document.getElementById('level-info').style.display = 'none';
-                    document.querySelector('.progress-bar-container').style.display = 'none';
-                    document.querySelector('.game-stats .timer-display').style.display = 'none';
-                    document.getElementById('game-result').className = 'result level-up';
-                    if(levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n", Tone.now());
-                    return; // Salir de la función
-                }
-                
-                // Verificar si el resultado es entero
-                if (evalString) {
-                    correctAnswer = evaluateExpression(evalString.replace(/\^/g, '**')); // Usar ** para eval
-                } else {
-                    correctAnswer = null; // Para el mensaje final
+                    evalString = null; mathCorrectAnswer = null;
+                    document.getElementById('math-user-answer').style.display = 'none';
+                    document.querySelector('#math-game-container .input-area button').style.display = 'none';
+                    document.querySelector('#math-game-container .level-info').style.display = 'none';
+                    document.querySelector('#math-game-container .progress-bar-container').style.display = 'none';
+                    document.querySelector('#math-game-container .game-stats .timer-display').style.display = 'none';
+                    document.getElementById('math-game-result').className = 'result level-up';
+                    if(synthsInitialized && levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n", Tone.now());
+                    saveGameData(); // Save final state
+                    return; // Exit function
                 }
 
-            } while (evalString && (!Number.isFinite(correctAnswer) || correctAnswer !== Math.floor(correctAnswer)) && regenerationCount <= MAX_REGEN);
+                // Check if the result is an integer
+                if (evalString) {
+                    mathCorrectAnswer = evaluateExpression(evalString.replace(/\^/g, '**')); // Use ** for eval
+                } else {
+                    mathCorrectAnswer = null; // For the final message
+                }
+
+            } while (evalString && (!Number.isFinite(mathCorrectAnswer) || mathCorrectAnswer !== Math.floor(mathCorrectAnswer)) && regenerationCount <= MAX_REGEN);
 
             if (evalString) {
                 document.getElementById('math-problem').innerHTML = displayString.replace(/\*\*/g, '^') + ' = <span class="text-blue-500">?</span>';
             } else {
-                 document.getElementById('math-problem').innerHTML = displayString; // Mensaje final
+                 document.getElementById('math-problem').innerHTML = displayString; // Final message
             }
 
-            document.getElementById('user-answer').value = '';
-            const resultEl = document.getElementById('game-result');
+            document.getElementById('math-user-answer').value = '';
+            const resultEl = document.getElementById('math-game-result');
             resultEl.textContent = ''; resultEl.className = 'result'; resultEl.style.animation = 'none';
-            document.getElementById('answer-explanation').style.display = 'none';
-            document.getElementById('answer-explanation').textContent = '';
+            document.getElementById('math-answer-explanation').style.display = 'none';
+            document.getElementById('math-answer-explanation').textContent = '';
 
 
-            document.getElementById('current-level').textContent = currentLevel;
-            document.getElementById('correct-streak').textContent = correctStreak;
-            updateProgressBar();
-            if (evalString) startTimer(); // Iniciar temporizador solo si hay problema
+            document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
+            document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
+            document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update best streak
+            updateMathProgressBar();
+            if (evalString) startMathTimer(); // Start timer only if there's a problem
+            saveGameData(); // Save math game state
         }
 
 
-        function generateExplanation(details, userAnswer) {
+        function generateMathExplanation(details, userAnswer) {
             let explanationText = `Tu respuesta fue ${userAnswer}. La respuesta correcta es <strong>${details.result}</strong>.<br>`;
             switch (details.type) {
                 case 'simple':
@@ -496,155 +1415,498 @@
                     explanationText += `2. Luego, usamos ese resultado: <code>${details.numA} ${details.op1} ${details.intermediate} = ${details.finalResult}</code>.`;
                     break;
                 case 'exponent':
-                    explanationText += `Para <code>${details.base ? details.base + '^' + details.exp : details.term1} ${details.op} ${details.base ? details.term2 : details.base + '^' + details.exp}</code>:<br>`;
-                    if (details.base) { // Si el primer término es la potencia
-                        explanationText += `1. Calculamos la potencia: <code>${details.base}^${details.exp} = ${details.term1}</code>.<br>`;
-                        explanationText += `2. Luego operamos: <code>${details.term1} ${details.op} ${details.term2} = ${details.result}</code>.`;
-                    } else { // Si el segundo término es la potencia
-                         explanationText += `1. Calculamos la potencia: <code>${details.exp_base}^${details.exp_val} = ${details.term2}</code> (asumiendo que guardaste base y exp para el segundo).<br>`; // Necesitarías guardar base y exp del segundo término
-                         explanationText += `2. Luego operamos: <code>${details.term1} ${details.op} ${details.term2} = ${details.result}</code>.`;
-                         // Simplificación si solo un exponente:
-                         let baseVal = details.base || (currentProblemDetails.num1 === details.term1 ? currentProblemDetails.num2_base : currentProblemDetails.num1_base); // Esto es un hack, mejorar almacenamiento de detalles
-                         let expVal = details.exp || (currentProblemDetails.num1 === details.term1 ? currentProblemDetails.num2_exp : currentProblemDetails.num1_exp);
-                         let powerTerm = Math.pow(baseVal, expVal);
-                         explanationText = `Calculamos la potencia <code>${baseVal}^${expVal} = ${powerTerm}</code>. Luego <code>${details.term1} ${details.op} ${details.term2}</code> (donde una de las partes es ${powerTerm}) da ${details.result}.`;
-                    }
+                    let baseVal = details.base;
+                    let expVal = details.exp;
+                    let powerTerm = Math.pow(baseVal, expVal);
+                    let otherTerm = (details.term1 === powerTerm) ? details.term2 : details.term1;
+                    let opSymbol = details.op;
+
+                    explanationText = `Calculamos la potencia <code>${baseVal}^${expVal} = ${powerTerm}</code>.<br>`;
+                    explanationText += `Luego operamos: <code>${details.term1} ${opSymbol} ${details.term2}</code> (que es <code>${powerTerm} ${opSymbol} ${otherTerm}</code>) da como resultado ${details.result}.`;
                     break;
-                case 'threeStep': // Ejemplo: A op B op C (sin paréntesis explícitos, se usa orden de operaciones)
+                case 'threeStep':
                     let step1Res = evaluateExpression(`${details.n1} ${details.o1} ${details.n2}`);
-                    if ((details.o1 === '+' || details.o1 === '-') && (details.o2 === '*' || details.o2 === '/')) { // B op C primero
-                        step1Res = evaluateExpression(`${details.n2} ${details.o2} ${details.n3}`);
-                        explanationText += `Por orden de operaciones, primero <code>${details.n2} ${details.o2} ${details.n3} = ${step1Res}</code>.<br>`;
-                        explanationText += `Luego <code>${details.n1} ${details.o1} ${step1Res} = ${details.result}</code>.`;
-                    } else { // A op B primero
-                        explanationText += `Por orden de operaciones, primero <code>${details.n1} ${details.o1} ${details.n2} = ${step1Res}</code>.<br>`;
-                        explanationText += `Luego <code>${step1Res} ${details.o2} ${details.n3} = ${details.result}</code>.`;
-                    }
+                    // Determine order of operations for explanation
+                    let firstOp = `${details.n1} ${details.o1} ${details.n2}`;
+                    let secondOp = `${step1Res} ${details.o2} ${details.n3}`;
+                     if ((details.o1 === '+' || details.o1 === '-') && (details.o2 === '*' || details.o2 === '/')) {
+                          step1Res = evaluateExpression(`${details.n2} ${details.o2} ${details.n3}`);
+                          firstOp = `${details.n2} ${details.o2} ${details.n3}`;
+                          secondOp = `${details.n1} ${details.o1} ${step1Res}`;
+                     }
+                    explanationText += `Por orden de operaciones, primero <code>${firstOp} = ${step1Res}</code>.<br>`;
+                    explanationText += `Luego <code>${secondOp} = ${details.result}</code>.`;
                     break;
                 default: // complexTwoStep, complexNested
-                    explanationText += `Este es un problema más complejo. La secuencia de operaciones es: <code>${document.getElementById('math-problem').textContent.replace(' = ?','')}</code>, lo que da como resultado ${details.result}. Intenta seguir el orden de operaciones (paréntesis, exponentes, multiplicación/división, suma/resta).`;
+                    let problemString = document.getElementById('math-problem').textContent.replace(' = ?','');
+                     explanationText += `Este es un problema más complejo: <code>${problemString}</code>.<br>`;
+                     explanationText += `Siguiendo el orden de operaciones (paréntesis, exponentes, multiplicación/división, suma/resta), el resultado es ${details.result}.`;
             }
             return explanationText;
         }
 
-        function handleIncorrectAnswer(isTimeout = false) {
-            clearTimeout(timerId);
-            playerLives--;
-            updateLivesDisplay();
-            correctStreak = 0;
-            updateProgressBar();
 
-            const resultElement = document.getElementById('game-result');
-            const explanationDiv = document.getElementById('answer-explanation');
-            const userAnswerInput = document.getElementById('user-answer');
+        function handleMathIncorrectAnswer(isTimeout = false) {
+            clearTimeout(mathTimerId);
+            playerStats.math.playerLives--;
+            playerStats.math.totalIncorrect++; // Count incorrect answers
+            updateMathLivesDisplay();
+
+            // Reset streak and update best streak if current was higher
+            if (playerStats.math.correctStreak > playerStats.math.bestStreak) {
+                 playerStats.math.bestStreak = playerStats.math.correctStreak;
+                 document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update UI
+                 updateLeaderboardDisplay(); // Update local leaderboard
+                 checkMedalUnlocked('math_streak_5'); // Check for streak medals
+            }
+            playerStats.math.correctStreak = 0;
+            updateMathProgressBar();
+
+            const resultElement = document.getElementById('math-game-result');
+            const explanationDiv = document.getElementById('math-answer-explanation');
+            const userAnswerInput = document.getElementById('math-user-answer');
             const userAnswerValue = isTimeout ? "N/A (tiempo agotado)" : userAnswerInput.value;
 
 
-            if (playerLives > 0) {
-                if(lifeLostSound) lifeLostSound.triggerAttackRelease("A3", "16n", Tone.now() + 0.1);
-                resultElement.textContent = isTimeout ? `¡Tiempo Agotado! 😟 Vidas: ${playerLives}` : `Incorrecto. 😟 Vidas: ${playerLives}`;
+            if (playerStats.math.playerLives > 0) {
+                if(synthsInitialized && lifeLostSound) lifeLostSound.triggerAttackRelease("A3", "16n", Tone.now() + 0.1);
+                resultElement.textContent = isTimeout ? `¡Tiempo Agotado! 😟 Vidas: ${playerStats.math.playerLives}` : `Incorrecto. 😟 Vidas: ${playerStats.math.playerLives}`;
                 resultElement.className = 'result incorrect';
-                explanationDiv.innerHTML = generateExplanation(currentProblemDetails, userAnswerValue);
+                explanationDiv.innerHTML = generateMathExplanation(mathCurrentProblemDetails, userAnswerValue);
                 explanationDiv.style.display = 'block';
-                setTimeout(generateProblem, 4500); // Más tiempo para leer explicación
+                setTimeout(generateMathProblem, 4500); // More time to read explanation
             } else {
-                if(levelDownSound) levelDownSound.triggerAttackRelease("8n", Tone.now() + 0.1);
+                if(synthsInitialized && levelDownSound) levelDownSound.triggerAttackRelease("8n", Tone.now() + 0.1);
                 resultElement.textContent = `¡Oh no! Te quedaste sin vidas. Regresas al nivel anterior.`;
                 resultElement.className = 'result level-down';
-                explanationDiv.innerHTML = generateExplanation(currentProblemDetails, userAnswerValue);
+                explanationDiv.innerHTML = generateMathExplanation(mathCurrentProblemDetails, userAnswerValue);
                 explanationDiv.style.display = 'block';
-                
-                if (currentLevel > 1) {
-                    currentLevel--;
+
+                if (playerStats.math.currentLevel > 1) {
+                    playerStats.math.currentLevel--;
                 }
-                playerLives = 3; // Reset vidas para el nivel (anterior o actual si era N1)
-                updateLivesDisplay();
+                playerStats.math.playerLives = 3; // Reset lives for the level (previous or current if it was Lvl 1)
+                updateMathLivesDisplay();
                 setTimeout(() => {
-                    resultElement.textContent = `Volviendo al Nivel ${currentLevel}...`;
+                    resultElement.textContent = `Volviendo al Nivel ${playerStats.math.currentLevel}...`;
                     resultElement.className = 'result'; // Neutral
                     explanationDiv.style.display = 'none';
-                    generateProblem();
+                    generateMathProblem();
                 }, 4000);
             }
             // Trigger reflow for animation
             void resultElement.offsetWidth;
             resultElement.style.animation = 'shake 0.5s';
             userAnswerInput.value = '';
+            saveGameData(); // Save state after incorrect answer
         }
 
 
-        function checkAnswer() {
-            if (correctAnswer === null && currentLevel > maxLevel) return; 
+        function checkMathAnswer() {
+            if (mathCorrectAnswer === null && playerStats.math.currentLevel > mathMaxLevel) return;
 
-            clearTimeout(timerId); // Detener temporizador al verificar
-            const userAnswerInput = document.getElementById('user-answer');
+            clearTimeout(mathTimerId); // Stop timer on check
+            const userAnswerInput = document.getElementById('math-user-answer');
             const userAnswer = parseFloat(userAnswerInput.value);
-            const resultElement = document.getElementById('game-result');
-            const explanationDiv = document.getElementById('answer-explanation');
-            
-            resultElement.style.animation = 'none'; 
-            explanationDiv.style.display = 'none'; // Ocultar explicación anterior
+            const resultElement = document.getElementById('math-game-result');
+            const explanationDiv = document.getElementById('math-answer-explanation');
+
+            resultElement.style.animation = 'none';
+            explanationDiv.style.display = 'none'; // Hide previous explanation
 
             if (isNaN(userAnswer)) {
                 resultElement.textContent = '🤔 Por favor, ingresa un número válido.';
                 resultElement.className = 'result incorrect';
-                if(incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now() + 0.1);
-                // No perder vida por input inválido, pero reiniciar timer
-                startTimer(); 
+                if(synthsInitialized && incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now() + 0.1);
+                startMathTimer();
                 userAnswerInput.focus();
                 void resultElement.offsetWidth; resultElement.style.animation = 'shake 0.5s';
                 return;
             }
 
-            const tolerance = 0.0001; // Tolerancia muy pequeña ya que son enteros
-            if (Math.abs(userAnswer - correctAnswer) < tolerance) {
+            const tolerance = 0.0001; // Very small tolerance for integers
+            if (Math.abs(userAnswer - mathCorrectAnswer) < tolerance) {
                 resultElement.textContent = '¡Correcto! 🎉';
                 resultElement.className = 'result correct';
-                if(correctSound) correctSound.triggerAttackRelease("C5", "8n", Tone.now() + 0.1);
-                correctStreak++;
+                if(synthsInitialized && correctSound) correctSound.triggerAttackRelease("C5", "8n", Tone.now() + 0.1);
+                playerStats.math.correctStreak++;
+                playerStats.math.totalCorrect++; // Count correct answers
 
-                if (correctStreak >= correctPerLevel && currentLevel < maxLevel) {
-                    correctStreak = 0; 
-                    currentLevel++;
-                    playerLives = 3; // Reset vidas al subir de nivel
-                    updateLivesDisplay();
-                    const congratsMessage = getCongratulationMessage(currentLevel, playerName);
+                // Update best streak if current is higher
+                 if (playerStats.math.correctStreak > playerStats.math.bestStreak) {
+                     playerStats.math.bestStreak = playerStats.math.correctStreak;
+                     document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update UI
+                     updateLeaderboardDisplay(); // Update local leaderboard
+                     checkMedalUnlocked('math_streak_5'); // Check for streak medals
+                 }
+
+                 // Check for level and total correct medals
+                 checkMedalUnlocked('math_level_5');
+                 checkMedalUnlocked('math_level_10');
+                 checkMedalUnlocked('math_level_20');
+                 checkMedalUnlocked('math_total_100_correct');
+
+
+                // Streak notification
+                if (playerStats.math.correctStreak >= 3 && playerStats.math.correctStreak % 3 === 0) {
+                     showNotification(`¡Racha de ${playerStats.math.correctStreak} respuestas correctas!`, 'streak');
+                }
+
+
+                if (playerStats.math.correctStreak >= mathCorrectPerLevel && playerStats.math.currentLevel < mathMaxLevel) {
+                    playerStats.math.correctStreak = 0;
+                    playerStats.math.currentLevel++;
+                    playerStats.math.playerLives = 3; // Reset lives on level up
+                    updateMathLivesDisplay();
+                    const congratsMessage = getCongratulationMessage(playerStats.math.currentLevel, playerName);
                     resultElement.textContent = congratsMessage;
                     resultElement.className = 'result level-up';
                     void resultElement.offsetWidth; resultElement.style.animation = 'pulse 1s 1';
-                    if(levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "2n", Tone.now() + 0.2, 0.8);
-                    setTimeout(generateProblem, 2800);
-                } else if (correctStreak >= correctPerLevel && currentLevel === maxLevel) {
+                    if(synthsInitialized && levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "2n", Tone.now() + 0.2, 0.8);
+                    setTimeout(generateMathProblem, 2800);
+                    tryTriggerLootBox(); // Attempt to trigger loot box on level up
+                } else if (playerStats.math.correctStreak >= mathCorrectPerLevel && playerStats.math.currentLevel === mathMaxLevel) {
                     resultElement.textContent = '¡Correcto! 🔥 Última racha completada...';
                     resultElement.className = 'result correct';
-                    correctStreak++; 
-                    updateProgressBar(); 
-                    setTimeout(generateProblem, 2000); // Esto activará el mensaje de fin de juego
+                    playerStats.math.correctStreak++; // Increment final streak to show in stats
+                    updateMathProgressBar();
+                    setTimeout(generateMathProblem, 2000); // This will trigger the end game message
+                    tryTriggerLootBox(); // Attempt to trigger loot box on completing last level
                 } else {
-                    setTimeout(generateProblem, 1800);
+                    setTimeout(generateMathProblem, 1800);
+                    tryTriggerLootBox(); // Attempt to trigger loot box on correct answer
                 }
             } else {
-                handleIncorrectAnswer(false); // false indica que no fue por tiempo agotado
+                handleMathIncorrectAnswer(false); // false indicates it was not due to timeout
             }
-            
-            updateProgressBar();
-            document.getElementById('current-level').textContent = currentLevel;
-            document.getElementById('correct-streak').textContent = correctStreak;
-            userAnswerInput.value = ''; 
-            userAnswerInput.focus(); 
+
+            updateMathProgressBar();
+            document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
+            document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
+            userAnswerInput.value = '';
+            userAnswerInput.focus();
+            saveGameData(); // Save state after correct answer
         }
-        
-        document.getElementById('user-answer').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') { event.preventDefault(); checkAnswer(); }
+
+        // --- Mind Twist Game Logic ---
+        function startMindTwistGame() {
+            // Load player stats for the mind twist game
+            // They are already loaded into playerStats when entering the selection screen
+            // Use playerStats.mindtwist.currentLevel directly
+
+            // Resume or start the mind twist game
+            if (playerStats.mindtwist.currentLevel === 0) {
+                 loadMindTwistLevel(0); // Load the first level
+            } else {
+                 console.log("Resuming mind twist game at level", playerStats.mindtwist.currentLevel);
+                 loadMindTwistLevel(playerStats.mindtwist.currentLevel); // Resume from current level
+            }
+        }
+
+        // Function to remove specific Mind Twist Level 2 listeners
+        function removeMindTwistLevel2Listeners() {
+            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+            if (puzzleArea && mindTwistLevel2Listeners.mousemove) {
+                 document.removeEventListener('mousemove', mindTwistLevel2Listeners.mousemove);
+                 document.removeEventListener('mouseup', mindTwistLevel2Listeners.mouseup);
+                 document.removeEventListener('touchmove', mindTwistLevel2Listeners.touchmove);
+                 document.removeEventListener('touchend', mindTwistLevel2Listeners.touchend);
+                 // Clear stored listeners
+                 mindTwistLevel2Listeners = {};
+                 console.log("Mind Twist Level 2 listeners removed.");
+            }
+        }
+
+
+        function loadMindTwistLevel(levelIndex) {
+            // Clean up listeners from previous level before setting up the new one
+            removeMindTwistLevel2Listeners(); // Specifically for level 2 drag events
+
+            playerStats.mindtwist.currentLevel = levelIndex; // Update level in stats
+
+            const questionElement = document.getElementById('mind-twist-question');
+            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+            const feedbackElement = document.getElementById('mind-twist-feedback');
+            const nextLevelBtn = document.getElementById('mind-twist-next-level-btn');
+
+            if (playerStats.mindtwist.currentLevel < mindTwistLevels.length) {
+                const level = mindTwistLevels[playerStats.mindtwist.currentLevel];
+                questionElement.innerHTML = level.question;
+                puzzleArea.innerHTML = ''; // Clear previous puzzle area content
+                feedbackElement.textContent = '';
+                nextLevelBtn.style.display = 'none';
+
+                // Clone and replace next level button to remove old event listeners safely
+                const oldNextLevelBtn = nextLevelBtn.cloneNode(true);
+                nextLevelBtn.parentNode.replaceChild(oldNextLevelBtn, nextLevelBtn);
+                const newNextLevelBtn = document.getElementById('mind-twist-next-level-btn');
+
+                newNextLevelBtn.addEventListener('click', () => {
+                    loadMindTwistLevel(playerStats.mindtwist.currentLevel + 1);
+                });
+
+                // Set up the visual elements and specific interactions for the current level
+                level.setup();
+
+            } else {
+                // Game finished
+                questionElement.textContent = `¡Felicidades, ${playerName}! Has completado todos los acertijos visuales disponibles.`;
+                puzzleArea.innerHTML = '<p>¡Eres un maestro de la lógica retorcida!</p>';
+                feedbackElement.textContent = '';
+                nextLevelBtn.style.display = 'none'; // Hide next level button
+
+                // Ensure the back to selection button is visible at the end
+                 const backBtn = document.querySelector('#mind-twist-game-container .back-to-selection-btn');
+                 if (backBtn) backBtn.style.display = 'block';
+            }
+            saveGameData(); // Save mind twist game state
+        }
+
+        function checkMindTwistAnswer(isCorrect) {
+            const feedbackElement = document.getElementById('mind-twist-feedback');
+            const nextLevelBtn = document.getElementById('mind-twist-next-level-btn');
+
+            playerStats.mindtwist.totalAttempts++; // Count attempt
+
+            if (isCorrect) {
+                feedbackElement.textContent = "¡Correcto!";
+                feedbackElement.style.color = 'green';
+                if(synthsInitialized && mindTwistCorrectSound) mindTwistCorrectSound.triggerAttackRelease("C5", "8n", Tone.now());
+                nextLevelBtn.style.display = 'block';
+                playerStats.mindtwist.solvedCount++; // Count solved puzzle
+
+                // Check for medals
+                checkMedalUnlocked('mindtwist_solved_1'); // Check first solved medal
+                checkMedalUnlocked('mindtwist_solved_5');
+                checkMedalUnlocked('mindtwist_solved_10');
+
+                tryTriggerLootBox(); // Attempt to trigger loot box on solving
+            } else {
+                feedbackElement.textContent = "¡Inténtalo de nuevo!";
+                feedbackElement.style.color = 'red';
+                 if(synthsInitialized && mindTwistIncorrectSound) mindTwistIncorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
+                 const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+                 puzzleArea.style.animation = 'none';
+                 void puzzleArea.offsetWidth; // Trigger reflow
+                 puzzleArea.style.animation = 'shake 0.5s';
+            }
+            saveGameData(); // Save state after answer
+        }
+
+        // --- Mind Twist Level Setups ---
+
+        // Level 1: The Biggest Object
+        function setupMindTwistLevel1() {
+            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+            puzzleArea.innerHTML = `
+                <div id="apple" class="level1-object"></div>
+                <div id="car" class="level1-object"></div>
+                <div id="sun" class="level1-object"></div>
+            `;
+            // Get references to the newly created elements
+            const appleEl = document.getElementById('apple');
+            const carEl = document.getElementById('car');
+            const sunEl = document.getElementById('sun');
+
+            // Add event listeners
+            appleEl.addEventListener('click', () => checkMindTwistAnswer(false));
+            carEl.addEventListener('click', () => checkMindTwistAnswer(false));
+            sunEl.addEventListener('click', () => checkMindTwistAnswer(true)); // Correct solution
+        }
+
+        function checkMindTwistLevel1() { /* Logic handled by event listeners */ }
+
+        // Level 2: The Car Obstacle
+        function setupMindTwistLevel2() {
+             const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+             puzzleArea.innerHTML = `
+                 <div id="road"></div>
+                 <div id="ice"></div>
+                 <div id="car-level2"></div>
+                 <div id="sun-hidden"></div>
+                 <div id="cloud"></div>
+             `;
+
+             const cloud = document.getElementById('cloud');
+             const sunHidden = document.getElementById('sun-hidden');
+             const ice = document.getElementById('ice');
+             const carLevel2 = document.getElementById('car-level2');
+             let isDragging = false;
+             let offsetX, offsetY;
+
+             // Define event handlers as named functions to allow removal
+             mindTwistLevel2Listeners.handleCloudMouseDown = (e) => {
+                 if (activeGame !== 'mindtwist') return;
+                 isDragging = true;
+                 offsetX = e.clientX - cloud.getBoundingClientRect().left;
+                 offsetY = e.clientY - cloud.getBoundingClientRect().top;
+                 cloud.style.cursor = 'grabbing';
+                 e.preventDefault(); // Prevent text selection and default drag behavior
+             };
+
+             mindTwistLevel2Listeners.handleDocumentMouseMove = (e) => {
+                 if (!isDragging || activeGame !== 'mindtwist') return;
+                 // Update cloud position based on mouse movement
+                 cloud.style.left = (e.clientX - offsetX) + 'px';
+                 cloud.style.top = (e.clientY - offsetY) + 'px';
+
+                 // Check if the cloud is "far enough" to reveal the sun and solve the puzzle
+                 const cloudRect = cloud.getBoundingClientRect();
+                 const puzzleRect = puzzleArea.getBoundingClientRect();
+                 const threshold = 50; // Pixels outside the puzzle area
+
+                 if (cloudRect.left < puzzleRect.left - threshold || cloudRect.right > puzzleRect.right + threshold ||
+                     cloudRect.top < puzzleRect.top - threshold || cloudRect.bottom > puzzleRect.bottom + threshold) {
+
+                     if (sunHidden.style.opacity === '0') { // Only trigger once
+                         sunHidden.style.opacity = 1; // Reveal sun
+                         ice.style.opacity = 0; // "Melt" the ice
+                         carLevel2.style.left = `calc(50% - 60px + 75px)`; // Move the car past the ice
+                         checkMindTwistAnswer(true); // Puzzle solved
+                         isDragging = false; // Stop dragging after solving
+                         cloud.style.cursor = 'default';
+                         // Remove listeners after solving to prevent further interaction
+                         removeMindTwistLevel2Listeners();
+                     }
+                 }
+             };
+
+             mindTwistLevel2Listeners.handleDocumentMouseUp = () => {
+                 isDragging = false;
+                 cloud.style.cursor = 'grab';
+             };
+
+             // Touch events for mobile
+             mindTwistLevel2Listeners.handleCloudTouchStart = (e) => {
+                 if (activeGame !== 'mindtwist') return;
+                 isDragging = true;
+                 offsetX = e.touches[0].clientX - cloud.getBoundingClientRect().left;
+                 offsetY = e.touches[0].clientY - cloud.getBoundingClientRect().top;
+                 cloud.style.cursor = 'grabbing';
+                 e.preventDefault(); // Prevent mobile scrolling
+             };
+
+             mindTwistLevel2Listeners.handleDocumentTouchMove = (e) => {
+                 if (!isDragging || activeGame !== 'mindtwist') return;
+                 cloud.style.left = (e.touches[0].clientX - offsetX) + 'px';
+                 cloud.style.top = (e.touches[0].clientY - offsetY) + 'px';
+
+                 const cloudRect = cloud.getBoundingClientRect();
+                 const puzzleRect = puzzleArea.getBoundingClientRect();
+                 const threshold = 50;
+
+                 if (cloudRect.left < puzzleRect.left - threshold || cloudRect.right > puzzleRect.right + threshold ||
+                     cloudRect.top < puzzleRect.top - threshold || cloudRect.bottom > puzzleRect.bottom + threshold) {
+
+                     if (sunHidden.style.opacity === '0') {
+                         sunHidden.style.opacity = 1;
+                         ice.style.opacity = 0;
+                         carLevel2.style.left = `calc(50% - 60px + 75px)`;
+                         checkMindTwistAnswer(true);
+                         isDragging = false;
+                         cloud.style.cursor = 'default';
+                         removeMindTwistLevel2Listeners(); // Remove listeners after solving
+                     }
+                 }
+                 e.preventDefault();
+             };
+
+             mindTwistLevel2Listeners.handleDocumentTouchEnd = () => {
+                 isDragging = false;
+                 cloud.style.cursor = 'grab';
+             };
+
+             // Add event listeners using the named functions
+             cloud.addEventListener('mousedown', mindTwistLevel2Listeners.handleCloudMouseDown);
+             document.addEventListener('mousemove', mindTwistLevel2Listeners.handleDocumentMouseMove);
+             document.addEventListener('mouseup', mindTwistLevel2Listeners.handleDocumentMouseUp);
+
+             cloud.addEventListener('touchstart', mindTwistLevel2Listeners.handleCloudTouchStart);
+             document.addEventListener('touchmove', mindTwistLevel2Listeners.handleDocumentTouchMove);
+             document.addEventListener('touchend', mindTwistLevel2Listeners.handleDocumentTouchEnd);
+        }
+
+        function checkMindTwistLevel2() { /* Logic handled by event listeners */ }
+
+        // Level 3: Find the Difference
+        function setupMindTwistLevel3() {
+            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
+            puzzleArea.innerHTML = `
+                <div class="image-pair-container">
+                    <div class="image-box"></div>
+                    <div class="image-box"></div>
+                </div>
+            `;
+            const questionElement = document.getElementById('mind-twist-question');
+            // Ensure the span with id 'difference-word' exists in the question
+             if (!questionElement.querySelector('#difference-word')) {
+                 // Use innerHTML carefully to avoid removing existing listeners if question changes
+                 // A safer approach might be to manage the question text and span separately
+                 // For this example, we'll re-add the span if missing and re-attach listener
+                 questionElement.innerHTML = questionElement.textContent.replace('diferencia', '<span id="difference-word">diferencia</span>');
+             }
+
+            const differenceWord = document.getElementById('difference-word');
+            if (differenceWord) {
+                // Clone and replace to remove old event listeners safely
+                const oldDifferenceWord = differenceWord.cloneNode(true);
+                differenceWord.parentNode.replaceChild(oldDifferenceWord, differenceWord);
+                const newDifferenceWord = document.getElementById('difference-word');
+
+                newDifferenceWord.addEventListener('click', () => checkMindTwistAnswer(true));
+            }
+            const imageBoxes = document.querySelectorAll('#mind-twist-game-container .image-box');
+            imageBoxes.forEach(box => {
+                // Clone and replace each image box to remove old event listeners safely
+                const oldBox = box.cloneNode(true);
+                box.parentNode.replaceChild(oldBox, box);
+                // Get the reference to the new element after replacement
+                const newBox = box.parentNode.querySelector('.image-box:nth-child(' + (Array.from(imageBoxes).indexOf(box) + 1) + ')');
+
+                newBox.addEventListener('click', () => {
+                    const feedbackElement = document.getElementById('mind-twist-feedback');
+                    // Only provide incorrect feedback if the answer hasn't been marked correct yet
+                    if (!feedbackElement.textContent.includes('Correcto')) {
+                        checkMindTwistAnswer(false);
+                    }
+                });
+            });
+        }
+
+        function checkMindTwistLevel3() { /* Logic handled by event listeners */ }
+
+
+        // --- Global Event Listeners ---
+        document.getElementById('math-user-answer').addEventListener('keypress', function(event) {
+            if (activeGame === 'math' && event.key === 'Enter') { event.preventDefault(); checkMathAnswer(); }
         });
         document.getElementById('player-name-input').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') { event.preventDefault(); startGame(); }
+            if (event.key === 'Enter') { event.preventDefault(); handleStartClick(); }
         });
 
-        document.getElementById('welcome-screen').style.display = 'flex';
-        document.getElementById('game-screen').style.display = 'none';
-        document.getElementById('correct-per-level-display').textContent = correctPerLevel;
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Do not load data here, it's loaded in handleStartClick after getting the name
+            showScreen('welcome'); // Show welcome screen on load
+            document.getElementById('math-correct-per-level-display').textContent = mathCorrectPerLevel; // Ensure this value is displayed
+
+            // Preload placeholder images if necessary (not critical for this example)
+            const img = new Image();
+            img.src = 'https://via.placeholder.com/200x200?text=Imagen+A';
+
+            // Generate the initial medal spans on the selection screen
+             const medalsListEl = document.getElementById('medals-list');
+             medalsListEl.innerHTML = ''; // Clear current display (if any from HTML)
+             allMedals.forEach(medal => {
+                 const medalSpan = document.createElement('span');
+                 medalSpan.className = `medal-item locked`; // All locked initially
+                 medalSpan.textContent = medal.icon;
+                 medalSpan.title = `${medal.name}: ${medal.description}`;
+                 medalsListEl.appendChild(medalSpan);
+             });
+        });
+
     </script>
 </body>
 </html>
-
