@@ -6,34 +6,34 @@
     <title>Desafíos Mentales - Edición Estratégica</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
         /* Estilos Generales */
         body {
-            font-family: 'Fredoka One', cursive, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-family: 'Nunito', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             line-height: 1.6;
-            color: #4A5568;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
+            color: #4A5568; /* Gris oscuro para texto general */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Degradado morado-azul */
+            padding: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Evitar scroll horizontal */
         }
         .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 10px rgba(0,0,0,0.15);
+            background-color: rgba(255, 255, 255, 0.97); /* Blanco semi-transparente */
+            padding: 25px 35px;
+            border-radius: 20px; /* Bordes más redondeados */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 8px 15px rgba(0,0,0,0.18); /* Sombra más pronunciada */
             text-align: center;
-            max-width: 700px;
+            max-width: 750px;
             width: 100%;
             box-sizing: border-box;
             transition: transform 0.3s ease-out;
-            min-height: 650px; /* Aumentado para nuevos elementos */
+            min-height: 680px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -41,423 +41,326 @@
             position: relative; /* Para elementos flotantes como notificaciones */
         }
         .container:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px); /* Sutil efecto al pasar el mouse */
         }
 
         /* Estilos Comunes de Botones */
         button {
-             color: white;
-             padding: 12px 25px;
-             border: none;
-             border-radius: 8px;
-             cursor: pointer;
-             font-size: 1.1em; /* Ajustado ligeramente */
-             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-             text-transform: uppercase;
-             letter-spacing: 0.5px;
-             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-             margin: 8px; /* Margen para separar botones */
-             font-family: 'Fredoka One', cursive; /* Usar la fuente principal */
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 0 5px 8px rgba(0,0,0,0.12);
+            margin: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-weight: 400;
         }
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 7px 12px rgba(0,0,0,0.18);
+        }
+        button:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
         /* Pantalla de Bienvenida */
-        .welcome-screen { display: flex; flex-direction: column; align-items: center; }
-        .welcome-screen h1 { color: #5A67D8; margin-bottom: 25px; font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .welcome-screen p { font-size: 1.1em; margin-bottom: 15px; color: #4A5568; }
-        .welcome-screen input[type="text"] { padding: 12px 15px; margin-bottom: 20px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.2em; width: 90%; max-width: 300px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .welcome-screen input[type="text"]:focus { border-color: #5A67D8; box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.3); outline: none; }
-        .welcome-screen button { background-color: #48BB78; }
-        .welcome-screen button:hover { background-color: #38A169; }
-        .name-error-message { color: #E53E3E; font-size: 0.9em; margin-top: -10px; margin-bottom: 10px; display: none; }
+        .welcome-screen { display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.5s ease-out; }
+        .welcome-screen h1 { color: #5A67D8; margin-bottom: 25px; font-size: 2.6em; text-shadow: 1px 1px 3px rgba(0,0,0,0.1); font-family: 'Fredoka One', cursive; }
+        .welcome-screen p { font-size: 1.15em; margin-bottom: 18px; color: #5f6c80; }
+        .welcome-screen input[type="text"] { padding: 14px 18px; margin-bottom: 22px; border: 2px solid #CBD5E0; border-radius: 10px; font-size: 1.25em; width: 90%; max-width: 320px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; font-family: 'Nunito', sans-serif; }
+        .welcome-screen input[type="text"]:focus { border-color: #5A67D8; box-shadow: 0 0 0 4px rgba(90, 103, 216, 0.25); outline: none; }
+        .welcome-screen button { background-color: #48BB78; /* Verde */ }
+        .welcome-screen button:hover { background-color: #3f9e6a; }
+        .name-error-message { color: #E53E3E; font-size: 0.95em; margin-top: -12px; margin-bottom: 12px; display: none; font-weight: 600; }
 
-        /* Pantalla de Selección de Juego */
-        .selection-screen { display: none; flex-direction: column; align-items: center; }
-        .selection-screen h2 { color: #2D3748; margin-bottom: 30px; font-size: 2em; }
-        .selection-screen .game-selection-buttons button { background-color: #4299E1; }
-        .selection-screen .game-selection-buttons button:hover { background-color: #3182CE; }
-        .selection-screen .game-selection-buttons button:nth-of-type(2) { background-color: #ED8936; }
-        .selection-screen .game-selection-buttons button:nth-of-type(2):hover { background-color: #DD6B20; }
-        .selection-screen .player-stats-summary { margin-top: 20px; font-size: 1em; color: #4A5568; text-align: left; width: 100%; max-width: 400px; }
-        .selection-screen .player-stats-summary strong { color: #2D3748; }
+        /* Pantalla de Selección de Juego (Inicio Post-Nombre) */
+        .selection-screen { display: none; flex-direction: column; align-items: center; width: 100%; animation: slideInUp 0.6s ease-out; }
+        .selection-screen h2 { color: #3a4b60; margin-bottom: 15px; font-size: 2.2em; font-family: 'Fredoka One', cursive; }
+        .selection-screen .greeting-subtext { font-size: 1.1em; color: #6b7a90; margin-bottom: 25px; }
+
+        .selection-screen .game-selection-buttons { margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: center;}
+        .selection-screen .game-selection-buttons button { background-color: #4299E1; /* Azul */ min-width: 220px; }
+        .selection-screen .game-selection-buttons button:hover { background-color: #3582c0; }
+        .selection-screen .game-selection-buttons button:nth-of-type(2) { background-color: #ED8936; /* Naranja */ }
+        .selection-screen .game-selection-buttons button:nth-of-type(2):hover { background-color: #d57b2f; }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 680px; /* Contener el grid */
+            margin-top: 20px;
+        }
+
+        .selection-card {
+            background-color: #f7faff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: left;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        .selection-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        .selection-card h3 {
+            font-family: 'Fredoka One', cursive;
+            color: #4a5a94;
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            text-align: center;
+        }
+        .selection-card p, .selection-card li { font-size: 1em; color: #5a677a; margin-bottom: 6px; }
+        .selection-card strong { color: #3d4a78; font-weight: 700; }
+        .selection-card ul { list-style: none; padding: 0; }
+        .selection-card .leaderboard-list, .selection-card .medals-list-container { margin-top: 10px; }
 
 
         /* Contenedor del Juego de Matemáticas */
-        #math-game-container { display: none; flex-direction: column; align-items: center; width: 100%; }
-        /* Estilos específicos del juego de matemáticas */
+        #math-game-container { display: none; flex-direction: column; align-items: center; width: 100%; animation: zoomIn 0.4s ease-out; }
         #math-game-container .game-stats {
-            display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px;
-            font-size: 1em; color: #718096; padding: 0 10px;
+            display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 18px;
+            font-size: 1.05em; color: #718096; padding: 8px 12px; background-color: #f8f9fa; border-radius:10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
-        #math-game-container .player-name-display { font-weight: 600; color: #5A67D8; font-size:1.1em; }
-        #math-game-container .lives-display, #math-game-container .timer-display { font-weight: 600; font-size:1.1em; color: #4A5568;}
+        #math-game-container .player-name-display { font-weight: 700; color: #5A67D8; font-size:1.1em; }
+        #math-game-container .lives-display, #math-game-container .timer-display { font-weight: 700; font-size:1.1em; color: #4A5568;}
         #math-game-container .lives-display span, #math-game-container .timer-display span { color: #DD6B20; }
+        #math-game-container .timer-display.text-red-500 span { color: #E53E3E !important; animation: pulseRed 1s infinite; }
 
-        #math-game-container .level-info { font-size: 1.1em; color: #4A5568; margin-bottom: 5px; font-weight: 600; }
-        #math-game-container .progress-bar-container { width: 80%; max-width: 400px; height: 22px; background-color: #E2E8F0; border-radius: 11px; margin-bottom: 15px; overflow: hidden; border: 1px solid #CBD5E0; }
-        #math-game-container .progress-bar { height: 100%; width: 0%; background-color: #68D391; border-radius: 10px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85em; }
 
-        #math-game-container .problem { font-size: 2.2em; /* Ajustado */ margin-bottom: 20px; color: #2D3748; min-height: 1.5em; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; padding: 10px 15px; background-color: #edf2f7; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
-        #math-game-container .problem span { margin: 0 8px; }
+        #math-game-container .level-info { font-size: 1.15em; color: #4A5568; margin-bottom: 6px; font-weight: 600; }
+        #math-game-container .progress-bar-container { width: 85%; max-width: 420px; height: 24px; background-color: #E2E8F0; border-radius: 12px; margin-bottom: 18px; overflow: hidden; border: 1px solid #CBD5E0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        #math-game-container .progress-bar { height: 100%; width: 0%; background: linear-gradient(to right, #68D391, #48BB78); border-radius: 11px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9em; font-weight: 600; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
 
-        #math-game-container .input-area { margin-bottom: 20px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
-        #math-game-container input[type="number"] { padding: 12px 15px; margin: 5px; border: 2px solid #CBD5E0; border-radius: 8px; font-size: 1.4em; width: 130px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        #math-game-container input[type="number"]:focus { border-color: #63B3ED; box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3); outline: none; }
-        #math-game-container .input-area button { background-color: #4299E1; margin-left: 10px; }
-        #math-game-container .input-area button:hover { background-color: #3182CE; }
+        #math-game-container .problem { font-size: 2.3em; margin-bottom: 22px; color: #2D3748; min-height: 1.6em; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; padding: 12px 18px; background-color: #edf2f7; border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.07); font-family: 'Fredoka One', cursive; }
+        #math-game-container .problem span { margin: 0 10px; }
 
-        #math-game-container .result-area { margin-top: 15px; width: 100%; }
-        #math-game-container .result { font-size: 1.2em; /* Ajustado */ font-weight: 600; min-height: 1.5em; transition: transform 0.3s ease-out, color 0.3s ease; padding: 10px 15px; border-radius: 8px; margin-bottom:10px; }
-        #math-game-container .result.correct { color: #38A169; background-color: #C6F6D5; transform: scale(1.05); }
-        #math-game-container .result.incorrect { color: #E53E3E; background-color: #FED7D7; animation: shake 0.5s; }
-        #math-game-container .result.level-up { color: #DD6B20; background-color: #FEEBC8; transform: scale(1.1); animation: pulse 1s 1; }
-        #math-game-container .result.level-down { color: #E53E3E; background-color: #FED7D7; animation: shake 0.8s; }
+        #math-game-container .input-area { margin-bottom: 22px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
+        #math-game-container input[type="number"] { padding: 14px 18px; margin: 6px; border: 2px solid #CBD5E0; border-radius: 10px; font-size: 1.45em; width: 140px; text-align: center; box-sizing: border-box; transition: border-color 0.3s ease, box-shadow 0.3s ease; font-family: 'Nunito', sans-serif; }
+        #math-game-container input[type="number"]:focus { border-color: #63B3ED; box-shadow: 0 0 0 4px rgba(99, 179, 237, 0.25); outline: none; }
+        #math-game-container .input-area button { background-color: #4299E1; margin-left: 12px; }
+        #math-game-container .input-area button:hover { background-color: #3582c0; }
+
+        #math-game-container .result-area { margin-top: 18px; width: 100%; }
+        #math-game-container .result { font-size: 1.25em; font-weight: 700; min-height: 1.6em; transition: transform 0.3s ease-out, background-color 0.3s ease, color 0.3s ease; padding: 12px 18px; border-radius: 10px; margin-bottom:12px; }
+        #math-game-container .result.correct { color: #2F855A; background-color: #C6F6D5; transform: scale(1.03); border: 1px solid #9AE6B4;}
+        #math-game-container .result.incorrect { color: #C53030; background-color: #FED7D7; animation: shake 0.5s; border: 1px solid #FEB2B2;}
+        #math-game-container .result.level-up { color: #B7791F; background-color: #FEEBC8; transform: scale(1.08); animation: pulse 1s 1; border: 1px solid #FBD38D;}
+        #math-game-container .result.level-down { color: #C53030; background-color: #FED7D7; animation: shake 0.8s; border: 1px solid #FEB2B2;}
 
         #math-game-container .explanation {
-            font-size: 0.9em; /* Ajustado */ color: #4A5568; margin-top: 5px; padding: 10px; background-color: #f7fafc;
-            border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; line-height: 1.5;
-            max-height: 100px; /* Ajustado */ overflow-y: auto;
+            font-size: 0.95em; color: #4A5568; margin-top: 8px; padding: 12px; background-color: #f7fafc;
+            border: 1px solid #e2e8f0; border-radius: 10px; text-align: left; line-height: 1.55;
+            max-height: 110px; overflow-y: auto;
         }
         #math-game-container .explanation strong { color: #2D3748; }
-        #math-game-container .explanation code { background-color: #edf2f7; padding: 2px 5px; border-radius: 4px; font-family: monospace;}
+        #math-game-container .explanation code { background-color: #edf2f7; padding: 3px 6px; border-radius: 5px; font-family: monospace; color: #2b6cb0;}
+        #math-game-container .back-to-selection-btn, #mind-twist-game-container .back-to-selection-btn {
+            background-color: #A0AEC0; /* Gris */
+            margin-top: 25px;
+            font-size: 1em;
+            padding: 10px 18px;
+        }
+        #math-game-container .back-to-selection-btn:hover, #mind-twist-game-container .back-to-selection-btn:hover {
+            background-color: #7f8c9b;
+        }
 
 
         /* Contenedor del Juego de Acertijos Visuales */
-        #mind-twist-game-container { display: none; flex-direction: column; align-items: center; width: 100%; }
-        /* Estilos específicos del juego de acertijos */
-        #mind-twist-game-container h2 { color: #ED8936; margin-bottom: 20px; font-size: 2em; }
+        #mind-twist-game-container { display: none; flex-direction: column; align-items: center; width: 100%; animation: zoomIn 0.4s ease-out; }
+        #mind-twist-game-container h2 { color: #ED8936; margin-bottom: 20px; font-size: 2.1em; font-family: 'Fredoka One', cursive;}
         #mind-twist-game-container #mind-twist-question {
-            font-size: 1.2em; color: #555; margin-bottom: 25px; min-height: 1.5em;
+            font-size: 1.25em; color: #555; margin-bottom: 28px; min-height: 1.6em; font-weight: 600;
         }
         #mind-twist-game-container #mind-twist-puzzle-area {
-            display: flex; justify-content: center; align-items: center; height: 300px;
-            position: relative; margin-bottom: 20px; overflow: hidden; width: 100%;
+            display: flex; justify-content: center; align-items: center; height: 320px;
+            position: relative; margin-bottom: 22px; overflow: hidden; width: 100%;
+            background-color: #f0f4f8;
+            border-radius: 12px;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.06);
         }
          #mind-twist-game-container #mind-twist-feedback {
-            font-weight: bold; margin-top: 15px; min-height: 1.5em;
+            font-weight: 700; margin-top: 18px; min-height: 1.6em;
+            font-size: 1.15em;
         }
         #mind-twist-game-container #mind-twist-next-level-btn {
-            background-color: #4CAF50; color: white; border: none; padding: 12px 25px;
-            border-radius: 8px; cursor: pointer; font-size: 1.1em; margin-top: 20px;
+            background-color: #4CAF50; color: white; border: none; padding: 12px 28px;
+            border-radius: 10px; cursor: pointer; font-size: 1.1em; margin-top: 22px;
             transition: background-color 0.3s ease; display: none;
         }
         #mind-twist-game-container #mind-twist-next-level-btn:hover {
             background-color: #45a049;
         }
-         #mind-twist-game-container .back-to-selection-btn {
-             background-color: #A0AEC0; /* Gris */
-             margin-top: 20px;
-             font-size: 1em;
-             padding: 8px 15px;
-         }
-         #mind-twist-game-container .back-to-selection-btn:hover {
-             background-color: #718096;
-         }
 
-        /* Estilos específicos para los niveles del juego de acertijos */
-        /* Nivel 1: El objeto más grande */
+
+        /* Estilos específicos para los niveles del juego de acertijos (sin cambios mayores aquí) */
         #mind-twist-game-container .level1-object {
-            cursor: pointer; border: 2px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; user-select: none;
+            cursor: pointer; border: 3px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; user-select: none;
+            display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        #mind-twist-game-container .level1-object:hover { transform: scale(1.05); }
-        #mind-twist-game-container #apple {
-            width: 80px; height: 80px; background-color: #e74c3c; border-radius: 50%; position: absolute; left: 15%; top: 50%; transform: translateY(-50%);
-        }
-        #mind-twist-game-container #car {
-            width: 150px; height: 70px; background-color: #3498db; border-radius: 10px; position: absolute; left: 40%; top: 50%; transform: translateY(-50%);
-        }
-        #mind-twist-game-container #sun {
-            width: 50px; height: 50px; background-color: #f1c40f; border-radius: 50%; position: absolute; right: 10%; top: 20%; transform: translateY(-50%);
-        }
-
-        /* Nivel 2: El obstáculo del coche */
-        #mind-twist-game-container #road {
-            width: 100%; height: 50px; background-color: #666; position: absolute; bottom: 0; left: 0;
-        }
-        #mind-twist-game-container #ice {
-            width: 150px; height: 30px; background-color: #aed6f1; border-radius: 5px; position: absolute; bottom: 50px; left: calc(50% - 75px); z-index: 1; box-shadow: 0 0 10px rgba(174, 214, 241, 0.7);
-        }
-        #mind-twist-game-container #car-level2 {
-            width: 120px; height: 60px; background-color: #2ecc71; border-radius: 10px; position: absolute; bottom: 50px; left: calc(50% - 60px - 75px); z-index: 2; transition: left 1s ease-out;
-        }
-        #mind-twist-game-container #cloud {
-            width: 100px; height: 60px; background-color: #ecf0f1; border-radius: 30px; position: absolute; top: 20px; left: calc(50% - 50px); cursor: grab; z-index: 3; transition: opacity 0.5s ease;
-        }
-        #mind-twist-game-container #sun-hidden {
-            width: 80px; height: 80px; background-color: #f39c12; border-radius: 50%; position: absolute; top: 10px; left: calc(50% - 40px); opacity: 0; z-index: 0; transition: opacity 0.5s ease;
-        }
-
-        /* Nivel 3: Encuentra la diferencia */
-        #mind-twist-game-container .image-pair-container {
-            display: flex; justify-content: space-around; width: 100%;
-        }
-        #mind-twist-game-container .image-box {
-            width: 45%; height: 200px; background-color: #ddd; display: flex; justify-content: center;
-            align-items: center; border: 2px solid #ccc; font-size: 1.5em; color: #666; user-select: none;
-            background-image: url('https://via.placeholder.com/200x200?text=Imagen+A'); /* Placeholder */
-            background-size: cover; background-position: center;
-        }
-        #mind-twist-game-container #difference-word {
-            cursor: pointer; color: blue; text-decoration: underline;
-        }
-        #mind-twist-game-container #difference-word:hover { color: darkblue; }
+        #mind-twist-game-container .level1-object:hover { transform: scale(1.05); border-color: #f1c40f; }
+        #mind-twist-game-container #apple { width: 80px; height: 80px; background-color: #e74c3c; border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%; position: absolute; left: 15%; top: 50%; transform: translateY(-50%); }
+        #mind-twist-game-container #apple::before { content: ''; width: 8px; height: 15px; background-color: #8B4513; position: absolute; top: -10px; left: calc(50% - 4px); border-radius: 4px 4px 0 0; }
+        #mind-twist-game-container #car { width: 150px; height: 70px; background-color: #3498db; border-radius: 10px 10px 5px 5px; position: absolute; left: 40%; top: 50%; transform: translateY(-50%); }
+        #mind-twist-game-container #car::before, #mind-twist-game-container #car::after { content: ''; position: absolute; width: 25px; height: 25px; background-color: #2c3e50; border-radius: 50%; bottom: -10px; }
+        #mind-twist-game-container #car::before { left: 20px; } #mind-twist-game-container #car::after { right: 20px; }
+        #mind-twist-game-container #sun { width: 50px; height: 50px; background-color: #f1c40f; border-radius: 50%; position: absolute; right: 10%; top: 20%; transform: translateY(-50%); box-shadow: 0 0 15px #f1c40f, 0 0 25px #f1c40f; }
+        #mind-twist-game-container #road { width: 100%; height: 60px; background-color: #666; position: absolute; bottom: 0; left: 0; border-top: 5px dashed #ccc; }
+        #mind-twist-game-container #ice { width: 150px; height: 30px; background: linear-gradient(to bottom, #aed6f1, #85c1e9); border-radius: 5px; position: absolute; bottom: 60px; left: calc(50% - 75px); z-index: 1; box-shadow: 0 0 10px rgba(174, 214, 241, 0.7); border: 1px solid #74b7e0; }
+        #mind-twist-game-container #car-level2 { width: 120px; height: 60px; background-color: #2ecc71; border-radius: 10px 10px 5px 5px; position: absolute; bottom: 60px; left: calc(50% - 60px - 85px); z-index: 2; transition: left 1s ease-out, opacity 0.5s ease-out; }
+        #mind-twist-game-container #car-level2::before, #mind-twist-game-container #car-level2::after { content: ''; position: absolute; width: 20px; height: 20px; background-color: #2c3e50; border-radius: 50%; bottom: -8px; }
+        #mind-twist-game-container #car-level2::before { left: 15px; } #mind-twist-game-container #car-level2::after { right: 15px; }
+        #mind-twist-game-container #cloud { width: 100px; height: 60px; background-color: #ecf0f1; border-radius: 30px; position: absolute; top: 20px; left: calc(50% - 50px); cursor: grab; z-index: 3; transition: opacity 0.5s ease, transform 0.2s ease; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        #mind-twist-game-container #cloud.dragging { transform: scale(1.1); opacity: 0.8; }
+        #mind-twist-game-container #sun-hidden { width: 80px; height: 80px; background-color: #f39c12; border-radius: 50%; position: absolute; top: 10px; left: calc(50% - 40px); opacity: 0; z-index: 0; transition: opacity 0.5s ease 0.3s; box-shadow: 0 0 20px #f39c12, 0 0 30px #f39c12; }
+        #mind-twist-game-container .image-pair-container { display: flex; justify-content: space-around; width: 100%; align-items: center; }
+        #mind-twist-game-container .image-box { width: 45%; height: 200px; background-color: #ddd; display: flex; justify-content: center; align-items: center; border: 2px solid #ccc; font-size: 1.5em; color: #666; user-select: none; background-size: contain; background-repeat: no-repeat; background-position: center; border-radius: 8px; position: relative; }
+        #mind-twist-game-container .difference-spot { position: absolute; width: 20px; height: 20px; background-color: rgba(255, 0, 0, 0.5); border-radius: 50%; cursor: pointer; }
+        #mind-twist-game-container #difference-word { cursor: pointer; color: #3498db; text-decoration: underline; font-weight: bold; }
+        #mind-twist-game-container #difference-word:hover { color: #2980b9; }
 
 
         /* Loot Box */
-        .loot-box-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .loot-box-container.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        .loot-box-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
-            width: 90%;
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-        }
-         .loot-box-container.visible .loot-box-content {
-             transform: scale(1);
-         }
-        .loot-box-content h3 {
-            color: #DD6B20;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        .loot-box-content .loot-box-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            animation: bounce 0.8s infinite alternate;
-        }
-        .loot-box-content .loot-box-reward {
-            font-size: 1.2em;
-            color: #4A5568;
-            margin-bottom: 20px;
-        }
-         .loot-box-content button {
-             background-color: #4299E1;
-         }
-         .loot-box-content button:hover {
-             background-color: #3182CE;
-         }
+        .loot-box-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .loot-box-container.visible { opacity: 1; visibility: visible; }
+        .loot-box-content { background-color: #fff; padding: 35px; border-radius: 18px; text-align: center; box-shadow: 0 12px 28px rgba(0,0,0,0.3); max-width: 420px; width: 90%; transform: scale(0.8) translateY(20px); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .loot-box-container.visible .loot-box-content { transform: scale(1) translateY(0); }
+        .loot-box-content h3 { color: #DD6B20; font-size: 2em; margin-bottom: 18px; font-family: 'Fredoka One', cursive; }
+        .loot-box-content .loot-box-icon { font-size: 3.5em; margin-bottom: 22px; animation: bounce 0.8s infinite alternate; }
+        .loot-box-content .loot-box-reward { font-size: 1.25em; color: #4A5568; margin-bottom: 25px; font-weight: 600; }
+        .loot-box-content button { background-color: #4299E1; }
+        .loot-box-content button:hover { background-color: #3582c0; }
 
-        /* Leaderboard */
-        .leaderboard-container {
-            margin-top: 30px;
-            width: 100%;
-            text-align: left;
-            max-width: 400px; /* Alinear con summary */
-        }
-        .leaderboard-container h3 {
-            color: #2D3748;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .leaderboard-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .leaderboard-item {
-            background-color: #edf2f7;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1em;
-            border: 1px solid #e2e8f0;
-        }
-        .leaderboard-item strong {
-            color: #5A67D8;
-        }
-        .leaderboard-item span {
-            font-weight: 600;
-            color: #4A5568;
-        }
-        .leaderboard-item.you {
-            background-color: #fffacd; /* Light yellow for the current player */
-            border-color: #f0e68c;
-            font-weight: bold;
-        }
-
-        /* Medals */
-        .medals-container {
-            margin-top: 30px;
-            width: 100%;
-            text-align: center;
-             max-width: 400px; /* Alinear con summary */
-        }
-        .medals-container h3 {
-             color: #2D3748;
-             font-size: 1.5em;
-             margin-bottom: 15px;
-        }
-        .medals-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .medal-item {
-            font-size: 2.5em;
-            cursor: help; /* Indicate hover for info */
-            transition: transform 0.2s ease;
-        }
-        .medal-item:hover {
-            transform: scale(1.2);
-        }
-         .medal-item.locked {
-             filter: grayscale(100%);
-             opacity: 0.5;
-         }
+        /* Leaderboard (dentro de .selection-card) */
+        .leaderboard-list { list-style: none; padding: 0; margin: 0; max-height: 160px; overflow-y: auto; border: 1px solid #eaf0f6; border-radius: 8px; background-color: #fff; }
+        .leaderboard-item { background-color: transparent; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 0.95em; border-bottom: 1px solid #eaf0f6; }
+        .leaderboard-item:last-child { border-bottom: none; }
+        .leaderboard-item strong { color: #5A67D8; font-weight: 700; }
+        .leaderboard-item span { font-weight: 600; color: #4A5568; }
+        .leaderboard-item.you { background-color: #e6effc; border-left: 4px solid #667eea; font-weight: bold; }
+        .leaderboard-list::-webkit-scrollbar { width: 6px; }
+        .leaderboard-list::-webkit-scrollbar-thumb { background-color: #cdd5e0; border-radius: 3px; }
 
 
-        /* Daily Bonus */
+        /* Medals (dentro de .selection-card) */
+        .medals-list-container { text-align: center; }
+        .medals-list { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; padding-top: 5px; }
+        .medal-item { font-size: 2.6em; cursor: help; transition: transform 0.2s ease, filter 0.2s ease; position: relative; }
+        .medal-item:hover { transform: scale(1.2); filter: brightness(1.1); }
+        .medal-item.locked { filter: grayscale(100%) opacity(0.5); }
+        .medal-item.locked:hover { filter: grayscale(80%) opacity(0.7); transform: scale(1.1);}
+        .medal-tooltip { visibility: hidden; width: 130px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 8px; position: absolute; z-index: 1; bottom: 130%; left: 50%; margin-left: -65px; opacity: 0; transition: opacity 0.3s, transform 0.3s; font-size: 0.45em; pointer-events: none; transform: translateY(10px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .medal-tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px; border-width: 6px; border-style: solid; border-color: #333 transparent transparent transparent; }
+        .medal-item:hover .medal-tooltip { visibility: visible; opacity: 1; transform: translateY(0); }
+
+
+        /* Daily Bonus (dentro de .selection-card o como un banner aparte) */
+        .daily-bonus-card { /* Si se usa como una tarjeta separada en el grid */
+            background-color: #fff9e6;
+            border: 2px dashed #f6e05e;
+        }
+        .daily-bonus-card h3 { color: #c09511; }
         .daily-bonus-container {
-             margin-top: 20px;
-             padding: 15px;
-             background-color: #fefcbf; /* Light yellow */
-             border: 2px dashed #f6e05e; /* Darker yellow dashed border */
-             border-radius: 8px;
-             text-align: center;
-             color: #744210; /* Brownish text */
-             font-weight: 600;
-             display: none; /* Initially hidden */
-             max-width: 400px; /* Alinear con summary */
-             width: 100%;
+            margin-top: 0; /* Reset si está dentro de una card */
+            padding: 15px;
+            background-color: transparent; /* El fondo lo da la card */
+            border: none; /* El borde lo da la card */
+            border-radius: 8px;
+            text-align: center;
+            color: #744210;
+            font-weight: 600;
+            display: none; /* Initially hidden */
+            width: 100%;
         }
-         .daily-bonus-container h4 {
-             font-size: 1.2em;
-             margin-bottom: 10px;
-             color: #b7791f; /* Darker brown */
-         }
-         .daily-bonus-container button {
-             background-color: #f6ad55; /* Orange */
-             font-size: 1em;
-             padding: 8px 15px;
-             margin-top: 10px;
-         }
-         .daily-bonus-container button:hover {
-             background-color: #ed8936; /* Darker orange */
-         }
+        .daily-bonus-container h4 { font-size: 1.25em; margin-bottom: 12px; color: #b7791f; font-family: 'Fredoka One', cursive; }
+        .daily-bonus-container p { font-size: 1em; margin-bottom: 10px;}
+        .daily-bonus-container button { background-color: #f6ad55; font-size: 1em; padding: 10px 18px; margin-top: 12px; }
+        .daily-bonus-container button:hover { background-color: #e99d42; }
 
         /* Notifications (Simple Modal/Toast) */
         .notification {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #48BB78; /* Green */
+            position: fixed; /* Cambiado a fixed para que esté sobre todo */
+            bottom: 20px; /* Posición inferior */
+            left: 50%; /* Centrado horizontal */
+            transform: translateX(-50%) translateY(150%); /* Inicialmente fuera y centrado */
+            background-color: #333;
             color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 12px 22px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.25);
             z-index: 101;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            transform: translateX(100%);
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1em;
+            font-weight: 600;
+            min-width: 250px;
+            text-align: center;
         }
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-        }
-         .notification.event {
-             background-color: #9F7AEA; /* Purple for events */
-         }
-         .notification.streak {
-             background-color: #F687B3; /* Pink for streaks */
-         }
-         .notification.medal {
-             background-color: #ECC94B; /* Yellow for medals */
-         }
+        .notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .notification.event { background-color: #805AD5; /* Morado */ }
+        .notification.streak { background-color: #D53F8C; /* Rosa */ }
+        .notification.medal { background-color: #D69E2E; /* Amarillo-Dorado */ color: white; }
+        .notification.error { background-color: #C53030; /* Rojo */ }
+        .notification.success { background-color: #38A169; /* Verde */ }
 
 
         /* Animaciones */
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-6px); } }
-        @keyframes pulse { 0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 10px 15px rgba(221, 107, 32, 0); } 100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
-         @keyframes bounce {
-             0%, 100% { transform: translateY(0); }
-             50% { transform: translateY(-10px); }
-         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-7px); } }
+        @keyframes pulse { 0% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.6); } 70% { transform: scale(1.12); box-shadow: 0 0 12px 18px rgba(221, 107, 32, 0); } 100% { transform: scale(1.05); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes pulseRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
 
         /* Media Queries para Responsividad */
-        @media (max-width: 640px) {
-            .container { padding: 20px; max-width: 95%; min-height: 550px; }
-            .welcome-screen h1 { font-size: 2em; }
-            .selection-screen h2 { font-size: 1.8em; }
-            button { font-size: 1em; padding: 10px 15px; margin: 5px;}
+        @media (max-width: 700px) { /* Ajustar breakpoint para el grid */
+            .selection-grid { grid-template-columns: 1fr; /* Una columna en móviles */ }
+            .container { padding: 20px; min-height: auto; }
+            .welcome-screen h1 { font-size: 2.2em; }
+            .selection-screen h2 { font-size: 1.9em; }
+            button { font-size: 1em; padding: 10px 20px; margin: 8px;}
 
-            /* Math Game Responsiveness */
-            #math-game-container .problem { font-size: 1.8em; }
-            #math-game-container input[type="number"] { font-size: 1.1em; width: 80px; padding: 8px 10px;}
-            #math-game-container .input-area button { margin-left: 5px; }
-            #math-game-container .result { font-size: 1.1em; }
-            #math-game-container .game-stats { flex-direction: column; align-items: center; gap: 5px; }
+            #math-game-container .problem { font-size: 1.9em; }
+            #math-game-container input[type="number"] { font-size: 1.2em; width: 100px; padding: 10px 12px;}
+            #math-game-container .game-stats { flex-direction: column; align-items: center; gap: 6px; }
             #math-game-container .player-name-display, #math-game-container .lives-display, #math-game-container .timer-display { font-size: 1em;}
-             #math-game-container .explanation { font-size: 0.8em; max-height: 80px;}
+            #math-game-container .explanation { font-size: 0.85em; max-height: 90px;}
 
-            /* Mind Twist Game Responsiveness */
-            #mind-twist-game-container #mind-twist-puzzle-area { height: 200px; }
-            #mind-twist-game-container #apple { width: 50px; height: 50px; }
-            #mind-twist-game-container #car { width: 80px; height: 40px; }
-            #mind-twist-game-container #sun { width: 30px; height: 30px; }
-            #mind-twist-game-container #ice { width: 80px; bottom: 40px; left: calc(50% - 40px); }
-            #mind-twist-game-container #car-level2 { width: 60px; height: 30px; bottom: 40px; left: calc(50% - 30px - 40px); }
-            #mind-twist-game-container #cloud { width: 60px; height: 40px; top: 5px; left: calc(50% - 30px); }
-            #mind-twist-game-container #sun-hidden { width: 50px; height: 50px; top: 0px; left: calc(50% - 25px); }
-            #mind-twist-game-container .image-box { height: 120px; font-size: 1em; }
-             #mind-twist-game-container #mind-twist-question { font-size: 1em;}
-             #mind-twist-game-container #mind-twist-feedback { font-size: 0.9em;}
-
-            /* Loot Box Responsiveness */
-             .loot-box-content { padding: 20px; }
-             .loot-box-content h3 { font-size: 1.5em; }
-             .loot-box-content .loot-box-icon { font-size: 2em; }
-             .loot-box-content .loot-box-reward { font-size: 1em; }
-
-            /* Leaderboard Responsiveness */
-             .leaderboard-item { padding: 8px 10px; font-size: 0.9em; }
-
-            /* Medals Responsiveness */
-             .medals-list { gap: 10px; }
-             .medal-item { font-size: 2em; }
-
-            /* Daily Bonus Responsiveness */
-             .daily-bonus-container { padding: 10px; }
-             .daily-bonus-container h4 { font-size: 1.1em; }
-
-            /* Notification Responsiveness */
-             .notification {
-                 top: 10px;
-                 right: 10px;
-                 padding: 8px 15px;
-                 font-size: 0.9em;
-             }
+            #mind-twist-game-container #mind-twist-puzzle-area { height: 280px; }
+            .notification { width: calc(100% - 40px); bottom: 15px; left: 20px; transform: translateY(150%) translateX(0); } /* Ajustar para que no use translateX(-50%) */
+            .notification.show { transform: translateY(0) translateX(0); }
+        }
+         @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 15px 20px; }
+            .welcome-screen h1 { font-size: 1.8em; }
+            .welcome-screen p { font-size: 1em; }
+            .welcome-screen input[type="text"] { font-size: 1.1em; }
+            .selection-screen h2 { font-size: 1.6em; }
+            .selection-card h3 { font-size: 1.2em; }
+            button { padding: 10px 15px; font-size: 0.95em;}
+            #math-game-container .problem { font-size: 1.6em; }
+            #math-game-container .input-area button { margin-left: 8px; }
+            #math-game-container .result { font-size: 1.1em; }
+            #mind-twist-game-container h2 { font-size: 1.7em; }
+            #mind-twist-game-container #mind-twist-question { font-size: 1.1em;}
+            .loot-box-content h3 { font-size: 1.6em; }
+            .loot-box-content .loot-box-icon { font-size: 2.5em; }
+            .loot-box-content .loot-box-reward { font-size: 1.05em; }
+            .medal-item { font-size: 2.2em; }
         }
     </style>
 </head>
@@ -468,51 +371,59 @@
         <div class="welcome-screen" id="welcome-screen">
             <h1>🚀 ¡Desafíos Mentales! 🧠</h1>
             <p>Ingresa tu nombre para comenzar esta aventura:</p>
-            <input type="text" id="player-name-input" placeholder="Tu Nombre de Campeón">
+            <input type="text" id="player-name-input" placeholder="Tu Nombre de Campeón" maxlength="20">
             <p id="name-error-message" class="name-error-message">¡Tu nombre es esencial para la leyenda!</p>
             <button onclick="handleStartClick()">¡Comenzar Aventura!</button>
         </div>
 
         <div class="selection-screen" id="selection-screen">
             <h2>¡Hola, <span id="display-player-name-selection"></span>!</h2>
-            <p>Elige tu desafío:</p>
+            <p class="greeting-subtext">¿Listo para ejercitar tu mente? Elige tu desafío:</p>
             <div class="game-selection-buttons">
-                 <button onclick="selectGame('math')">Juego de Matemáticas 🧮</button>
-                 <button onclick="selectGame('mindtwist')">Acertijos Visuales 🤔</button>
+                <button onclick="selectGame('math')">Mates Rápidas 🧮</button>
+                <button onclick="selectGame('mindtwist')">Acertijos Visuales 🤔</button>
             </div>
 
-            <div class="player-stats-summary">
-                 <p>Mejor Racha (Mates): <strong id="summary-math-best-streak">0</strong></p>
-                 <p>Acertijos Resueltos: <strong id="summary-mindtwist-solved">0</strong></p>
-                 <p>Total Correctas (Mates): <strong id="summary-math-total-correct">0</strong></p>
-                 <p>Total Juegos (Mates): <strong id="summary-math-total-games">0</strong></p>
-                 </div>
+            <div class="selection-grid">
+                <div class="selection-card" id="player-stats-card">
+                    <h3>📊 Tus Estadísticas</h3>
+                    <div class="player-stats-summary">
+                        <p>Mejor Racha (Mates): <strong id="summary-math-best-streak">0</strong></p>
+                        <p>Acertijos Resueltos: <strong id="summary-mindtwist-solved">0</strong></p>
+                        <p>Total Correctas (Mates): <strong id="summary-math-total-correct">0</strong></p>
+                        <p>Total Juegos (Mates): <strong id="summary-math-total-games">0</strong></p>
+                    </div>
+                </div>
 
-             <div class="leaderboard-container">
-                 <h3>Tabla de Posiciones (Mejor Racha Mates)</h3>
-                 <ul class="leaderboard-list" id="leaderboard-list">
-                     </ul>
-             </div>
+                <div class="selection-card" id="leaderboard-card">
+                    <h3>🏆 Tabla de Posiciones</h3>
+                    <p style="font-size:0.85em; text-align:center; margin-bottom:8px;">(Mejor Racha en Mates Rápidas)</p>
+                    <ul class="leaderboard-list" id="leaderboard-list">
+                        </ul>
+                </div>
 
-             <div class="medals-container">
-                 <h3>Tus Medallas</h3>
-                 <div class="medals-list" id="medals-list">
-                     </div>
-             </div>
-
-             <div class="daily-bonus-container" id="daily-bonus-container">
-                 <h4>🎁 ¡Bonificación Diaria Disponible! 🎁</h4>
-                 <p id="daily-bonus-message"></p>
-                 <button onclick="collectDailyBonus()">¡Reclamar!</button>
-             </div>
-
+                <div class="selection-card" id="medals-card">
+                    <h3>🎖️ Tus Medallas</h3>
+                    <div class="medals-list-container">
+                        <div class="medals-list" id="medals-list">
+                            </div>
+                    </div>
+                </div>
+                 <div class="selection-card daily-bonus-card" id="daily-bonus-card-container" style="display:none;"> <h3>🎁 Bonificación Diaria</h3>
+                    <div class="daily-bonus-container" id="daily-bonus-container">
+                        <h4>🎉 ¡Recompensa Especial! 🎉</h4>
+                        <p id="daily-bonus-message"></p>
+                        <button onclick="collectDailyBonus()">¡Reclamar!</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="math-game-container">
             <div class="game-stats">
                 <div class="player-name-display">Jugador: <span id="math-display-player-name"></span></div>
                 <div class="lives-display">❤️ Vidas: <span id="math-player-lives">3</span></div>
-                <div class="timer-display">⏱️ Tiempo: <span id="math-time-left">0</span>s</div>
+                <div class="timer-display" id="math-timer-wrapper">⏱️ Tiempo: <span id="math-time-left">0</span>s</div>
             </div>
 
             <div class="level-info">Nivel: <span id="math-current-level">1</span></div>
@@ -526,7 +437,7 @@
             <div class="problem" id="math-problem"></div>
 
             <div class="input-area">
-                <input type="number" id="math-user-answer" placeholder="Tu Respuesta">
+                <input type="number" id="math-user-answer" placeholder="Tu Respuesta" inputmode="numeric">
                 <button onclick="checkMathAnswer()">Verificar ✨</button>
             </div>
 
@@ -534,24 +445,23 @@
                 <div class="result" id="math-game-result"></div>
                 <div class="explanation" id="math-answer-explanation" style="display: none;"></div>
             </div>
-             <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
+            <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
         </div>
 
         <div id="mind-twist-game-container">
-             <h2>Acertijos Visuales 🤔</h2>
-             <p id="mind-twist-question"></p>
-             <div id="mind-twist-puzzle-area">
-                 </div>
-             <p id="mind-twist-feedback"></p>
-             <button id="mind-twist-next-level-btn">Siguiente Acertijo</button>
-             <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
+            <h2>Acertijos Visuales 🤔</h2>
+            <p id="mind-twist-question"></p>
+            <div id="mind-twist-puzzle-area">
+                </div>
+            <p id="mind-twist-feedback"></p>
+            <button id="mind-twist-next-level-btn" onclick="nextMindTwistLevel()">Siguiente Acertijo</button>
+            <button class="back-to-selection-btn" onclick="showScreen('selection')">↩️ Volver a Elegir Juego</button>
         </div>
 
         <div class="loot-box-container" id="loot-box-modal">
             <div class="loot-box-content">
                 <h3>¡Caja de Recompensas!</h3>
-                <div class="loot-box-icon">📦</div>
-                <p class="loot-box-reward" id="loot-box-reward-text">Abriendo...</p>
+                <div class="loot-box-icon">🎁</div> <p class="loot-box-reward" id="loot-box-reward-text">Abriendo...</p>
                 <button onclick="closeLootBox()">¡Genial!</button>
             </div>
         </div>
@@ -562,6 +472,50 @@
     </div>
 
     <script>
+        // --- Elementos del DOM (cacheados para eficiencia) ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const selectionScreen = document.getElementById('selection-screen');
+        const mathGameContainer = document.getElementById('math-game-container');
+        const mindTwistGameContainer = document.getElementById('mind-twist-game-container');
+
+        const playerNameInput = document.getElementById('player-name-input');
+        const nameErrorMessage = document.getElementById('name-error-message');
+        const displayPlayerNameSelection = document.getElementById('display-player-name-selection');
+        const mathDisplayPlayerName = document.getElementById('math-display-player-name');
+
+        const mathPlayerLivesDisplay = document.getElementById('math-player-lives');
+        const mathTimeLeftDisplay = document.getElementById('math-time-left');
+        const mathTimerWrapper = document.getElementById('math-timer-wrapper');
+        const mathCurrentLevelDisplay = document.getElementById('math-current-level');
+        const mathProgressBarFill = document.getElementById('math-progress-bar-fill');
+        const mathCorrectStreakDisplay = document.getElementById('math-correct-streak');
+        const mathCorrectPerLevelDisplay = document.getElementById('math-correct-per-level-display');
+        const mathBestStreakDisplay = document.getElementById('math-best-streak');
+        const mathProblemDisplay = document.getElementById('math-problem');
+        const mathUserAnswerInput = document.getElementById('math-user-answer');
+        const mathGameResultDisplay = document.getElementById('math-game-result');
+        const mathAnswerExplanationDisplay = document.getElementById('math-answer-explanation');
+
+        const summaryMathBestStreak = document.getElementById('summary-math-best-streak');
+        const summaryMindtwistSolved = document.getElementById('summary-mindtwist-solved');
+        const summaryMathTotalCorrect = document.getElementById('summary-math-total-correct');
+        const summaryMathTotalGames = document.getElementById('summary-math-total-games');
+
+        const mindTwistQuestionDisplay = document.getElementById('mind-twist-question');
+        const mindTwistPuzzleArea = document.getElementById('mind-twist-puzzle-area');
+        const mindTwistFeedbackDisplay = document.getElementById('mind-twist-feedback');
+        const mindTwistNextLevelBtn = document.getElementById('mind-twist-next-level-btn');
+
+        const lootBoxModal = document.getElementById('loot-box-modal');
+        const lootBoxRewardText = document.getElementById('loot-box-reward-text');
+        const notificationDisplay = document.getElementById('notification-display');
+
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const medalsList = document.getElementById('medals-list');
+        const dailyBonusContainer = document.getElementById('daily-bonus-container');
+        const dailyBonusCardContainer = document.getElementById('daily-bonus-card-container');
+        const dailyBonusMessage = document.getElementById('daily-bonus-message');
+
         // --- Estado Global del Juego ---
         let playerName = '';
         let activeGame = null; // 'math' or 'mindtwist'
@@ -573,50 +527,48 @@
                 playerLives: 3,
                 totalCorrect: 0,
                 totalIncorrect: 0,
-                totalGamesPlayed: 0
+                totalGamesPlayed: 0,
+                questionsInLevel: 0
             },
             mindtwist: {
                 currentLevel: 0,
                 solvedCount: 0,
                 totalAttempts: 0
             },
-            inventory: [], // Para futuras recompensas de loot box
-            medals: [], // IDs de medallas obtenidas
-            lastPlayed: null, // Timestamp de la última vez que jugó
-            dailyBonusDay: 0
+            inventory: [],
+            medals: [],
+            lastPlayed: null,
+            dailyBonusDay: 0,
+            lastLoginDate: null
         };
-        const mathCorrectPerLevel = 5;
-        const mathMaxLevel = 20;
+        const MATH_CORRECT_PER_LEVEL = 5;
+        const MATH_MAX_LEVEL = 20;
+        const INITIAL_LIVES = 3;
 
-
-        // --- Variables de Control de Juego Activo ---
         let mathCorrectAnswer;
         let mathTimerId = null;
         let mathTimeLeft = 0;
-        let mathBaseTimePerQuestion = 7;
-        let mathTimeBonusPerLevel = 1;
+        const MATH_BASE_TIME_PER_QUESTION = 15;
+        const MATH_TIME_REDUCTION_PER_LEVEL = 0.5;
+        const MATH_MIN_TIME_PER_QUESTION = 5;
         let mathCurrentProblemDetails = {};
 
-        // mindTwistCurrentLevel will use playerStats.mindtwist.currentLevel directly
         const mindTwistLevels = [
-            { question: "¿Cuál es el objeto más grande?", setup: setupMindTwistLevel1, checkAnswer: checkMindTwistLevel1 },
-            { question: "Haz que el coche avance.", setup: setupMindTwistLevel2, checkAnswer: checkMindTwistLevel2 },
-            { question: "Encuentra la <span id='difference-word'>diferencia</span>.", setup: setupMindTwistLevel3, checkAnswer: checkMindTwistLevel3 },
-            // TODO: Add more visual puzzle levels here
+            { id: "biggest_object", question: "¿Cuál es el objeto más grande?", setup: setupMindTwistLevel1, checkAnswer: checkMindTwistLevel1, cleanup: cleanupMindTwistLevel1 },
+            { id: "move_car", question: "Haz que el coche avance.", setup: setupMindTwistLevel2, checkAnswer: checkMindTwistLevel2, cleanup: cleanupMindTwistLevel2 },
+            { id: "find_difference", question: "Encuentra la <span id='difference-word' onclick='mindTwistLevel3DifferenceClicked(event)'>diferencia</span>.", setup: setupMindTwistLevel3, checkAnswer: checkMindTwistLevel3, cleanup: cleanupMindTwistLevel3 },
         ];
-        // Store references to event listeners for Mind Twist Level 2 to remove them later
         let mindTwistLevel2Listeners = {};
+        let mindTwistLevel3SpotElement = null;
 
-
-        // --- Tone.js Synths (Shared) ---
         let synthsInitialized = false;
-        let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, lifeLostSound, mindTwistCorrectSound, mindTwistIncorrectSound, lootBoxSound, dailyBonusSound, medalSound;
+        let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, lifeLostSound, mindTwistCorrectSound, mindTwistIncorrectSound, lootBoxSound, dailyBonusSound, medalSound, clickSound;
 
-        async function initializeSynths() {
-            if (synthsInitialized) return;
+        async function initializeAudio() {
+            if (synthsInitialized || (Tone.context && Tone.context.state === 'running')) return;
             try {
                 await Tone.start();
-                console.log("AudioContext started!");
+                console.log("AudioContext started successfully!");
                 correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
                 incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
                 levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
@@ -628,1285 +580,493 @@
                 lootBoxSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.05, decay: 0.4, sustain: 0.1, release: 0.5 }, volume: -7 }).toDestination();
                 dailyBonusSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -6 }).toDestination();
                 medalSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -8 }).toDestination();
-
-
+                clickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.2, sustain: 0 } }).toDestination();
                 synthsInitialized = true;
             } catch (e) {
-                console.error("Error initializing AudioContext:", e);
-                synthsInitialized = false; // Continue without sound
+                console.error("Error initializing AudioContext or synths:", e);
             }
         }
 
         const congratulations = [
-            "¡Bien hecho! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente! 🌟 ¡Pasaste al Nivel {level}!",
-            "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera!",
-            "¡Wow, {name}! 🏆 ¡Eres imparable! ¡Nivel {level} alcanzado!", "¡Asombroso! 🌠 ¡Dominando las mates en el Nivel {level}!",
-            "¡Fuera de serie, {name}! 💫 ¡El Nivel {level} no es rival para ti!", "¡¡¡ALUCINANTE, {name}!!! 👑 ¡Has llegado al ÚLTIMO Nivel {level}! ¡Pura maestría!"
+            "¡Bien hecho, {name}! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente trabajo! 🌟 ¡Pasaste al Nivel {level}!",
+            "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera, {name}!",
+            "¡Sigue así, {name}! 🔥 ¡Nivel {level} superado con éxito!", "¡Eres una estrella, {name}! 🌠 ¡Bienvenido al Nivel {level}!",
+            "¡Lo lograste, {name}! 💪 ¡A conquistar el Nivel {level}!"
         ];
 
-        function getCongratulationMessage(level, name) {
-            let message;
-            if (level <= 1) message = congratulations[0]; else if (level === 2) message = congratulations[0];
-            else if (level === 3) message = congratulations[1]; else if (level === 4) message = congratulations[2];
-            else if (level === 5) message = congratulations[3]; else if (level >= 6 && level <= 10) message = congratulations[4];
-            else if (level >= 11 && level <= 15) message = congratulations[5]; else if (level >= 16 && level <= 19) message = congratulations[6];
-            else if (level === 20) message = congratulations[7]; else message = `¡Nivel ${level} desbloqueado! 😎`;
-            return message.replace("{level}", level).replace("{name}", name);
-        }
-
-        // --- Data Persistence (localStorage) ---
-        function saveGameData() {
-            localStorage.setItem('mentalChallengesGameData', JSON.stringify({ playerName, playerStats }));
-        }
-
-        function loadGameData() {
-            const savedData = localStorage.getItem('mentalChallengesGameData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                const nameInput = document.getElementById('player-name-input');
-                // Load data only if the player name matches the saved data
-                if (data.playerName === nameInput.value.trim()) {
-                     playerName = data.playerName;
-                     // Merge saved stats with current structure to include new properties
-                     playerStats = { ...playerStats, ...data.playerStats };
-                     // Ensure nested properties are also merged and have default values if missing
-                     playerStats.math = { ...playerStats.math, ...(data.playerStats ? data.playerStats.math : {}) };
-                     playerStats.math.totalGamesPlayed = playerStats.math.totalGamesPlayed || 0; // Default to 0
-                     playerStats.mindtwist = { ...playerStats.mindtwist, ...(data.playerStats ? data.playerStats.mindtwist : {}) };
-                     playerStats.mindtwist.solvedCount = playerStats.mindtwist.solvedCount || 0; // Default to 0
-                     playerStats.mindtwist.totalAttempts = playerStats.mindtwist.totalAttempts || 0; // Default to 0
-                     playerStats.inventory = data.playerStats.inventory || [];
-                     playerStats.medals = data.playerStats.medals || [];
-                     playerStats.lastPlayed = data.playerStats.lastPlayed || null;
-                     playerStats.dailyBonusDay = playerStats.dailyBonusDay || 0; // Default to 0
-
-                     console.log("Game data loaded for", playerName, ":", playerStats);
-                } else {
-                    console.log("No saved data found for this player name.");
-                }
-            }
-        }
-
-        // --- Notifications (Simulated) ---
-        function showNotification(message, type = 'info', duration = 3000) {
-            const notificationEl = document.getElementById('notification-display');
-            notificationEl.textContent = message;
-            notificationEl.className = `notification show ${type}`; // Add type class for styling
-            setTimeout(() => {
-                notificationEl.className = 'notification'; // Hide after duration
-            }, duration);
-             // Request permission if not granted (for actual push notifications, requires service worker)
-             if ('Notification' in window && Notification.permission !== 'granted') {
-                 Notification.requestPermission().then(permission => {
-                     if (permission === 'granted') {
-                         console.log("Notification permission granted.");
-                         // Here you would typically register a service worker for actual push notifications
-                     }
-                 });
-             }
-             // For actual push notifications, you'd use a service worker here
-        }
-
-        // --- Medals ---
-        const allMedals = [
-            { id: 'math_level_5', name: 'Novato Matemático', icon: '🥉', description: 'Completa el Nivel 5 en el Juego de Matemáticas' },
-            { id: 'math_level_10', name: 'Matemático Avanzado', icon: '🥈', description: 'Completa el Nivel 10 en el Juego de Matemáticas' },
-            { id: 'math_level_20', name: 'Maestro Matemático', icon: '🥇', description: 'Completa el Nivel 20 en el Juego de Matemáticas' },
-            { id: 'mindtwist_solved_1', name: 'Primer Acertijo', icon: '✨', description: 'Resuelve tu primer acertijo visual' }, // New medal
-            { id: 'mindtwist_solved_5', name: 'Pensador Lateral', icon: '🧠', description: 'Resuelve 5 acertijos visuales' },
-            { id: 'mindtwist_solved_10', name: 'Mente Retorcida', icon: '💡', description: 'Resuelve 10 acertijos visuales' },
-            { id: 'math_streak_5', name: 'Racha Imparable', icon: '🔥', description: 'Consigue una racha de 5 respuestas correctas en Matemáticas' },
-            { id: 'math_total_100_correct', name: 'Cien Respuestas Correctas', icon: '💯', description: 'Resuelve 100 problemas de matemáticas en total' },
-             // TODO: Add more medal definitions
+        const MEDALS = [
+            { id: "first_game", name: "Primer Juego", description: "Juega tu primera partida de cualquier juego.", icon: "🎮", condition: (stats) => stats.math.totalGamesPlayed > 0 || stats.mindtwist.totalAttempts > 0},
+            { id: "math_first_correct", name: "Matiniciante", description: "Resuelve tu primer problema de Mates Rápidas.", icon: "➕", condition: (stats) => stats.math.totalCorrect > 0 && stats.math.totalGamesPlayed > 0 },
+            { id: "mindtwist_first_try", name: "Explorador de Acertijos", description: "Intenta resolver tu primer acertijo visual.", icon: "👀", condition: (stats) => stats.mindtwist.totalAttempts > 0 },
+            { id: "math_streak_5", name: "Racha de 5 (Mates)", description: "Logra una racha de 5 respuestas correctas en Mates Rápidas.", icon: "🏅", condition: (stats) => stats.math.bestStreak >= 5 },
+            { id: "math_level_5", name: "Nivel 5 (Mates)", description: "Alcanza el nivel 5 en Mates Rápidas.", icon: "🏆", condition: (stats) => playerStats.math.currentLevel >= 5 }, // Corrected to use playerStats
+            { id: "math_level_10", name: "Nivel 10 (Mates)", description: "Alcanza el nivel 10 en Mates Rápidas.", icon: "🌟", condition: (stats) => playerStats.math.currentLevel >= 10 }, // Corrected to use playerStats
+            { id: "mindtwist_solved_1", name: "Primer Acertijo Resuelto", description: "Resuelve tu primer acertijo visual.", icon: "💡", condition: (stats) => stats.mindtwist.solvedCount >= 1 },
+            { id: "mindtwist_solved_3", name: "Maestro de Acertijos Jr.", description: "Resuelve 3 acertijos visuales.", icon: "🧠", condition: (stats) => stats.mindtwist.solvedCount >= 3 },
+            { id: "daily_login_3", name: "Visitante Frecuente", description: "Inicia sesión 3 días diferentes.", icon: "📅", condition: (stats) => countUniqueLoginDays(stats) >= 3 }
         ];
+        let loginHistory = [];
 
-        function checkMedalUnlocked(medalId) {
-            if (playerStats.medals.includes(medalId)) {
-                return true; // Already unlocked
-            }
-
-            const medal = allMedals.find(m => m.id === medalId);
-            if (!medal) return false;
-
-            let unlocked = false;
-            switch (medalId) {
-                case 'math_level_5': unlocked = playerStats.math.currentLevel >= 5; break;
-                case 'math_level_10': unlocked = playerStats.math.currentLevel >= 10; break;
-                case 'math_level_20': unlocked = playerStats.math.currentLevel >= 20; break;
-                case 'mindtwist_solved_1': unlocked = playerStats.mindtwist.solvedCount >= 1; break; // Check for 1 solved
-                case 'mindtwist_solved_5': unlocked = playerStats.mindtwist.solvedCount >= 5; break;
-                case 'mindtwist_solved_10': unlocked = playerStats.mindtwist.solvedCount >= 10; break;
-                case 'math_streak_5': unlocked = playerStats.math.bestStreak >= 5; break;
-                case 'math_total_100_correct': unlocked = playerStats.math.totalCorrect >= 100; break;
-                 // TODO: Add logic for new medals
-            }
-
-            if (unlocked) {
-                playerStats.medals.push(medalId);
-                showNotification(`🏅 ¡Medalla desbloqueada: ${medal.name}!`, 'medal'); // Use 'medal' type
-                 if(synthsInitialized && medalSound) medalSound.triggerAttackRelease(["C6", "E6", "G6"], "8n", Tone.now());
-                updateMedalsDisplay();
-                saveGameData();
-                return true;
-            }
-            return false;
+        function countUniqueLoginDays(stats) {
+            const uniqueDays = new Set(loginHistory);
+            return uniqueDays.size;
         }
 
-        function updateMedalsDisplay() {
-            const medalsListEl = document.getElementById('medals-list');
-            medalsListEl.innerHTML = ''; // Clear current display
-
-            allMedals.forEach(medal => {
-                const isUnlocked = playerStats.medals.includes(medal.id);
-                const medalSpan = document.createElement('span');
-                medalSpan.className = `medal-item ${isUnlocked ? '' : 'locked'}`;
-                medalSpan.textContent = medal.icon;
-                medalSpan.title = `${medal.name}: ${medal.description}`;
-                medalsListEl.appendChild(medalSpan);
-            });
-        }
-
-
-        // --- Loot Boxes ---
-        // Default function, can be temporarily overridden by events
-        let tryTriggerLootBox = () => {
-             // Example: 25% chance to get a loot box
-             if (Math.random() < 0.25) {
-                 openLootBox();
-             }
-        };
-
-
-        function openLootBox() {
-            const lootBoxModal = document.getElementById('loot-box-modal');
-            const rewardTextEl = document.getElementById('loot-box-reward-text');
-            const lootBoxIconEl = lootBoxModal.querySelector('.loot-box-icon');
-
-            lootBoxIconEl.textContent = '📦'; // Closed box icon
-            rewardTextEl.textContent = 'Abriendo...';
-            lootBoxModal.classList.add('visible');
-             if(synthsInitialized && lootBoxSound) lootBoxSound.triggerAttackRelease(["C4", "E4", "G4"], "8n", Tone.now());
-
-
-            setTimeout(() => {
-                // Logic to determine the reward (simplified)
-                const possibleRewards = [
-                    { text: "+1 Vida (Mates)", type: 'life_math', icon: '❤️' },
-                    { text: "Bonus de Tiempo (Mates)", type: 'time_bonus_math', icon: '⏱️' },
-                    { text: "Pista para Acertijos", type: 'hint_mindtwist', icon: '🔍' },
-                    { text: "Bonificación de Racha", type: 'streak_bonus', icon: '🔥' },
-                    { text: "Pequeño Bonus XP (Simulado)", type: 'xp_bonus', icon: '✨' },
-                    { text: "Nada (¡mala suerte!)", type: 'none', icon: '💩' }
-                ];
-                const randomReward = possibleRewards[getRandomInt(0, possibleRewards.length - 1)];
-
-                rewardTextEl.textContent = `¡Obtuviste: ${randomReward.text}!`;
-                lootBoxIconEl.textContent = randomReward.icon; // Reward icon
-                 if(synthsInitialized && lootBoxSound) lootBoxSound.triggerAttackRelease(["C5", "G5"], "8n", Tone.now() + 0.3);
-
-
-                // Apply the reward
-                applyReward(randomReward.type);
-
-            }, 1500); // Time for the opening animation
-        }
-
-        function applyReward(rewardType) {
-            switch (rewardType) {
-                case 'life_math':
-                    playerStats.math.playerLives++;
-                    updateMathLivesDisplay();
-                    showNotification("Ganaste +1 Vida en Matemáticas!", 'info');
-                    break;
-                case 'time_bonus_math':
-                    // Implement how a time bonus is used (could be automatic on the next problem)
-                    // For now, just notify
-                    showNotification("Ganaste un Bonus de Tiempo para el siguiente problema de Matemáticas!", 'info');
-                    // You could save a flag in playerStats and use it in startMathTimer
-                    break;
-                case 'hint_mindtwist':
-                    playerStats.inventory.push('hint_mindtwist'); // Add to inventory
-                    showNotification("Ganaste una Pista para Acertijos Visuales!", 'info');
-                    // You would need UI to use hints in the mind twist game
-                    break;
-                 case 'streak_bonus':
-                     playerStats.math.correctStreak = Math.min(playerStats.math.correctStreak + 2, mathCorrectPerLevel); // Add 2 to current streak, cap at max per level
-                     showNotification("¡Bonus de Racha aplicado!", 'info');
-                     // Ensure this is reflected in the UI if math game is active
-                     if (activeGame === 'math') {
-                         document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
-                         updateMathProgressBar();
-                     }
-                     break;
-                 case 'xp_bonus':
-                     // Simulate gaining XP or points
-                     showNotification("Ganaste un Pequeño Bonus de XP (Simulado)!", 'info');
-                     // You could add an XP counter to playerStats
-                     break;
-                case 'none':
-                    // Bad luck, no reward
-                    showNotification("La caja estaba vacía... ¡mejor suerte la próxima!", 'info'); // Notify even if no reward
-                    break;
-            }
-            saveGameData();
-        }
-
-        function closeLootBox() {
-            document.getElementById('loot-box-modal').classList.remove('visible');
-        }
-
-        // --- Leaderboard (Local) ---
-        function updateLeaderboardDisplay() {
-            const leaderboardListEl = document.getElementById('leaderboard-list');
-            leaderboardListEl.innerHTML = ''; // Clear current list
-
-            // Use best math streak as score for this simple example
-            let leaderboardData = JSON.parse(localStorage.getItem('mathLeaderboard') || '[]');
-
-            // Update or add current player's score
-            const existingEntryIndex = leaderboardData.findIndex(entry => entry.name === playerName);
-            if (existingEntryIndex > -1) {
-                // Update if the new best streak is higher
-                if (playerStats.math.bestStreak > leaderboardData[existingEntryIndex].score) {
-                     leaderboardData[existingEntryIndex].score = playerStats.math.bestStreak;
-                     leaderboardData[existingEntryIndex].lastUpdated = new Date().toISOString();
-                }
-            } else {
-                // Add new entry if it doesn't exist
-                leaderboardData.push({
-                    name: playerName,
-                    score: playerStats.math.bestStreak,
-                    lastUpdated: new Date().toISOString()
-                });
-            }
-
-            // Sort by score descending
-            leaderboardData.sort((a, b) => b.score - a.score);
-
-            // Limit to top N (e.g., 10)
-            leaderboardData = leaderboardData.slice(0, 10);
-
-            // Save the updated leaderboard (locally)
-            localStorage.setItem('mathLeaderboard', JSON.stringify(leaderboardData));
-
-            // Display in the UI
-            leaderboardData.forEach((entry, index) => {
-                const listItem = document.createElement('li');
-                listItem.className = `leaderboard-item ${entry.name === playerName ? 'you' : ''}`;
-                listItem.innerHTML = `
-                    <span>${index + 1}. <strong>${entry.name}</strong></span>
-                    <span>Racha: ${entry.score}</span>
-                `;
-                leaderboardListEl.appendChild(listItem);
-            });
-        }
-
-        // --- Daily Bonus and Day Streak ---
-        function checkDailyBonus() {
-             const today = new Date();
-             today.setHours(0, 0, 0, 0); // Reset time to start of day
-
-             const lastPlayedDate = playerStats.lastPlayed ? new Date(playerStats.lastPlayed) : null;
-             let showBonus = false;
-             let bonusMessage = "";
-             let nextBonusDay = playerStats.dailyBonusDay + 1;
-
-             if (!lastPlayedDate) {
-                 // First time playing or old data without lastPlayed
-                 showBonus = true;
-                 bonusMessage = "¡Bienvenido! Reclama tu primera bonificación diaria.";
-                 nextBonusDay = 1;
-             } else {
-                 const yesterday = new Date(today);
-                 yesterday.setDate(yesterday.getDate() - 1);
-
-                 if (lastPlayedDate.getTime() < today.getTime()) { // Hasn't played today
-                     if (lastPlayedDate.getTime() === yesterday.getTime()) {
-                         // Played yesterday, streak continues
-                         showBonus = true;
-                         bonusMessage = `¡Racha de ${nextBonusDay} días! Reclama tu bonificación creciente.`;
-                     } else {
-                         // Streak broken
-                         showBonus = true;
-                         bonusMessage = "¡Bonificación diaria disponible! Racha reiniciada.";
-                         nextBonusDay = 1; // Reset streak
-                     }
-                 } else {
-                     // Already played today
-                     showBonus = false; // Don't show bonus if already claimed today
-                 }
-             }
-
-             const dailyBonusContainer = document.getElementById('daily-bonus-container');
-             const dailyBonusMessageEl = document.getElementById('daily-bonus-message');
-
-             if (showBonus) {
-                 dailyBonusMessageEl.textContent = bonusMessage;
-                 dailyBonusContainer.style.display = 'block';
-                 // Store the next expected bonus day (not yet claimed)
-                 dailyBonusContainer.dataset.nextBonusDay = nextBonusDay;
-             } else {
-                 dailyBonusContainer.style.display = 'none';
-             }
-        }
-
-        function collectDailyBonus() {
-             const dailyBonusContainer = document.getElementById('daily-bonus-container');
-             const nextBonusDay = parseInt(dailyBonusContainer.dataset.nextBonusDay || '1');
-
-             // Logic for increasing reward (simple example)
-             let rewardAmount = nextBonusDay * 10; // 10 points per streak day
-
-             let bonusType = 'points';
-             if (nextBonusDay >= 3) bonusType = 'lootbox'; // Loot box every 3 days
-             if (nextBonusDay >= 7) bonusType = 'life_math'; // Extra life every 7 days
-             if (nextBonusDay >= 15) bonusType = 'super_lootbox'; // Super loot box every 15 days (simulated as 2 loot boxes)
-
-
-             let rewardMessage = "";
-
-             switch (bonusType) {
-                 case 'points':
-                     // playerStats.points = (playerStats.points || 0) + rewardAmount; // You need to add points to playerStats
-                     rewardMessage = `Has reclamado tu bonificación diaria del Día ${nextBonusDay}. (+${rewardAmount} puntos simulados)`;
-                     showNotification(rewardMessage, 'info');
-                     break;
-                 case 'lootbox':
-                      rewardMessage = `¡Bonificación del Día ${nextBonusDay}! ¡Una Caja de Recompensas!`;
-                      showNotification(rewardMessage, 'info');
-                      openLootBox(); // Open one loot box
-                     break;
-                 case 'life_math':
-                     playerStats.math.playerLives++;
-                     updateMathLivesDisplay();
-                     rewardMessage = `¡Bonificación del Día ${nextBonusDay}! ¡+1 Vida en Matemáticas!`;
-                     showNotification(rewardMessage, 'info');
-                     break;
-                 case 'super_lootbox':
-                      rewardMessage = `¡Bonificación Épica del Día ${nextBonusDay}! ¡Dos Cajas de Recompensas!`;
-                      showNotification(rewardMessage, 'info');
-                      openLootBox(); // Open the first
-                      setTimeout(openLootBox, 1000); // Open the second with a small delay
-                     break;
-             }
-
-             if(synthsInitialized && dailyBonusSound) dailyBonusSound.triggerAttackRelease(["E5", "G5", "C6"], "8n", Tone.now());
-
-
-             // Update state
-             playerStats.dailyBonusDay = nextBonusDay;
-             playerStats.lastPlayed = new Date().toISOString(); // Record that they played today
-             saveGameData();
-
-             dailyBonusContainer.style.display = 'none'; // Hide after claiming
-             // Optional: show a "Already claimed today" message
-        }
-
-
-        // --- Temporary Events (Simulated) ---
-        function checkTemporaryEvents() {
-            // This could be more sophisticated, based on real dates or an internal "calendar"
-            const now = new Date();
-            const eventActive = now.getDate() % 5 === 0; // Example: event active every 5th day of the month
-
-            if (eventActive) {
-                const lastEventNotification = localStorage.getItem('lastEventNotification');
-                const today = new Date().toDateString();
-                if (lastEventNotification !== today) {
-                    showNotification("¡Evento Especial Activo! ¡Probabilidad de Loot Box aumentada!", 'event', 5000);
-                    localStorage.setItem('lastEventNotification', today);
-                }
-                // Temporarily override the loot box trigger function during the event
-                 tryTriggerLootBox = () => {
-                     if (Math.random() < 0.4) { // Increased probability to 40%
-                         openLootBox();
-                     }
-                 };
-            } else {
-                 // Restore the normal loot box probability if no event is active
-                 tryTriggerLootBox = () => {
-                     if (Math.random() < 0.25) { // Normal probability 25%
-                         openLootBox();
-                     }
-                 };
+        function playSound(sound, note, duration = '8n', timeOffset = '+0') {
+            if (synthsInitialized && sound) {
+                try {
+                    if (sound instanceof Tone.PolySynth) {
+                        sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
+                    } else if (sound instanceof Tone.NoiseSynth || sound instanceof Tone.MembraneSynth) {
+                        sound.triggerAttackRelease(duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
+                    } else {
+                        sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
+                    }
+                } catch (e) { console.error("Error playing sound:", e); }
             }
         }
+        function playClickSound() { if(synthsInitialized && clickSound) playSound(clickSound, null, '16n'); }
 
-
-        // --- Screen Control Functions ---
         function showScreen(screenId) {
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('selection-screen').style.display = 'none';
-            document.getElementById('math-game-container').style.display = 'none';
-            document.getElementById('mind-twist-game-container').style.display = 'none';
+            playClickSound();
+            ['welcome', 'selection', 'math', 'mindtwist'].forEach(id => {
+                const el = document.getElementById(id + '-screen') || document.getElementById(id + '-game-container');
+                if (el) el.style.display = 'none';
+            });
 
-            // Stop timers and clean up states when changing screens
-            if (activeGame === 'math') {
-                clearTimeout(mathTimerId);
-            } else if (activeGame === 'mindtwist') {
-                // Clean up Mind Twist specific listeners, especially drag events
-                removeMindTwistLevel2Listeners();
+            if (activeGame === 'mindtwist' && mindTwistLevels[playerStats.mindtwist.currentLevel]?.cleanup) {
+                mindTwistLevels[playerStats.mindtwist.currentLevel].cleanup();
             }
-            activeGame = null; // Reset active game
 
-            if (screenId === 'welcome') {
-                 document.getElementById('welcome-screen').style.display = 'flex';
-            } else if (screenId === 'selection') {
-                 document.getElementById('selection-screen').style.display = 'flex';
-                 document.getElementById('display-player-name-selection').textContent = playerName;
-                 updatePlayerStatsSummary();
-                 updateLeaderboardDisplay(); // Update leaderboard when returning to selection
-                 updateMedalsDisplay(); // Update medals when returning to selection
-                 checkDailyBonus(); // Check for daily bonus
-                 checkTemporaryEvents(); // Check for temporary events
-            } else if (screenId === 'math') {
-                 document.getElementById('math-game-container').style.display = 'flex';
-                 activeGame = 'math';
-                 startMathGame(); // Start or resume
-            } else if (screenId === 'mindtwist') {
-                 document.getElementById('mind-twist-game-container').style.display = 'flex';
-                 activeGame = 'mindtwist';
-                 startMindTwistGame(); // Start or resume
+            let targetScreen;
+            if (screenId === 'welcome') targetScreen = welcomeScreen;
+            else if (screenId === 'selection') {
+                updateSelectionScreenStats();
+                checkDailyBonus();
+                updateMedalsDisplay();
+                updateLeaderboardDisplay();
+                targetScreen = selectionScreen;
             }
-             saveGameData(); // Save data when changing screens
+            else if (screenId === 'math') targetScreen = mathGameContainer;
+            else if (screenId === 'mindtwist') targetScreen = mindTwistGameContainer;
+
+            if(targetScreen) targetScreen.style.display = 'flex';
         }
 
-        async function handleStartClick() {
-             await initializeSynths(); // Initialize synths on first user click
-             const nameInput = document.getElementById('player-name-input');
-             const nameErrorMessage = document.getElementById('name-error-message');
-             const enteredName = nameInput.value.trim();
+        function handleStartClick() {
+            initializeAudio();
+            playClickSound();
+            playerName = playerNameInput.value.trim();
+            if (playerName && playerName.length <= 20) {
+                displayPlayerNameSelection.textContent = playerName;
+                mathDisplayPlayerName.textContent = playerName;
+                nameErrorMessage.style.display = 'none';
+                loadPlayerStats(); // Cargar datos ANTES de ir a selección para que el nombre se use en leaderboard, etc.
+                                 // Pero el playerName actual del input tiene prioridad.
+                playerStats.playerName = playerName; // Guardar el nombre actual en stats para persistencia
 
-             if (enteredName === '') {
-                 nameErrorMessage.style.display = 'block'; nameInput.focus();
-                 if(synthsInitialized && incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
-                 return;
-             }
-             nameErrorMessage.style.display = 'none';
-
-             // Attempt to load data for the entered name
-             playerName = enteredName; // Set playerName before loading
-             loadGameData();
-
-             // If loadGameData didn't find data for this name, playerStats will be in its initial state.
-             // If it found data, playerStats will already be loaded.
-             // Ensure playerStats.playerName is set correctly
-             playerStats.playerName = playerName;
-
-
-             if(synthsInitialized && gameStartSound) gameStartSound.triggerAttackRelease("C4", "4n", Tone.now());
-
-             showScreen('selection');
+                const today = new Date().toISOString().split('T')[0];
+                if (!playerStats.lastLoginDate || playerStats.lastLoginDate !== today) {
+                    playerStats.lastLoginDate = today;
+                    if (!loginHistory.includes(today)) {
+                        loginHistory.push(today);
+                        if (loginHistory.length > 30) loginHistory.shift();
+                    }
+                }
+                savePlayerStats(); // Guardar nombre y datos de login
+                showScreen('selection');
+                checkAndAwardMedal("first_game"); // Se otorga al llegar a la pantalla de selección por primera vez.
+            } else {
+                if (!playerName) nameErrorMessage.textContent = '¡Tu nombre es esencial para la leyenda!';
+                else if (playerName.length > 20) nameErrorMessage.textContent = '¡Nombre demasiado largo! (Máx. 20)';
+                nameErrorMessage.style.display = 'block';
+            }
         }
 
         function selectGame(gameType) {
-             if (gameType === 'math') {
-                 showScreen('math');
-             } else if (gameType === 'mindtwist') {
-                 showScreen('mindtwist');
-             }
+            playClickSound();
+            activeGame = gameType;
+            if (gameType === 'math') {
+                startMathGame();
+                showScreen('math');
+            } else if (gameType === 'mindtwist') {
+                startMindTwistGame();
+                showScreen('mindtwist');
+            }
         }
 
-        function updatePlayerStatsSummary() {
-             document.getElementById('summary-math-best-streak').textContent = playerStats.math.bestStreak;
-             document.getElementById('summary-mindtwist-solved').textContent = playerStats.mindtwist.solvedCount;
-             document.getElementById('summary-math-total-correct').textContent = playerStats.math.totalCorrect;
-             document.getElementById('summary-math-total-games').textContent = playerStats.math.totalGamesPlayed;
-             // Update other stats if added
+        function updateSelectionScreenStats() {
+            summaryMathBestStreak.textContent = playerStats.math.bestStreak;
+            summaryMindtwistSolved.textContent = playerStats.mindtwist.solvedCount;
+            summaryMathTotalCorrect.textContent = playerStats.math.totalCorrect;
+            summaryMathTotalGames.textContent = playerStats.math.totalGamesPlayed;
         }
 
-
-        // --- Math Game Logic ---
         function startMathGame() {
-             document.getElementById('math-display-player-name').textContent = playerName;
-             document.getElementById('math-correct-per-level-display').textContent = mathCorrectPerLevel;
-
-             // Load player stats for the math game
-             // They are already loaded into playerStats when entering the selection screen
-             // Just update the UI elements from playerStats
-
-             document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
-             document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
-             document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak;
-             updateMathLivesDisplay();
-             updateMathProgressBar();
-             document.getElementById('math-answer-explanation').style.display = 'none';
-
-             // Increment games played counter if it's the start of a new math session
-             // A new session starts if streak is 0 and lives are full (assuming they don't start a new game with less than max lives)
-             if (playerStats.math.correctStreak === 0 && playerStats.math.playerLives === 3) {
-                 playerStats.math.totalGamesPlayed++;
-                 saveGameData(); // Save the increment
-             }
-
-
-             generateMathProblem(); // Generate the first problem or continue
-        }
-
-        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-        function evaluateExpression(expression) {
-            try {
-                // eslint-disable-next-line no-eval
-                return eval(expression);
-            } catch (error) {
-                console.error("Error evaluating expression:", expression, error); return NaN;
-            }
-        }
-
-        function updateMathProgressBar() {
-            const progressBarFill = document.getElementById('math-progress-bar-fill');
-            const progressPercentage = (playerStats.math.correctStreak / mathCorrectPerLevel) * 100;
-            progressBarFill.style.width = `${progressPercentage}%`;
-            progressBarFill.textContent = `${Math.round(progressPercentage)}%`;
-        }
-
-        function updateMathLivesDisplay() {
-            document.getElementById('math-player-lives').textContent = playerStats.math.playerLives;
-        }
-
-        function startMathTimer() {
-            clearTimeout(mathTimerId); // Clear previous timer
-            mathTimeLeft = mathBaseTimePerQuestion + (playerStats.math.currentLevel - 1) * mathTimeBonusPerLevel;
-            document.getElementById('math-time-left').textContent = mathTimeLeft;
-
-            mathTimerId = setInterval(() => {
-                mathTimeLeft--;
-                document.getElementById('math-time-left').textContent = mathTimeLeft;
-
-                if (mathTimeLeft <= 0) {
-                    clearInterval(mathTimerId);
-                    handleMathIncorrectAnswer(true); // true indicates it was due to timeout
-                }
-            }, 1000);
-        }
-
-        // --- MATH PROBLEM GENERATION (Your code + Adaptation) ---
-        function generateMathProblem() {
-            clearTimeout(mathTimerId); // Stop any active timer
-            mathCurrentProblemDetails = {}; // Reset problem details
-            let displayString = "";
-            let evalString = "";
-            let regenerationCount = 0;
-            const MAX_REGEN = 30; // Increased retry limit
-
-            // Simulate adaptive personalization: adjust difficulty or problem type
-            // based on current streak or best streak.
-            // If streak is high, maybe generate slightly more complex problems for the level.
-            // If streak is low or lives lost, maybe generate slightly simpler problems.
-            let effectiveLevel = playerStats.math.currentLevel;
-            // Simple adjustment: if current streak is high, simulate a higher level for generation
-            if (playerStats.math.correctStreak >= mathCorrectPerLevel / 2 && playerStats.math.currentLevel < mathMaxLevel) {
-                 effectiveLevel = Math.min(playerStats.math.currentLevel + 1, mathMaxLevel);
-            }
-            // Simple adjustment: if lives are low, simulate a lower level for generation (only if not on Level 1)
-            if (playerStats.math.playerLives <= 1 && playerStats.math.currentLevel > 1) {
-                 effectiveLevel = Math.max(playerStats.math.currentLevel - 1, 1);
-            }
-             // Note: This is a simple simulation. A real adaptive system would be more granular and based on history.
-
-
-            do {
-                regenerationCount++;
-                if (regenerationCount > MAX_REGEN) {
-                    console.error("Max regeneration attempts reached. Simplifying problem.");
-                    let n1 = getRandomInt(1, 5), n2 = getRandomInt(1, 5);
-                    mathCurrentProblemDetails = { type: 'simple', num1: n1, op: '+', num2: n2, result: n1 + n2 };
-                    displayString = `${n1} + ${n2}`;
-                    evalString = `${n1} + ${n2}`;
-                    break;
-                }
-
-                // Problem generation logic based on effectiveLevel
-                if (effectiveLevel <= 3) { // Level 1-3: Addition or Subtraction
-                    let num1 = getRandomInt(1, 15 + effectiveLevel * 3);
-                    let num2 = getRandomInt(1, 15 + effectiveLevel * 2);
-                    let operator = Math.random() < 0.6 ? '+' : '-';
-                    if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
-                    displayString = `${num1} ${operator} ${num2}`;
-                    evalString = displayString;
-                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (effectiveLevel <= 6) { // Level 4-6: Addition, Subtraction, Multiplication
-                    let num1 = getRandomInt(1, 20 + effectiveLevel * 2);
-                    let num2 = getRandomInt(1, effectiveLevel <= 4 ? 10 : 15);
-                    const operators = ['+', '-', '*'];
-                    let operator = operators[getRandomInt(0, 2)];
-                    if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
-                    if (operator === '*' && effectiveLevel <= 5) { num2 = getRandomInt(1, 9); }
-                    displayString = `${num1} ${operator} ${num2}`;
-                    evalString = displayString;
-                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (effectiveLevel <= 9) { // Level 7-9: Division (integer results)
-                    const operators = ['+', '-', '*', '/'];
-                    let operator = operators[getRandomInt(0, 3)];
-                    let num1, num2;
-                    if (operator === '/') {
-                        num2 = getRandomInt(2, 10 + effectiveLevel);
-                        let quotient = getRandomInt(1, 10 + effectiveLevel);
-                        num1 = num2 * quotient;
-                    } else {
-                        num1 = getRandomInt(1, 25 + effectiveLevel * 3);
-                        num2 = getRandomInt(1, (operator === '*') ? 12 : (20 + effectiveLevel));
-                        if (operator === '-' && num1 < num2) { [num1, num2] = [num2, num1]; }
-                    }
-                    displayString = `${num1} ${operator} ${num2}`;
-                    evalString = displayString;
-                    mathCurrentProblemDetails = { type: 'simple', num1, op: operator, num2, result: evaluateExpression(evalString) };
-                } else if (effectiveLevel <= 12) { // Level 10-12: Two steps with parentheses
-                    let numA = getRandomInt(1, 15 + effectiveLevel);
-                    let numB = getRandomInt(1, 10 + effectiveLevel);
-                    let numC = getRandomInt(1, 10 + effectiveLevel);
-                    const ops = ['+', '-', '*'];
-                    let op1 = ops[getRandomInt(0, 2)];
-                    let op2 = ops[getRandomInt(0, 2)];
-                    let intermediateResult;
-
-                    if (Math.random() < 0.5) { // (A op1 B) op2 C
-                         if (op1 === '/' ) {
-                             numB = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numA = numB * intermediateResult;
-                             op1 = '/';
-                         } else {
-                             intermediateResult = evaluateExpression(`${numA} ${op1} ${numB}`);
-                         }
-
-                         if (op2 === '/') {
-                             numC = getRandomInt(2, Math.abs(intermediateResult) > 1 ? Math.min(8, Math.abs(intermediateResult)) : 5);
-                             if (intermediateResult % numC !== 0) {
-                                 op2 = (Math.random() < 0.5 && intermediateResult !==0 && numC !==0) ? '*' : '+';
-                                 if (intermediateResult === 0 || numC === 0) op2 = '+';
-                             } else {
-                                 op2 = '/';
-                             }
-                         }
-                         displayString = `(${numA} ${op1} ${numB}) ${op2} ${numC}`;
-                         evalString = displayString;
-                         mathCurrentProblemDetails = { type: 'twoStepParenLeft', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numA} ${op1} ${numB})`), finalResult: evaluateExpression(evalString) };
-
-                    } else { // A op1 (B op2 C)
-                         if (op2 === '/') {
-                             numC = getRandomInt(2,8); intermediateResult = getRandomInt(2,8); numB = numC * intermediateResult;
-                             op2 = '/';
-                         } else {
-                              intermediateResult = evaluateExpression(`${numB} ${op2} ${numC}`);
-                         }
-
-                         if (op1 === '/') {
-                             if (intermediateResult === 0) {
-                                 op1 = ops[getRandomInt(1,2)];
-                                 if (op1 === '-' && numA < intermediateResult) {[numA, intermediateResult] = [intermediateResult, numA];}
-                             } else {
-                                 numA = intermediateResult * getRandomInt(1, 5);
-                                 op1 = '/';
-                             }
-                         }
-                         displayString = `${numA} ${op1} (${numB} ${op2} ${numC})`;
-                         evalString = displayString;
-                         mathCurrentProblemDetails = { type: 'twoStepParenRight', numA, op1, numB, op2, numC, intermediate: evaluateExpression(`(${numB} ${op2} ${numC})`), finalResult: evaluateExpression(evalString) };
-                    }
-                } else if (effectiveLevel <= 15) { // Level 13-15: Simple exponents and two/three steps
-                    if (Math.random() < 0.4 && effectiveLevel >= 14) { // Problem with exponent
-                        let base = getRandomInt(2, 7);
-                        let exp = getRandomInt(2, 3);
-                        let term = getRandomInt(1, 50);
-                        let op = (Math.random() < 0.5) ? '+' : '-';
-                        let powerResult = Math.pow(base, exp);
-                        if (op === '-' && powerResult < term) {
-                            displayString = `${term} ${op} ${base}^${exp}`;
-                            evalString = `${term} ${op} Math.pow(${base}, ${exp})`;
-                            mathCurrentProblemDetails = { type: 'exponent', term1: term, op, base, exp, term2: powerResult, result: evaluateExpression(evalString) };
-                        } else {
-                            displayString = `${base}^${exp} ${op} ${term}`;
-                            evalString = `Math.pow(${base}, ${exp}) ${op} ${term}`;
-                            mathCurrentProblemDetails = { type: 'exponent', base, exp, term1: powerResult, op, term2: term, result: evaluateExpression(evalString) };
-                        }
-                    } else { // Simple three-step problem (A op B op C)
-                        let n1 = getRandomInt(5, 30), n2 = getRandomInt(2, 15), n3 = getRandomInt(2, 10);
-                        let o1 = ['+','-','*'][getRandomInt(0,2)];
-                        let o2 = ['+','-','*'][getRandomInt(0,2)];
-                        // Simplified logic for integer results in three steps
-                        if (o1 === '/' || o2 === '/') {
-                             // Avoid division in three-step problems for simplicity and guaranteed integers
-                             o1 = ['+','-','*'][getRandomInt(0,2)];
-                             o2 = ['+','-','*'][getRandomInt(0,2)];
-                        }
-                        displayString = `${n1} ${o1} ${n2} ${o2} ${n3}`;
-                        evalString = displayString;
-                        mathCurrentProblemDetails = { type: 'threeStep', n1, o1, n2, o2, n3, result: evaluateExpression(evalString) };
-                    }
-                } else if (effectiveLevel <= 20) { // Level 16-20: More complex, but still integer
-                    let n1 = getRandomInt(10,50), n2 = getRandomInt(2,10), n3 = getRandomInt(5,30), n4 = getRandomInt(2,8);
-                    let ops = ['+','-','*'];
-                    let o1 = ops[getRandomInt(0,2)], o2 = ops[getRandomInt(0,2)], o3 = ops[getRandomInt(0,2)];
-                     // Avoid division in complex problems for simplicity and guaranteed integers
-                     if (o1 === '/' || o2 === '/' || o3 === '/') {
-                         o1 = ops[getRandomInt(0,2)];
-                         o2 = ops[getRandomInt(0,2)];
-                         o3 = ops[getRandomInt(0,2)];
-                     }
-
-                    if (effectiveLevel <= 18) {
-                        displayString = `(${n1} ${o1} ${n2}) ${o2} ${n3}`;
-                        evalString = displayString;
-                        mathCurrentProblemDetails = { type: 'complexTwoStep', n1,o1,n2,o2,n3, result: evaluateExpression(evalString) };
-                    } else { // Level 19-20
-                         displayString = `(${n1} ${o1} ${n2}) ${o2} (${n3} ${o3} ${n4})`;
-                         evalString = displayString;
-                         mathCurrentProblemDetails = { type: 'complexNested', n1,o1,n2,o2,n3,o3,n4, result: evaluateExpression(evalString) };
-                    }
-                } else { // Max Level
-                    displayString = `🏆 ¡Felicidades Supremas, ${playerName}! 🏆 Has conquistado TODOS los niveles. ¡Eres una leyenda matemática!`;
-                    evalString = null; mathCorrectAnswer = null;
-                    document.getElementById('math-user-answer').style.display = 'none';
-                    document.querySelector('#math-game-container .input-area button').style.display = 'none';
-                    document.querySelector('#math-game-container .level-info').style.display = 'none';
-                    document.querySelector('#math-game-container .progress-bar-container').style.display = 'none';
-                    document.querySelector('#math-game-container .game-stats .timer-display').style.display = 'none';
-                    document.getElementById('math-game-result').className = 'result level-up';
-                    if(synthsInitialized && levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "1n", Tone.now());
-                    saveGameData(); // Save final state
-                    return; // Exit function
-                }
-
-                // Check if the result is an integer
-                if (evalString) {
-                    mathCorrectAnswer = evaluateExpression(evalString.replace(/\^/g, '**')); // Use ** for eval
-                } else {
-                    mathCorrectAnswer = null; // For the final message
-                }
-
-            } while (evalString && (!Number.isFinite(mathCorrectAnswer) || mathCorrectAnswer !== Math.floor(mathCorrectAnswer)) && regenerationCount <= MAX_REGEN);
-
-            if (evalString) {
-                document.getElementById('math-problem').innerHTML = displayString.replace(/\*\*/g, '^') + ' = <span class="text-blue-500">?</span>';
-            } else {
-                 document.getElementById('math-problem').innerHTML = displayString; // Final message
-            }
-
-            document.getElementById('math-user-answer').value = '';
-            const resultEl = document.getElementById('math-game-result');
-            resultEl.textContent = ''; resultEl.className = 'result'; resultEl.style.animation = 'none';
-            document.getElementById('math-answer-explanation').style.display = 'none';
-            document.getElementById('math-answer-explanation').textContent = '';
-
-
-            document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
-            document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
-            document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update best streak
-            updateMathProgressBar();
-            if (evalString) startMathTimer(); // Start timer only if there's a problem
-            saveGameData(); // Save math game state
-        }
-
-
-        function generateMathExplanation(details, userAnswer) {
-            let explanationText = `Tu respuesta fue ${userAnswer}. La respuesta correcta es <strong>${details.result}</strong>.<br>`;
-            switch (details.type) {
-                case 'simple':
-                    explanationText += `Para resolver <code>${details.num1} ${details.op} ${details.num2}</code>, simplemente realizas la operación: ${details.num1} ${details.op} ${details.num2} = ${details.result}.`;
-                    break;
-                case 'twoStepParenLeft':
-                    explanationText += `En <code>(${details.numA} ${details.op1} ${details.numB}) ${details.op2} ${details.numC}</code>:<br>`;
-                    explanationText += `1. Primero resolvemos el paréntesis: <code>${details.numA} ${details.op1} ${details.numB} = ${details.intermediate}</code>.<br>`;
-                    explanationText += `2. Luego, usamos ese resultado: <code>${details.intermediate} ${details.op2} ${details.numC} = ${details.finalResult}</code>.`;
-                    break;
-                case 'twoStepParenRight':
-                    explanationText += `En <code>${details.numA} ${details.op1} (${details.numB} ${details.op2} ${details.numC})</code>:<br>`;
-                    explanationText += `1. Primero resolvemos el paréntesis: <code>${details.numB} ${details.op2} ${details.numC} = ${details.intermediate}</code>.<br>`;
-                    explanationText += `2. Luego, usamos ese resultado: <code>${details.numA} ${details.op1} ${details.intermediate} = ${details.finalResult}</code>.`;
-                    break;
-                case 'exponent':
-                    let baseVal = details.base;
-                    let expVal = details.exp;
-                    let powerTerm = Math.pow(baseVal, expVal);
-                    let otherTerm = (details.term1 === powerTerm) ? details.term2 : details.term1;
-                    let opSymbol = details.op;
-
-                    explanationText = `Calculamos la potencia <code>${baseVal}^${expVal} = ${powerTerm}</code>.<br>`;
-                    explanationText += `Luego operamos: <code>${details.term1} ${opSymbol} ${details.term2}</code> (que es <code>${powerTerm} ${opSymbol} ${otherTerm}</code>) da como resultado ${details.result}.`;
-                    break;
-                case 'threeStep':
-                    let step1Res = evaluateExpression(`${details.n1} ${details.o1} ${details.n2}`);
-                    // Determine order of operations for explanation
-                    let firstOp = `${details.n1} ${details.o1} ${details.n2}`;
-                    let secondOp = `${step1Res} ${details.o2} ${details.n3}`;
-                     if ((details.o1 === '+' || details.o1 === '-') && (details.o2 === '*' || details.o2 === '/')) {
-                          step1Res = evaluateExpression(`${details.n2} ${details.o2} ${details.n3}`);
-                          firstOp = `${details.n2} ${details.o2} ${details.n3}`;
-                          secondOp = `${details.n1} ${details.o1} ${step1Res}`;
-                     }
-                    explanationText += `Por orden de operaciones, primero <code>${firstOp} = ${step1Res}</code>.<br>`;
-                    explanationText += `Luego <code>${secondOp} = ${details.result}</code>.`;
-                    break;
-                default: // complexTwoStep, complexNested
-                    let problemString = document.getElementById('math-problem').textContent.replace(' = ?','');
-                     explanationText += `Este es un problema más complejo: <code>${problemString}</code>.<br>`;
-                     explanationText += `Siguiendo el orden de operaciones (paréntesis, exponentes, multiplicación/división, suma/resta), el resultado es ${details.result}.`;
-            }
-            return explanationText;
-        }
-
-
-        function handleMathIncorrectAnswer(isTimeout = false) {
-            clearTimeout(mathTimerId);
-            playerStats.math.playerLives--;
-            playerStats.math.totalIncorrect++; // Count incorrect answers
-            updateMathLivesDisplay();
-
-            // Reset streak and update best streak if current was higher
-            if (playerStats.math.correctStreak > playerStats.math.bestStreak) {
-                 playerStats.math.bestStreak = playerStats.math.correctStreak;
-                 document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update UI
-                 updateLeaderboardDisplay(); // Update local leaderboard
-                 checkMedalUnlocked('math_streak_5'); // Check for streak medals
-            }
+            playSound(gameStartSound, 'C4', '0.5s');
+            playerStats.math.currentLevel = playerStats.math.currentLevel > 0 ? playerStats.math.currentLevel : 1;
+            playerStats.math.playerLives = INITIAL_LIVES;
             playerStats.math.correctStreak = 0;
-            updateMathProgressBar();
-
-            const resultElement = document.getElementById('math-game-result');
-            const explanationDiv = document.getElementById('math-answer-explanation');
-            const userAnswerInput = document.getElementById('math-user-answer');
-            const userAnswerValue = isTimeout ? "N/A (tiempo agotado)" : userAnswerInput.value;
-
-
-            if (playerStats.math.playerLives > 0) {
-                if(synthsInitialized && lifeLostSound) lifeLostSound.triggerAttackRelease("A3", "16n", Tone.now() + 0.1);
-                resultElement.textContent = isTimeout ? `¡Tiempo Agotado! 😟 Vidas: ${playerStats.math.playerLives}` : `Incorrecto. 😟 Vidas: ${playerStats.math.playerLives}`;
-                resultElement.className = 'result incorrect';
-                explanationDiv.innerHTML = generateMathExplanation(mathCurrentProblemDetails, userAnswerValue);
-                explanationDiv.style.display = 'block';
-                setTimeout(generateMathProblem, 4500); // More time to read explanation
-            } else {
-                if(synthsInitialized && levelDownSound) levelDownSound.triggerAttackRelease("8n", Tone.now() + 0.1);
-                resultElement.textContent = `¡Oh no! Te quedaste sin vidas. Regresas al nivel anterior.`;
-                resultElement.className = 'result level-down';
-                explanationDiv.innerHTML = generateMathExplanation(mathCurrentProblemDetails, userAnswerValue);
-                explanationDiv.style.display = 'block';
-
-                if (playerStats.math.currentLevel > 1) {
-                    playerStats.math.currentLevel--;
-                }
-                playerStats.math.playerLives = 3; // Reset lives for the level (previous or current if it was Lvl 1)
-                updateMathLivesDisplay();
-                setTimeout(() => {
-                    resultElement.textContent = `Volviendo al Nivel ${playerStats.math.currentLevel}...`;
-                    resultElement.className = 'result'; // Neutral
-                    explanationDiv.style.display = 'none';
-                    generateMathProblem();
-                }, 4000);
-            }
-            // Trigger reflow for animation
-            void resultElement.offsetWidth;
-            resultElement.style.animation = 'shake 0.5s';
-            userAnswerInput.value = '';
-            saveGameData(); // Save state after incorrect answer
+            playerStats.math.questionsInLevel = 0;
+            updateMathGameDisplay();
+            nextMathProblem();
+            playerStats.math.totalGamesPlayed++;
+            savePlayerStats(); // Guardar al iniciar el juego
+            checkAndAwardMedal("first_game"); // También aquí por si se salta el flujo normal
         }
 
+        function getMathTimeForCurrentLevel() {
+            const time = MATH_BASE_TIME_PER_QUESTION - (playerStats.math.currentLevel -1) * MATH_TIME_REDUCTION_PER_LEVEL;
+            return Math.max(time, MATH_MIN_TIME_PER_QUESTION);
+        }
 
-        function checkMathAnswer() {
-            if (mathCorrectAnswer === null && playerStats.math.currentLevel > mathMaxLevel) return;
-
-            clearTimeout(mathTimerId); // Stop timer on check
-            const userAnswerInput = document.getElementById('math-user-answer');
-            const userAnswer = parseFloat(userAnswerInput.value);
-            const resultElement = document.getElementById('math-game-result');
-            const explanationDiv = document.getElementById('math-answer-explanation');
-
-            resultElement.style.animation = 'none';
-            explanationDiv.style.display = 'none'; // Hide previous explanation
-
-            if (isNaN(userAnswer)) {
-                resultElement.textContent = '🤔 Por favor, ingresa un número válido.';
-                resultElement.className = 'result incorrect';
-                if(synthsInitialized && incorrectSound) incorrectSound.triggerAttackRelease("C3", "8n", Tone.now() + 0.1);
-                startMathTimer();
-                userAnswerInput.focus();
-                void resultElement.offsetWidth; resultElement.style.animation = 'shake 0.5s';
+        function nextMathProblem() {
+            if (playerStats.math.playerLives <= 0) {
+                gameOverMath();
                 return;
             }
-
-            const tolerance = 0.0001; // Very small tolerance for integers
-            if (Math.abs(userAnswer - mathCorrectAnswer) < tolerance) {
-                resultElement.textContent = '¡Correcto! 🎉';
-                resultElement.className = 'result correct';
-                if(synthsInitialized && correctSound) correctSound.triggerAttackRelease("C5", "8n", Tone.now() + 0.1);
-                playerStats.math.correctStreak++;
-                playerStats.math.totalCorrect++; // Count correct answers
-
-                // Update best streak if current is higher
-                 if (playerStats.math.correctStreak > playerStats.math.bestStreak) {
-                     playerStats.math.bestStreak = playerStats.math.correctStreak;
-                     document.getElementById('math-best-streak').textContent = playerStats.math.bestStreak; // Update UI
-                     updateLeaderboardDisplay(); // Update local leaderboard
-                     checkMedalUnlocked('math_streak_5'); // Check for streak medals
-                 }
-
-                 // Check for level and total correct medals
-                 checkMedalUnlocked('math_level_5');
-                 checkMedalUnlocked('math_level_10');
-                 checkMedalUnlocked('math_level_20');
-                 checkMedalUnlocked('math_total_100_correct');
+            clearTimeout(mathTimerId);
+            mathTimeLeft = getMathTimeForCurrentLevel();
+            mathUserAnswerInput.value = '';
+            mathUserAnswerInput.focus();
+            mathAnswerExplanationDisplay.style.display = 'none';
+            mathGameResultDisplay.textContent = '';
+            mathGameResultDisplay.className = 'result';
+            mathTimerWrapper.classList.remove('text-red-500');
 
 
-                // Streak notification
-                if (playerStats.math.correctStreak >= 3 && playerStats.math.correctStreak % 3 === 0) {
-                     showNotification(`¡Racha de ${playerStats.math.correctStreak} respuestas correctas!`, 'streak');
-                }
-
-
-                if (playerStats.math.correctStreak >= mathCorrectPerLevel && playerStats.math.currentLevel < mathMaxLevel) {
-                    playerStats.math.correctStreak = 0;
-                    playerStats.math.currentLevel++;
-                    playerStats.math.playerLives = 3; // Reset lives on level up
-                    updateMathLivesDisplay();
-                    const congratsMessage = getCongratulationMessage(playerStats.math.currentLevel, playerName);
-                    resultElement.textContent = congratsMessage;
-                    resultElement.className = 'result level-up';
-                    void resultElement.offsetWidth; resultElement.style.animation = 'pulse 1s 1';
-                    if(synthsInitialized && levelUpSound) levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "2n", Tone.now() + 0.2, 0.8);
-                    setTimeout(generateMathProblem, 2800);
-                    tryTriggerLootBox(); // Attempt to trigger loot box on level up
-                } else if (playerStats.math.correctStreak >= mathCorrectPerLevel && playerStats.math.currentLevel === mathMaxLevel) {
-                    resultElement.textContent = '¡Correcto! 🔥 Última racha completada...';
-                    resultElement.className = 'result correct';
-                    playerStats.math.correctStreak++; // Increment final streak to show in stats
-                    updateMathProgressBar();
-                    setTimeout(generateMathProblem, 2000); // This will trigger the end game message
-                    tryTriggerLootBox(); // Attempt to trigger loot box on completing last level
-                } else {
-                    setTimeout(generateMathProblem, 1800);
-                    tryTriggerLootBox(); // Attempt to trigger loot box on correct answer
-                }
-            } else {
-                handleMathIncorrectAnswer(false); // false indicates it was not due to timeout
-            }
-
-            updateMathProgressBar();
-            document.getElementById('math-current-level').textContent = playerStats.math.currentLevel;
-            document.getElementById('math-correct-streak').textContent = playerStats.math.correctStreak;
-            userAnswerInput.value = '';
-            userAnswerInput.focus();
-            saveGameData(); // Save state after correct answer
+            generateMathProblem();
+            updateMathGameDisplay();
+            mathTimerId = setInterval(updateMathTimer, 1000);
         }
 
-        // --- Mind Twist Game Logic ---
+        function generateMathProblem() {
+            const level = playerStats.math.currentLevel;
+            let num1, num2, operator, problemText;
+            if (level <= 3) { operator = Math.random() < 0.5 ? '+' : '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; }
+            else if (level <= 7) { const r = Math.random(); operator = r < 0.4 ? '+' : (r < 0.8 ? '-' : '*'); if (operator === '*') { num1 = Math.floor(Math.random() * 9) + 2; num2 = Math.floor(Math.random() * 9) + 2; } else { num1 = Math.floor(Math.random() * 20 * (level/3)) + 1; num2 = Math.floor(Math.random() * 20 * (level/3)) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
+            else if (level <= 12) { const r = Math.random(); operator = r < 0.3 ? '+' : (r < 0.5 ? '-' : (r < 0.85 ? '*' : '/')); if (operator === '*') { num1 = Math.floor(Math.random() * 10) + 5; num2 = Math.floor(Math.random() * 10) + (level > 9 ? 5 : 2); } else if (operator === '/') { num2 = Math.floor(Math.random() * 8) + 2; mathCorrectAnswer = Math.floor(Math.random() * 8) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * 50 * (level/6)) + 10; num2 = Math.floor(Math.random() * 50 * (level/6)) + 10; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
+            else { const r = Math.random(); operator = r < 0.4 ? '*' : (r < 0.7 ? '/' : '+'); if (operator === '*') { num1 = Math.floor(Math.random() * 15) + 5; num2 = Math.floor(Math.random() * 15) + 5; } else if (operator === '/') { num2 = Math.floor(Math.random() * 10) + 2; mathCorrectAnswer = Math.floor(Math.random() * 12) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * (50 + level * 5)) + 20; num2 = Math.floor(Math.random() * (50 + level * 5)) + 20; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
+            if (operator !== '/') { switch (operator) { case '+': mathCorrectAnswer = num1 + num2; break; case '-': mathCorrectAnswer = num1 - num2; break; case '*': mathCorrectAnswer = num1 * num2; break; } }
+            mathCurrentProblemDetails = {num1, num2, operator};
+            problemText = `<span>${num1}</span> <span style="color: #667eea;">${operator}</span> <span>${num2}</span> = ?`;
+            mathProblemDisplay.innerHTML = problemText;
+        }
+
+        function checkMathAnswer() {
+            clearTimeout(mathTimerId);
+            const userAnswer = parseInt(mathUserAnswerInput.value);
+            if (isNaN(userAnswer)) { showMathResult("¡Ingresa un número!", "incorrect"); playerStats.math.playerLives--; playSound(lifeLostSound, 'C3', '0.1s'); setTimeout(nextMathProblem, 1500); return; }
+
+            if (userAnswer === mathCorrectAnswer) {
+                playerStats.math.correctStreak++; playerStats.math.questionsInLevel++; playerStats.math.totalCorrect++;
+                if (playerStats.math.correctStreak > playerStats.math.bestStreak) { playerStats.math.bestStreak = playerStats.math.correctStreak; showNotification(`¡Nueva mejor racha: ${playerStats.math.bestStreak}!`, "streak", 2500); addToLeaderboard(playerName, playerStats.math.bestStreak); }
+                showMathResult("¡Correcto! 🎉", "correct"); playSound(correctSound, 'C5', '0.1s');
+                checkAndAwardMedal("math_first_correct");
+                if (playerStats.math.questionsInLevel >= MATH_CORRECT_PER_LEVEL) { levelUpMath(); } else { setTimeout(nextMathProblem, 1000); }
+            } else {
+                playerStats.math.playerLives--; playerStats.math.correctStreak = 0; playerStats.math.totalIncorrect++;
+                showMathResult(`Incorrecto. La respuesta era ${mathCorrectAnswer}.`, "incorrect"); showMathExplanation();
+                playSound(incorrectSound, 'C3', '0.2s'); playSound(lifeLostSound, 'A2', '0.1s', '+0.1');
+                if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2500); }
+            }
+            updateMathGameDisplay(); checkAndAwardAllMedals(); savePlayerStats();
+        }
+
+        function showMathExplanation() {
+            const {num1, num2, operator} = mathCurrentProblemDetails;
+            let explanation = `<strong>Explicación:</strong> `;
+            switch(operator) {
+                case '+': explanation += `Sumar ${num1} y ${num2} da como resultado <code>${num1} + ${num2} = ${mathCorrectAnswer}</code>.`; break;
+                case '-': explanation += `Restar ${num2} de ${num1} da como resultado <code>${num1} - ${num2} = ${mathCorrectAnswer}</code>.`; break;
+                case '*': explanation += `Multiplicar ${num1} por ${num2} da como resultado <code>${num1} * ${num2} = ${mathCorrectAnswer}</code>.`; break;
+                case '/': explanation += `Dividir ${num1} entre ${num2} da como resultado <code>${num1} / ${num2} = ${mathCorrectAnswer}</code>. (Porque ${num2} * ${mathCorrectAnswer} = ${num1}).`; break;
+            }
+            mathAnswerExplanationDisplay.innerHTML = explanation;
+            mathAnswerExplanationDisplay.style.display = 'block';
+        }
+
+        function levelUpMath() {
+            playerStats.math.currentLevel++; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0;
+            showMathResult(getCongratulationsMessage(), "level-up", 2500); playSound(levelUpSound, ['C4', 'E4', 'G4', 'C5'], '0.5s');
+            if (playerStats.math.currentLevel > MATH_MAX_LEVEL) { showMathResult("¡Has dominado Mates Rápidas!", "correct", 3000); setTimeout(() => showScreen('selection'), 3000); return; }
+            if (playerStats.math.playerLives < INITIAL_LIVES) { playerStats.math.playerLives++; showNotification("+1 Vida por subir de nivel!", "event", 1500); }
+            setTimeout(nextMathProblem, 2500); checkAndAwardAllMedals();
+        }
+
+        function levelDownMath() {
+            if (playerStats.math.currentLevel > 1) {
+                playerStats.math.currentLevel--; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0;
+                showMathResult("¡Oh no! Has bajado al Nivel " + playerStats.math.currentLevel, "level-down", 2000);
+                playSound(levelDownSound, null, '0.3s');
+            } else { showMathResult("¡Cuidado! Estás en el primer nivel.", "incorrect", 2000); }
+            updateMathGameDisplay();
+        }
+
+        function updateMathTimer() {
+            mathTimeLeft--; mathTimeLeftDisplay.textContent = mathTimeLeft;
+            if (mathTimeLeft <= 0) {
+                clearTimeout(mathTimerId); showMathResult("¡Se acabó el tiempo! ⏰", "incorrect");
+                playerStats.math.playerLives--; playerStats.math.correctStreak = 0;
+                playSound(incorrectSound, 'A2', '0.3s'); playSound(lifeLostSound, 'G2', '0.1s', '+0.1');
+                if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2000); }
+                updateMathGameDisplay(); savePlayerStats();
+            }
+            if (mathTimeLeft <= 5 && mathTimeLeft > 0) { mathTimerWrapper.classList.add('text-red-500'); }
+            else { mathTimerWrapper.classList.remove('text-red-500'); }
+        }
+
+        function updateMathGameDisplay() {
+            mathPlayerLivesDisplay.textContent = playerStats.math.playerLives;
+            mathCurrentLevelDisplay.textContent = playerStats.math.currentLevel;
+            mathCorrectStreakDisplay.textContent = playerStats.math.correctStreak;
+            mathCorrectPerLevelDisplay.textContent = MATH_CORRECT_PER_LEVEL;
+            mathBestStreakDisplay.textContent = playerStats.math.bestStreak;
+            mathTimeLeftDisplay.textContent = mathTimeLeft;
+            const progress = playerStats.math.playerLives > 0 ? (playerStats.math.questionsInLevel / MATH_CORRECT_PER_LEVEL) * 100 : 0;
+            mathProgressBarFill.style.width = `${progress}%`;
+            mathProgressBarFill.textContent = `${Math.round(progress)}%`;
+        }
+
+        function showMathResult(message, type, duration = 1500) {
+            mathGameResultDisplay.textContent = message;
+            mathGameResultDisplay.className = 'result ' + type;
+            mathGameResultDisplay.style.animation = 'none'; mathGameResultDisplay.offsetHeight; mathGameResultDisplay.style.animation = null;
+            if (type === "incorrect" || type === "level-down") { mathGameResultDisplay.classList.add('shake'); }
+        }
+
+        function getCongratulationsMessage() {
+            const messageTemplate = congratulations[Math.floor(Math.random() * congratulations.length)];
+            return messageTemplate.replace("{name}", playerName).replace("{level}", playerStats.math.currentLevel);
+        }
+
+        function gameOverMath() {
+            clearTimeout(mathTimerId);
+            showMathResult(`¡Juego Terminado! Mejor racha: ${playerStats.math.bestStreak}`, "incorrect", 3000);
+            playSound(levelDownSound, null, '0.5s');
+            if (playerStats.math.currentLevel > 1) levelDownMath();
+            if (playerStats.math.bestStreak >= 3 && Math.random() < 0.25) { setTimeout(triggerLootBox, 1500); }
+            setTimeout(() => { showScreen('selection'); playerStats.math.correctStreak = 0; playerStats.math.questionsInLevel = 0; }, 3000);
+            savePlayerStats();
+        }
+
         function startMindTwistGame() {
-            // Load player stats for the mind twist game
-            // They are already loaded into playerStats when entering the selection screen
-            // Use playerStats.mindtwist.currentLevel directly
-
-            // Resume or start the mind twist game
-            if (playerStats.mindtwist.currentLevel === 0) {
-                 loadMindTwistLevel(0); // Load the first level
-            } else {
-                 console.log("Resuming mind twist game at level", playerStats.mindtwist.currentLevel);
-                 loadMindTwistLevel(playerStats.mindtwist.currentLevel); // Resume from current level
-            }
+            playSound(gameStartSound, 'D4', '0.5s');
+            mindTwistNextLevelBtn.style.display = 'none';
+            mindTwistFeedbackDisplay.textContent = '';
+            loadMindTwistLevel(playerStats.mindtwist.currentLevel);
+            playerStats.mindtwist.totalAttempts++;
+            savePlayerStats();
+            checkAndAwardMedal("first_game");
+            checkAndAwardMedal("mindtwist_first_try");
         }
-
-        // Function to remove specific Mind Twist Level 2 listeners
-        function removeMindTwistLevel2Listeners() {
-            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-            if (puzzleArea && mindTwistLevel2Listeners.mousemove) {
-                 document.removeEventListener('mousemove', mindTwistLevel2Listeners.mousemove);
-                 document.removeEventListener('mouseup', mindTwistLevel2Listeners.mouseup);
-                 document.removeEventListener('touchmove', mindTwistLevel2Listeners.touchmove);
-                 document.removeEventListener('touchend', mindTwistLevel2Listeners.touchend);
-                 // Clear stored listeners
-                 mindTwistLevel2Listeners = {};
-                 console.log("Mind Twist Level 2 listeners removed.");
-            }
-        }
-
 
         function loadMindTwistLevel(levelIndex) {
-            // Clean up listeners from previous level before setting up the new one
-            removeMindTwistLevel2Listeners(); // Specifically for level 2 drag events
-
-            playerStats.mindtwist.currentLevel = levelIndex; // Update level in stats
-
-            const questionElement = document.getElementById('mind-twist-question');
-            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-            const feedbackElement = document.getElementById('mind-twist-feedback');
-            const nextLevelBtn = document.getElementById('mind-twist-next-level-btn');
-
-            if (playerStats.mindtwist.currentLevel < mindTwistLevels.length) {
-                const level = mindTwistLevels[playerStats.mindtwist.currentLevel];
-                questionElement.innerHTML = level.question;
-                puzzleArea.innerHTML = ''; // Clear previous puzzle area content
-                feedbackElement.textContent = '';
-                nextLevelBtn.style.display = 'none';
-
-                // Clone and replace next level button to remove old event listeners safely
-                const oldNextLevelBtn = nextLevelBtn.cloneNode(true);
-                nextLevelBtn.parentNode.replaceChild(oldNextLevelBtn, nextLevelBtn);
-                const newNextLevelBtn = document.getElementById('mind-twist-next-level-btn');
-
-                newNextLevelBtn.addEventListener('click', () => {
-                    loadMindTwistLevel(playerStats.mindtwist.currentLevel + 1);
-                });
-
-                // Set up the visual elements and specific interactions for the current level
-                level.setup();
-
-            } else {
-                // Game finished
-                questionElement.textContent = `¡Felicidades, ${playerName}! Has completado todos los acertijos visuales disponibles.`;
-                puzzleArea.innerHTML = '<p>¡Eres un maestro de la lógica retorcida!</p>';
-                feedbackElement.textContent = '';
-                nextLevelBtn.style.display = 'none'; // Hide next level button
-
-                // Ensure the back to selection button is visible at the end
-                 const backBtn = document.querySelector('#mind-twist-game-container .back-to-selection-btn');
-                 if (backBtn) backBtn.style.display = 'block';
+            if (levelIndex > 0 && mindTwistLevels[levelIndex - 1]?.cleanup) { mindTwistLevels[levelIndex - 1].cleanup(); }
+            mindTwistPuzzleArea.innerHTML = '';
+            if (levelIndex >= mindTwistLevels.length) {
+                mindTwistQuestionDisplay.textContent = "¡Felicidades! Has resuelto todos los acertijos.";
+                mindTwistPuzzleArea.innerHTML = "<p style='font-size:1.8em; font-family: \"Fredoka One\", cursive; color: #ED8936;'>🎉🏆🎉</p>";
+                mindTwistFeedbackDisplay.textContent = `Total resueltos: ${playerStats.mindtwist.solvedCount}`;
+                mindTwistNextLevelBtn.style.display = 'none';
+                playSound(levelUpSound, ['C5', 'E5', 'G5', 'C6'], '0.7s'); return;
             }
-            saveGameData(); // Save mind twist game state
+            const level = mindTwistLevels[levelIndex];
+            mindTwistQuestionDisplay.innerHTML = level.question;
+            level.setup(mindTwistPuzzleArea);
+            mindTwistFeedbackDisplay.textContent = '';
+            mindTwistNextLevelBtn.style.display = 'none';
         }
 
-        function checkMindTwistAnswer(isCorrect) {
-            const feedbackElement = document.getElementById('mind-twist-feedback');
-            const nextLevelBtn = document.getElementById('mind-twist-next-level-btn');
-
-            playerStats.mindtwist.totalAttempts++; // Count attempt
-
+        function mindTwistAnswer(isCorrect) {
             if (isCorrect) {
-                feedbackElement.textContent = "¡Correcto!";
-                feedbackElement.style.color = 'green';
-                if(synthsInitialized && mindTwistCorrectSound) mindTwistCorrectSound.triggerAttackRelease("C5", "8n", Tone.now());
-                nextLevelBtn.style.display = 'block';
-                playerStats.mindtwist.solvedCount++; // Count solved puzzle
-
-                // Check for medals
-                checkMedalUnlocked('mindtwist_solved_1'); // Check first solved medal
-                checkMedalUnlocked('mindtwist_solved_5');
-                checkMedalUnlocked('mindtwist_solved_10');
-
-                tryTriggerLootBox(); // Attempt to trigger loot box on solving
+                playSound(mindTwistCorrectSound, 'E5', '0.1s');
+                mindTwistFeedbackDisplay.textContent = "¡Correcto! Brillante.";
+                mindTwistFeedbackDisplay.style.color = "#38A169";
+                playerStats.mindtwist.solvedCount++;
+                mindTwistNextLevelBtn.style.display = 'inline-block';
+                checkAndAwardMedal(mindTwistLevels[playerStats.mindtwist.currentLevel].id + "_solved");
+                checkAndAwardAllMedals();
+                if (Math.random() < 0.15) { setTimeout(triggerLootBox, 500); }
             } else {
-                feedbackElement.textContent = "¡Inténtalo de nuevo!";
-                feedbackElement.style.color = 'red';
-                 if(synthsInitialized && mindTwistIncorrectSound) mindTwistIncorrectSound.triggerAttackRelease("C3", "8n", Tone.now());
-                 const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-                 puzzleArea.style.animation = 'none';
-                 void puzzleArea.offsetWidth; // Trigger reflow
-                 puzzleArea.style.animation = 'shake 0.5s';
+                playSound(mindTwistIncorrectSound, 'D3', '0.2s');
+                mindTwistFeedbackDisplay.textContent = "Hmm, no es eso. ¡Sigue intentando!";
+                mindTwistFeedbackDisplay.style.color = "#E53E3E";
+                mindTwistPuzzleArea.classList.add('shake-animation');
+                setTimeout(() => mindTwistPuzzleArea.classList.remove('shake-animation'), 500);
             }
-            saveGameData(); // Save state after answer
+            savePlayerStats();
+        }
+        const tempStyleSheet = document.createElement("style"); tempStyleSheet.type = "text/css"; tempStyleSheet.innerText = ".shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }"; document.head.appendChild(tempStyleSheet);
+
+        function nextMindTwistLevel() { playClickSound(); playerStats.mindtwist.currentLevel++; loadMindTwistLevel(playerStats.mindtwist.currentLevel); savePlayerStats(); }
+
+        function setupMindTwistLevel1(area) {
+            area.innerHTML = `<div id="apple" class="level1-object"></div> <div id="car" class="level1-object"></div> <div id="sun" class="level1-object"></div>`;
+            const sunEl = document.getElementById('sun'); sunEl.style.width = '120px'; sunEl.style.height = '120px'; sunEl.style.right = 'calc(50% - 60px)'; sunEl.style.top = 'calc(50% - 60px)';
+            document.getElementById('apple').onclick = () => mindTwistLevels[0].checkAnswer('apple');
+            document.getElementById('car').onclick = () => mindTwistLevels[0].checkAnswer('car');
+            document.getElementById('sun').onclick = () => mindTwistLevels[0].checkAnswer('sun');
+        }
+        function checkMindTwistLevel1(selectedObject) { mindTwistAnswer(selectedObject === 'sun'); }
+        function cleanupMindTwistLevel1() {}
+
+        function setupMindTwistLevel2(area) {
+            area.innerHTML = `<div id="sun-hidden"></div> <div id="cloud"></div> <div id="ice"></div> <div id="car-level2"></div> <div id="road"></div>`;
+            const cloud = document.getElementById('cloud'); const ice = document.getElementById('ice'); const sunHidden = document.getElementById('sun-hidden');
+            let offsetX, offsetY, isDragging = false;
+            mindTwistLevel2Listeners.cloudMousedown = (e) => { isDragging = true; cloud.classList.add('dragging'); const cX = e.clientX || e.touches[0].clientX; const cY = e.clientY || e.touches[0].clientY; offsetX = cX - cloud.offsetLeft; offsetY = cY - cloud.offsetTop; cloud.style.cursor = 'grabbing'; };
+            mindTwistLevel2Listeners.documentMousemove = (e) => { if (!isDragging) return; e.preventDefault(); const cX = e.clientX || e.touches[0].clientX; const cY = e.clientY || e.touches[0].clientY; cloud.style.left = (cX - offsetX) + 'px'; cloud.style.top = (cY - offsetY) + 'px'; sunHidden.style.opacity = '1'; const sunRect = sunHidden.getBoundingClientRect(); const iceRect = ice.getBoundingClientRect(); if (sunRect.left < iceRect.right && sunRect.right > iceRect.left && sunRect.top < iceRect.bottom && sunRect.bottom > iceRect.top && parseFloat(sunHidden.style.opacity) === 1) { ice.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; ice.style.opacity = '0'; ice.style.transform = 'scale(0.5)'; setTimeout(() => { if (ice.parentElement) ice.remove(); mindTwistLevels[1].checkAnswer(); }, 500); } };
+            mindTwistLevel2Listeners.documentMouseup = () => { if (isDragging) { isDragging = false; cloud.classList.remove('dragging'); cloud.style.cursor = 'grab'; } };
+            cloud.addEventListener('mousedown', mindTwistLevel2Listeners.cloudMousedown); document.addEventListener('mousemove', mindTwistLevel2Listeners.documentMousemove); document.addEventListener('mouseup', mindTwistLevel2Listeners.documentMouseup);
+            cloud.addEventListener('touchstart', mindTwistLevel2Listeners.cloudMousedown, { passive: false }); document.addEventListener('touchmove', mindTwistLevel2Listeners.documentMousemove, { passive: false }); document.addEventListener('touchend', mindTwistLevel2Listeners.documentMouseup);
+        }
+        function checkMindTwistLevel2() { const ice = document.getElementById('ice'); const car = document.getElementById('car-level2'); if (!ice || ice.style.opacity === '0') { car.style.left = `calc(50% - 60px + 100px)`; mindTwistAnswer(true); } else { mindTwistAnswer(false); } }
+        function cleanupMindTwistLevel2() { const c = document.getElementById('cloud'); if (c) { c.removeEventListener('mousedown', mindTwistLevel2Listeners.cloudMousedown); c.removeEventListener('touchstart', mindTwistLevel2Listeners.cloudMousedown); } document.removeEventListener('mousemove', mindTwistLevel2Listeners.documentMousemove); document.removeEventListener('mouseup', mindTwistLevel2Listeners.documentMouseup); document.removeEventListener('touchmove', mindTwistLevel2Listeners.documentMousemove); document.removeEventListener('touchend', mindTwistLevel2Listeners.documentMouseup); mindTwistLevel2Listeners = {}; }
+
+        function setupMindTwistLevel3(area) { area.innerHTML = `<div class="image-pair-container"><div class="image-box" id="image-a" style="background-image: url('https://placehold.co/200x200/E8E8E8/B0B0B0?text=Imagen+A&font=lora');"></div><div class="image-box" id="image-b" style="background-image: url('https://placehold.co/200x200/E8E8E8/B0B0B0?text=Imagen+A&font=lora');"></div></div>`; }
+        function mindTwistLevel3DifferenceClicked(event) { event.stopPropagation(); mindTwistLevels[2].checkAnswer('word'); }
+        function checkMindTwistLevel3(clickedItem) { mindTwistAnswer(clickedItem === 'word'); }
+        function cleanupMindTwistLevel3() {}
+
+        function triggerLootBox() {
+            playSound(lootBoxSound, ['C4', 'E4', 'G4'], '0.4s');
+            lootBoxModal.classList.add('visible');
+            lootBoxRewardText.textContent = "Abriendo...";
+            setTimeout(() => {
+                const rewards = ["+1 Vida Extra (Mates)", "+5 Segundos extra (Mates Próx. Nivel)", "Pista para Acertijo (Próximamente)", "Doble XP por 3 problemas (Mates)"];
+                const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+                lootBoxRewardText.textContent = `¡Has ganado: ${randomReward}!`;
+                if (randomReward.includes("Vida Extra") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; showNotification("+1 Vida de la caja!", "event", 2000); }
+                else if (randomReward.includes("Segundos extra")) { playerStats.inventory.push("bonus_tiempo_mates"); showNotification("¡Bonus de tiempo guardado!", "event", 2000); }
+                updateMathGameDisplay(); savePlayerStats();
+            }, 1500);
+        }
+        function closeLootBox() { playClickSound(); lootBoxModal.classList.remove('visible'); }
+
+        function showNotification(message, type = 'success', duration = 3000) {
+            notificationDisplay.textContent = message;
+            notificationDisplay.className = 'notification show ' + type;
+            setTimeout(() => { notificationDisplay.classList.remove('show'); }, duration);
         }
 
-        // --- Mind Twist Level Setups ---
-
-        // Level 1: The Biggest Object
-        function setupMindTwistLevel1() {
-            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-            puzzleArea.innerHTML = `
-                <div id="apple" class="level1-object"></div>
-                <div id="car" class="level1-object"></div>
-                <div id="sun" class="level1-object"></div>
-            `;
-            // Get references to the newly created elements
-            const appleEl = document.getElementById('apple');
-            const carEl = document.getElementById('car');
-            const sunEl = document.getElementById('sun');
-
-            // Add event listeners
-            appleEl.addEventListener('click', () => checkMindTwistAnswer(false));
-            carEl.addEventListener('click', () => checkMindTwistAnswer(false));
-            sunEl.addEventListener('click', () => checkMindTwistAnswer(true)); // Correct solution
-        }
-
-        function checkMindTwistLevel1() { /* Logic handled by event listeners */ }
-
-        // Level 2: The Car Obstacle
-        function setupMindTwistLevel2() {
-             const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-             puzzleArea.innerHTML = `
-                 <div id="road"></div>
-                 <div id="ice"></div>
-                 <div id="car-level2"></div>
-                 <div id="sun-hidden"></div>
-                 <div id="cloud"></div>
-             `;
-
-             const cloud = document.getElementById('cloud');
-             const sunHidden = document.getElementById('sun-hidden');
-             const ice = document.getElementById('ice');
-             const carLevel2 = document.getElementById('car-level2');
-             let isDragging = false;
-             let offsetX, offsetY;
-
-             // Define event handlers as named functions to allow removal
-             mindTwistLevel2Listeners.handleCloudMouseDown = (e) => {
-                 if (activeGame !== 'mindtwist') return;
-                 isDragging = true;
-                 offsetX = e.clientX - cloud.getBoundingClientRect().left;
-                 offsetY = e.clientY - cloud.getBoundingClientRect().top;
-                 cloud.style.cursor = 'grabbing';
-                 e.preventDefault(); // Prevent text selection and default drag behavior
-             };
-
-             mindTwistLevel2Listeners.handleDocumentMouseMove = (e) => {
-                 if (!isDragging || activeGame !== 'mindtwist') return;
-                 // Update cloud position based on mouse movement
-                 cloud.style.left = (e.clientX - offsetX) + 'px';
-                 cloud.style.top = (e.clientY - offsetY) + 'px';
-
-                 // Check if the cloud is "far enough" to reveal the sun and solve the puzzle
-                 const cloudRect = cloud.getBoundingClientRect();
-                 const puzzleRect = puzzleArea.getBoundingClientRect();
-                 const threshold = 50; // Pixels outside the puzzle area
-
-                 if (cloudRect.left < puzzleRect.left - threshold || cloudRect.right > puzzleRect.right + threshold ||
-                     cloudRect.top < puzzleRect.top - threshold || cloudRect.bottom > puzzleRect.bottom + threshold) {
-
-                     if (sunHidden.style.opacity === '0') { // Only trigger once
-                         sunHidden.style.opacity = 1; // Reveal sun
-                         ice.style.opacity = 0; // "Melt" the ice
-                         carLevel2.style.left = `calc(50% - 60px + 75px)`; // Move the car past the ice
-                         checkMindTwistAnswer(true); // Puzzle solved
-                         isDragging = false; // Stop dragging after solving
-                         cloud.style.cursor = 'default';
-                         // Remove listeners after solving to prevent further interaction
-                         removeMindTwistLevel2Listeners();
-                     }
-                 }
-             };
-
-             mindTwistLevel2Listeners.handleDocumentMouseUp = () => {
-                 isDragging = false;
-                 cloud.style.cursor = 'grab';
-             };
-
-             // Touch events for mobile
-             mindTwistLevel2Listeners.handleCloudTouchStart = (e) => {
-                 if (activeGame !== 'mindtwist') return;
-                 isDragging = true;
-                 offsetX = e.touches[0].clientX - cloud.getBoundingClientRect().left;
-                 offsetY = e.touches[0].clientY - cloud.getBoundingClientRect().top;
-                 cloud.style.cursor = 'grabbing';
-                 e.preventDefault(); // Prevent mobile scrolling
-             };
-
-             mindTwistLevel2Listeners.handleDocumentTouchMove = (e) => {
-                 if (!isDragging || activeGame !== 'mindtwist') return;
-                 cloud.style.left = (e.touches[0].clientX - offsetX) + 'px';
-                 cloud.style.top = (e.touches[0].clientY - offsetY) + 'px';
-
-                 const cloudRect = cloud.getBoundingClientRect();
-                 const puzzleRect = puzzleArea.getBoundingClientRect();
-                 const threshold = 50;
-
-                 if (cloudRect.left < puzzleRect.left - threshold || cloudRect.right > puzzleRect.right + threshold ||
-                     cloudRect.top < puzzleRect.top - threshold || cloudRect.bottom > puzzleRect.bottom + threshold) {
-
-                     if (sunHidden.style.opacity === '0') {
-                         sunHidden.style.opacity = 1;
-                         ice.style.opacity = 0;
-                         carLevel2.style.left = `calc(50% - 60px + 75px)`;
-                         checkMindTwistAnswer(true);
-                         isDragging = false;
-                         cloud.style.cursor = 'default';
-                         removeMindTwistLevel2Listeners(); // Remove listeners after solving
-                     }
-                 }
-                 e.preventDefault();
-             };
-
-             mindTwistLevel2Listeners.handleDocumentTouchEnd = () => {
-                 isDragging = false;
-                 cloud.style.cursor = 'grab';
-             };
-
-             // Add event listeners using the named functions
-             cloud.addEventListener('mousedown', mindTwistLevel2Listeners.handleCloudMouseDown);
-             document.addEventListener('mousemove', mindTwistLevel2Listeners.handleDocumentMouseMove);
-             document.addEventListener('mouseup', mindTwistLevel2Listeners.handleDocumentMouseUp);
-
-             cloud.addEventListener('touchstart', mindTwistLevel2Listeners.handleCloudTouchStart);
-             document.addEventListener('touchmove', mindTwistLevel2Listeners.handleDocumentTouchMove);
-             document.addEventListener('touchend', mindTwistLevel2Listeners.handleDocumentTouchEnd);
-        }
-
-        function checkMindTwistLevel2() { /* Logic handled by event listeners */ }
-
-        // Level 3: Find the Difference
-        function setupMindTwistLevel3() {
-            const puzzleArea = document.getElementById('mind-twist-puzzle-area');
-            puzzleArea.innerHTML = `
-                <div class="image-pair-container">
-                    <div class="image-box"></div>
-                    <div class="image-box"></div>
-                </div>
-            `;
-            const questionElement = document.getElementById('mind-twist-question');
-            // Ensure the span with id 'difference-word' exists in the question
-             if (!questionElement.querySelector('#difference-word')) {
-                 // Use innerHTML carefully to avoid removing existing listeners if question changes
-                 // A safer approach might be to manage the question text and span separately
-                 // For this example, we'll re-add the span if missing and re-attach listener
-                 questionElement.innerHTML = questionElement.textContent.replace('diferencia', '<span id="difference-word">diferencia</span>');
-             }
-
-            const differenceWord = document.getElementById('difference-word');
-            if (differenceWord) {
-                // Clone and replace to remove old event listeners safely
-                const oldDifferenceWord = differenceWord.cloneNode(true);
-                differenceWord.parentNode.replaceChild(oldDifferenceWord, differenceWord);
-                const newDifferenceWord = document.getElementById('difference-word');
-
-                newDifferenceWord.addEventListener('click', () => checkMindTwistAnswer(true));
-            }
-            const imageBoxes = document.querySelectorAll('#mind-twist-game-container .image-box');
-            imageBoxes.forEach(box => {
-                // Clone and replace each image box to remove old event listeners safely
-                const oldBox = box.cloneNode(true);
-                box.parentNode.replaceChild(oldBox, box);
-                // Get the reference to the new element after replacement
-                const newBox = box.parentNode.querySelector('.image-box:nth-child(' + (Array.from(imageBoxes).indexOf(box) + 1) + ')');
-
-                newBox.addEventListener('click', () => {
-                    const feedbackElement = document.getElementById('mind-twist-feedback');
-                    // Only provide incorrect feedback if the answer hasn't been marked correct yet
-                    if (!feedbackElement.textContent.includes('Correcto')) {
-                        checkMindTwistAnswer(false);
-                    }
-                });
+        const MAX_LEADERBOARD_ENTRIES = 5;
+        let leaderboardData = [];
+        function updateLeaderboardDisplay() {
+            leaderboardList.innerHTML = '';
+            const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.score - a.score);
+            const displayEntries = sortedLeaderboard.slice(0, MAX_LEADERBOARD_ENTRIES);
+            if (displayEntries.length === 0) { leaderboardList.innerHTML = '<li class="leaderboard-item" style="text-align:center; color:#888;">Aún no hay puntajes.</li>'; return; }
+            displayEntries.forEach(entry => {
+                const li = document.createElement('li'); li.classList.add('leaderboard-item');
+                if (entry.name === playerName) { li.classList.add('you'); } // playerName es el nombre actual del input
+                li.innerHTML = `<strong>${entry.name}</strong> <span>${entry.score}</span>`;
+                leaderboardList.appendChild(li);
             });
         }
+        function addToLeaderboard(name, score) {
+            const existingEntryIndex = leaderboardData.findIndex(entry => entry.name === name);
+            if (existingEntryIndex !== -1) { if (score > leaderboardData[existingEntryIndex].score) { leaderboardData[existingEntryIndex].score = score; } else { return; } }
+            else { leaderboardData.push({ name, score }); }
+            leaderboardData.sort((a, b) => b.score - a.score);
+            if (leaderboardData.length > MAX_LEADERBOARD_ENTRIES * 2) { leaderboardData = leaderboardData.slice(0, MAX_LEADERBOARD_ENTRIES * 2); }
+            updateLeaderboardDisplay(); savePlayerStats();
+        }
 
-        function checkMindTwistLevel3() { /* Logic handled by event listeners */ }
+        function updateMedalsDisplay() {
+            medalsList.innerHTML = '';
+            MEDALS.forEach(medal => {
+                const isUnlocked = playerStats.medals.includes(medal.id);
+                const medalDiv = document.createElement('div'); medalDiv.classList.add('medal-item'); medalDiv.textContent = medal.icon;
+                const tooltipSpan = document.createElement('span'); tooltipSpan.classList.add('medal-tooltip'); tooltipSpan.textContent = `${medal.name}${isUnlocked ? '' : ' (Bloqueada)'} - ${medal.description}`;
+                medalDiv.appendChild(tooltipSpan);
+                if (!isUnlocked) { medalDiv.classList.add('locked'); }
+                medalsList.appendChild(medalDiv);
+            });
+        }
+        function checkAndAwardMedal(medalId) {
+            const medal = MEDALS.find(m => m.id === medalId);
+            if (medal && !playerStats.medals.includes(medalId) && medal.condition(playerStats)) {
+                playerStats.medals.push(medalId);
+                showNotification(`¡Medalla Desbloqueada: ${medal.name} ${medal.icon}!`, 'medal', 4000);
+                playSound(medalSound, ['C5', 'G5', 'E5'], '0.4s');
+                updateMedalsDisplay(); savePlayerStats();
+            }
+        }
+        function checkAndAwardAllMedals() { MEDALS.forEach(medal => { if (!playerStats.medals.includes(medal.id) && medal.condition(playerStats)) { checkAndAwardMedal(medal.id); } }); }
 
+        function checkDailyBonus() {
+            const today = new Date(); const todayDay = today.getDate(); const lastBonusDay = playerStats.dailyBonusDay;
+            if (!lastBonusDay || lastBonusDay !== todayDay) {
+                dailyBonusCardContainer.style.display = 'block'; // Mostrar la tarjeta
+                dailyBonusContainer.style.display = 'block'; // Mostrar el contenido del bonus
+                const bonusOptions = ["+1 Vida (Mates)", "Racha +1 (Mates)", "Inicio con +3s (Mates)"];
+                const randomBonus = bonusOptions[Math.floor(Math.random() * bonusOptions.length)];
+                dailyBonusMessage.textContent = `¡Tu recompensa de hoy es: ${randomBonus}!`;
+                dailyBonusContainer.dataset.pendingBonus = randomBonus;
+            } else {
+                dailyBonusCardContainer.style.display = 'none';
+                dailyBonusContainer.style.display = 'none';
+            }
+        }
+        function collectDailyBonus() {
+            playClickSound(); const pendingBonus = dailyBonusContainer.dataset.pendingBonus;
+            if (pendingBonus) {
+                showNotification(`¡Bonificación reclamada: ${pendingBonus}!`, 'event', 3000);
+                playSound(dailyBonusSound, ['D4', 'F#4', 'A4'], '0.5s');
+                if (pendingBonus.includes("Vida") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; }
+                else if (pendingBonus.includes("Racha")) { playerStats.inventory.push("bonus_racha_mates"); } // Guardar como item de inventario
+                else if (pendingBonus.includes("+3s")) { playerStats.inventory.push("bonus_tiempo_inicio_mates"); }
 
-        // --- Global Event Listeners ---
-        document.getElementById('math-user-answer').addEventListener('keypress', function(event) {
-            if (activeGame === 'math' && event.key === 'Enter') { event.preventDefault(); checkMathAnswer(); }
-        });
-        document.getElementById('player-name-input').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') { event.preventDefault(); handleStartClick(); }
-        });
+                playerStats.dailyBonusDay = new Date().getDate();
+                dailyBonusCardContainer.style.display = 'none'; // Ocultar la tarjeta después de reclamar
+                dailyBonusContainer.style.display = 'none';
+                delete dailyBonusContainer.dataset.pendingBonus;
+                updateMathGameDisplay(); savePlayerStats();
+            }
+        }
 
+        function savePlayerStats() {
+            try {
+                const dataToSave = { playerName: playerStats.playerName, stats: playerStats, leaderboard: leaderboardData, loginHist: loginHistory };
+                localStorage.setItem('mentalChallengesGameData_v2', JSON.stringify(dataToSave)); // Changed key for new structure
+            } catch (e) { console.error("Error saving data:", e); showNotification("Error al guardar progreso.", "error", 5000); }
+        }
+        function loadPlayerStats() {
+            try {
+                const savedData = localStorage.getItem('mentalChallengesGameData_v2'); // Changed key
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    // Prioritize playerName from input if it's the first load after input
+                    // but use saved playerName if input is empty (e.g. page refresh)
+                    const currentInputName = playerNameInput.value.trim();
+                    playerName = currentInputName || parsedData.playerName || ''; // Use current input, then saved, then default
 
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Do not load data here, it's loaded in handleStartClick after getting the name
-            showScreen('welcome'); // Show welcome screen on load
-            document.getElementById('math-correct-per-level-display').textContent = mathCorrectPerLevel; // Ensure this value is displayed
+                    playerStats = { ...playerStats, ...parsedData.stats };
+                    if (parsedData.stats.math) playerStats.math = { ...playerStats.math, ...parsedData.stats.math };
+                    if (parsedData.stats.mindtwist) playerStats.mindtwist = { ...playerStats.mindtwist, ...parsedData.stats.mindtwist };
+                    playerStats.inventory = parsedData.stats.inventory || [];
+                    playerStats.medals = parsedData.stats.medals || [];
+                    playerStats.playerName = playerName; // Ensure playerStats also has the correct name
 
-            // Preload placeholder images if necessary (not critical for this example)
-            const img = new Image();
-            img.src = 'https://via.placeholder.com/200x200?text=Imagen+A';
+                    leaderboardData = parsedData.leaderboard || [];
+                    loginHistory = parsedData.loginHist || [];
 
-            // Generate the initial medal spans on the selection screen
-             const medalsListEl = document.getElementById('medals-list');
-             medalsListEl.innerHTML = ''; // Clear current display (if any from HTML)
-             allMedals.forEach(medal => {
-                 const medalSpan = document.createElement('span');
-                 medalSpan.className = `medal-item locked`; // All locked initially
-                 medalSpan.textContent = medal.icon;
-                 medalSpan.title = `${medal.name}: ${medal.description}`;
-                 medalsListEl.appendChild(medalSpan);
-             });
-        });
+                    if (playerName) { // If a name is now established (either from input or load)
+                        playerNameInput.value = playerName;
+                        displayPlayerNameSelection.textContent = playerName;
+                        mathDisplayPlayerName.textContent = playerName;
+                    }
+                    updateLeaderboardDisplay(); updateMedalsDisplay(); checkAndAwardAllMedals();
+                }
+            } catch (e) { console.error("Error loading data:", e); showNotification("Error al cargar progreso.", "error", 5000); }
+        }
 
+        mathUserAnswerInput.addEventListener('keypress', function(event) { if (event.key === 'Enter') { checkMathAnswer(); } });
+        window.onload = () => {
+            loadPlayerStats();
+            showScreen('welcome');
+        };
     </script>
 </body>
 </html>
