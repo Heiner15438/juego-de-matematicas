@@ -180,22 +180,31 @@
         #mind-twist-game-container { display: none; flex-direction: column; align-items: center; width: 100%; animation: zoomIn 0.4s ease-out; }
         #mind-twist-game-container h2 { color: #ED8936; margin-bottom: 20px; font-size: 2.1em; font-family: 'Fredoka One', cursive;}
         #mind-twist-game-container #mind-twist-question {
-            font-size: 1.25em; color: #555; margin-bottom: 28px; min-height: 1.6em; font-weight: 600;
+            font-size: 1.25em; color: #555; margin-bottom: 15px; min-height: 1.6em; font-weight: 600;
         }
         #mind-twist-game-container #mind-twist-puzzle-area {
-            display: flex; justify-content: center; align-items: center; height: 320px;
-            position: relative; margin-bottom: 22px; overflow: hidden; width: 100%;
+            display: flex; /* Para centrar el contenido si es más pequeño que el área */
+            flex-wrap: wrap; /* Para el nuevo puzzle de formas */
+            justify-content: center;
+            align-items: center;
+            gap: 15px; /* Espacio entre formas */
+            min-height: 250px; /* Altura mínima para acomodar las formas */
+            height: auto; /* Altura se ajusta al contenido */
+            position: relative; margin-bottom: 15px; overflow: visible; /* Permitir que sombras de formas se vean */
+            width: 100%;
+            max-width: 450px;
             background-color: #f0f4f8;
             border-radius: 12px;
+            padding: 20px; /* Padding interno */
             box-shadow: inset 0 0 12px rgba(0,0,0,0.06);
         }
          #mind-twist-game-container #mind-twist-feedback {
-            font-weight: 700; margin-top: 18px; min-height: 1.6em;
+            font-weight: 700; margin-top: 10px; min-height: 1.6em;
             font-size: 1.15em;
         }
         #mind-twist-game-container #mind-twist-next-level-btn {
             background-color: #4CAF50; color: white; border: none; padding: 12px 28px;
-            border-radius: 10px; cursor: pointer; font-size: 1.1em; margin-top: 22px;
+            border-radius: 10px; cursor: pointer; font-size: 1.1em; margin-top: 15px;
             transition: background-color 0.3s ease; display: none;
         }
         #mind-twist-game-container #mind-twist-next-level-btn:hover {
@@ -203,7 +212,8 @@
         }
 
 
-        /* Estilos específicos para los niveles del juego de acertijos (sin cambios mayores aquí) */
+        /* Estilos específicos para los niveles del juego de acertijos */
+        /* Nivel 1: El objeto más grande */
         #mind-twist-game-container .level1-object {
             cursor: pointer; border: 3px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; user-select: none;
             display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -211,21 +221,39 @@
         #mind-twist-game-container .level1-object:hover { transform: scale(1.05); border-color: #f1c40f; }
         #mind-twist-game-container #apple { width: 80px; height: 80px; background-color: #e74c3c; border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%; position: absolute; left: 15%; top: 50%; transform: translateY(-50%); }
         #mind-twist-game-container #apple::before { content: ''; width: 8px; height: 15px; background-color: #8B4513; position: absolute; top: -10px; left: calc(50% - 4px); border-radius: 4px 4px 0 0; }
-        #mind-twist-game-container #car { width: 150px; height: 70px; background-color: #3498db; border-radius: 10px 10px 5px 5px; position: absolute; left: 40%; top: 50%; transform: translateY(-50%); }
-        #mind-twist-game-container #car::before, #mind-twist-game-container #car::after { content: ''; position: absolute; width: 25px; height: 25px; background-color: #2c3e50; border-radius: 50%; bottom: -10px; }
-        #mind-twist-game-container #car::before { left: 20px; } #mind-twist-game-container #car::after { right: 20px; }
-        #mind-twist-game-container #sun { width: 50px; height: 50px; background-color: #f1c40f; border-radius: 50%; position: absolute; right: 10%; top: 20%; transform: translateY(-50%); box-shadow: 0 0 15px #f1c40f, 0 0 25px #f1c40f; }
-        #mind-twist-game-container #road { width: 100%; height: 60px; background-color: #666; position: absolute; bottom: 0; left: 0; border-top: 5px dashed #ccc; }
-        #mind-twist-game-container #ice { width: 150px; height: 30px; background: linear-gradient(to bottom, #aed6f1, #85c1e9); border-radius: 5px; position: absolute; bottom: 60px; left: calc(50% - 75px); z-index: 1; box-shadow: 0 0 10px rgba(174, 214, 241, 0.7); border: 1px solid #74b7e0; }
-        #mind-twist-game-container #car-level2 { width: 120px; height: 60px; background-color: #2ecc71; border-radius: 10px 10px 5px 5px; position: absolute; bottom: 60px; left: calc(50% - 60px - 85px); z-index: 2; transition: left 1s ease-out, opacity 0.5s ease-out; }
-        #mind-twist-game-container #car-level2::before, #mind-twist-game-container #car-level2::after { content: ''; position: absolute; width: 20px; height: 20px; background-color: #2c3e50; border-radius: 50%; bottom: -8px; }
-        #mind-twist-game-container #car-level2::before { left: 15px; } #mind-twist-game-container #car-level2::after { right: 15px; }
-        #mind-twist-game-container #cloud { width: 100px; height: 60px; background-color: #ecf0f1; border-radius: 30px; position: absolute; top: 20px; left: calc(50% - 50px); cursor: grab; z-index: 3; transition: opacity 0.5s ease, transform 0.2s ease; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
-        #mind-twist-game-container #cloud.dragging { transform: scale(1.1); opacity: 0.8; }
-        #mind-twist-game-container #sun-hidden { width: 80px; height: 80px; background-color: #f39c12; border-radius: 50%; position: absolute; top: 10px; left: calc(50% - 40px); opacity: 0; z-index: 0; transition: opacity 0.5s ease 0.3s; box-shadow: 0 0 20px #f39c12, 0 0 30px #f39c12; }
+        #mind-twist-game-container #car-l1 {
+            width: 150px; height: 70px; background-color: #3498db; border-radius: 10px 10px 5px 5px; position: absolute; left: 40%; top: 50%; transform: translateY(-50%);
+        }
+        #mind-twist-game-container #car-l1::before, #mind-twist-game-container #car-l1::after { content: ''; position: absolute; width: 25px; height: 25px; background-color: #2c3e50; border-radius: 50%; bottom: -10px; }
+        #mind-twist-game-container #car-l1::before { left: 20px; } #mind-twist-game-container #car-l1::after { right: 20px; }
+        #mind-twist-game-container #sun-l1 {
+             width: 50px; height: 50px; background-color: #f1c40f; border-radius: 50%; position: absolute; right: 10%; top: 20%; transform: translateY(-50%); box-shadow: 0 0 15px #f1c40f, 0 0 25px #f1c40f;
+        }
+
+        /* Nivel 2: Toca la Forma Diferente */
+        .odd-one-out-shape {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px; /* Default square-ish */
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .odd-one-out-shape:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        .odd-one-out-shape.circle {
+            border-radius: 50%;
+        }
+
+
+        /* Nivel 3: Encuentra la diferencia */
         #mind-twist-game-container .image-pair-container { display: flex; justify-content: space-around; width: 100%; align-items: center; }
         #mind-twist-game-container .image-box { width: 45%; height: 200px; background-color: #ddd; display: flex; justify-content: center; align-items: center; border: 2px solid #ccc; font-size: 1.5em; color: #666; user-select: none; background-size: contain; background-repeat: no-repeat; background-position: center; border-radius: 8px; position: relative; }
-        #mind-twist-game-container .difference-spot { position: absolute; width: 20px; height: 20px; background-color: rgba(255, 0, 0, 0.5); border-radius: 50%; cursor: pointer; }
         #mind-twist-game-container #difference-word { cursor: pointer; color: #3498db; text-decoration: underline; font-weight: bold; }
         #mind-twist-game-container #difference-word:hover { color: #2980b9; }
 
@@ -339,7 +367,10 @@
             #math-game-container .player-name-display, #math-game-container .lives-display, #math-game-container .timer-display { font-size: 1em;}
             #math-game-container .explanation { font-size: 0.85em; max-height: 90px;}
 
-            #mind-twist-game-container #mind-twist-puzzle-area { height: 280px; }
+            #mind-twist-game-container #mind-twist-puzzle-area { min-height: 200px; max-width: 90vw; padding: 15px;}
+            .odd-one-out-shape { width: 60px; height: 60px; }
+
+
             .notification { width: calc(100% - 40px); bottom: 15px; left: 20px; transform: translateY(150%) translateX(0); } /* Ajustar para que no use translateX(-50%) */
             .notification.show { transform: translateY(0) translateX(0); }
         }
@@ -357,6 +388,8 @@
             #math-game-container .result { font-size: 1.1em; }
             #mind-twist-game-container h2 { font-size: 1.7em; }
             #mind-twist-game-container #mind-twist-question { font-size: 1.1em;}
+            #mind-twist-game-container #mind-twist-puzzle-area { min-height: 180px; gap: 10px; padding:10px; }
+            .odd-one-out-shape { width: 50px; height: 50px; }
             .loot-box-content h3 { font-size: 1.6em; }
             .loot-box-content .loot-box-icon { font-size: 2.5em; }
             .loot-box-content .loot-box-reward { font-size: 1.05em; }
@@ -461,7 +494,8 @@
         <div class="loot-box-container" id="loot-box-modal">
             <div class="loot-box-content">
                 <h3>¡Caja de Recompensas!</h3>
-                <div class="loot-box-icon">🎁</div> <p class="loot-box-reward" id="loot-box-reward-text">Abriendo...</p>
+                <div class="loot-box-icon">🎁</div>
+                <p class="loot-box-reward" id="loot-box-reward-text">Abriendo...</p>
                 <button onclick="closeLootBox()">¡Genial!</button>
             </div>
         </div>
@@ -520,45 +554,26 @@
         let playerName = '';
         let activeGame = null; // 'math' or 'mindtwist'
         let playerStats = {
-            math: {
-                currentLevel: 1,
-                correctStreak: 0,
-                bestStreak: 0,
-                playerLives: 3,
-                totalCorrect: 0,
-                totalIncorrect: 0,
-                totalGamesPlayed: 0,
-                questionsInLevel: 0
-            },
-            mindtwist: {
-                currentLevel: 0,
-                solvedCount: 0,
-                totalAttempts: 0
-            },
-            inventory: [],
-            medals: [],
-            lastPlayed: null,
-            dailyBonusDay: 0,
-            lastLoginDate: null
+            math: { currentLevel: 1, correctStreak: 0, bestStreak: 0, playerLives: 3, totalCorrect: 0, totalIncorrect: 0, totalGamesPlayed: 0, questionsInLevel: 0 },
+            mindtwist: { currentLevel: 0, solvedCount: 0, totalAttempts: 0 },
+            inventory: [], medals: [], lastPlayed: null, dailyBonusDay: 0, lastLoginDate: null, playerName: ''
         };
-        const MATH_CORRECT_PER_LEVEL = 5;
-        const MATH_MAX_LEVEL = 20;
-        const INITIAL_LIVES = 3;
-
-        let mathCorrectAnswer;
-        let mathTimerId = null;
-        let mathTimeLeft = 0;
-        const MATH_BASE_TIME_PER_QUESTION = 15;
-        const MATH_TIME_REDUCTION_PER_LEVEL = 0.5;
-        const MATH_MIN_TIME_PER_QUESTION = 5;
+        const MATH_CORRECT_PER_LEVEL = 5; const MATH_MAX_LEVEL = 20; const INITIAL_LIVES = 3;
+        let mathCorrectAnswer; let mathTimerId = null; let mathTimeLeft = 0;
+        const MATH_BASE_TIME_PER_QUESTION = 15; const MATH_TIME_REDUCTION_PER_LEVEL = 0.5; const MATH_MIN_TIME_PER_QUESTION = 5;
+        const MATH_GAME_LOOT_BOX_PROBABILITY = 0.25; const MINDTWIST_LOOT_BOX_PROBABILITY = 0.15;
         let mathCurrentProblemDetails = {};
+
+        // --- Variables para Nivel 2 de Acertijos: Toca la Forma Diferente ---
+        let oddOneOut_correctShapeIndex;
+        let oddOneOut_shapes = [];
+
 
         const mindTwistLevels = [
             { id: "biggest_object", question: "¿Cuál es el objeto más grande?", setup: setupMindTwistLevel1, checkAnswer: checkMindTwistLevel1, cleanup: cleanupMindTwistLevel1 },
-            { id: "move_car", question: "Haz que el coche avance.", setup: setupMindTwistLevel2, checkAnswer: checkMindTwistLevel2, cleanup: cleanupMindTwistLevel2 },
+            { id: "odd_one_out", question: "Toca la forma con el color diferente.", setup: setupMindTwistLevel2_OddOneOut, checkAnswer: checkMindTwistLevel2_OddOneOut, cleanup: cleanupMindTwistLevel2_OddOneOut },
             { id: "find_difference", question: "Encuentra la <span id='difference-word' onclick='mindTwistLevel3DifferenceClicked(event)'>diferencia</span>.", setup: setupMindTwistLevel3, checkAnswer: checkMindTwistLevel3, cleanup: cleanupMindTwistLevel3 },
         ];
-        let mindTwistLevel2Listeners = {};
         let mindTwistLevel3SpotElement = null;
 
         let synthsInitialized = false;
@@ -567,8 +582,7 @@
         async function initializeAudio() {
             if (synthsInitialized || (Tone.context && Tone.context.state === 'running')) return;
             try {
-                await Tone.start();
-                console.log("AudioContext started successfully!");
+                await Tone.start(); console.log("AudioContext started successfully!");
                 correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
                 incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
                 levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
@@ -582,491 +596,131 @@
                 medalSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -8 }).toDestination();
                 clickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.2, sustain: 0 } }).toDestination();
                 synthsInitialized = true;
-            } catch (e) {
-                console.error("Error initializing AudioContext or synths:", e);
-            }
+            } catch (e) { console.error("Error initializing AudioContext or synths:", e); }
         }
 
-        const congratulations = [
-            "¡Bien hecho, {name}! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente trabajo! 🌟 ¡Pasaste al Nivel {level}!",
-            "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera, {name}!",
-            "¡Sigue así, {name}! 🔥 ¡Nivel {level} superado con éxito!", "¡Eres una estrella, {name}! 🌠 ¡Bienvenido al Nivel {level}!",
-            "¡Lo lograste, {name}! 💪 ¡A conquistar el Nivel {level}!"
-        ];
-
-        const MEDALS = [
-            { id: "first_game", name: "Primer Juego", description: "Juega tu primera partida de cualquier juego.", icon: "🎮", condition: (stats) => stats.math.totalGamesPlayed > 0 || stats.mindtwist.totalAttempts > 0},
-            { id: "math_first_correct", name: "Matiniciante", description: "Resuelve tu primer problema de Mates Rápidas.", icon: "➕", condition: (stats) => stats.math.totalCorrect > 0 && stats.math.totalGamesPlayed > 0 },
-            { id: "mindtwist_first_try", name: "Explorador de Acertijos", description: "Intenta resolver tu primer acertijo visual.", icon: "👀", condition: (stats) => stats.mindtwist.totalAttempts > 0 },
-            { id: "math_streak_5", name: "Racha de 5 (Mates)", description: "Logra una racha de 5 respuestas correctas en Mates Rápidas.", icon: "🏅", condition: (stats) => stats.math.bestStreak >= 5 },
-            { id: "math_level_5", name: "Nivel 5 (Mates)", description: "Alcanza el nivel 5 en Mates Rápidas.", icon: "🏆", condition: (stats) => playerStats.math.currentLevel >= 5 }, // Corrected to use playerStats
-            { id: "math_level_10", name: "Nivel 10 (Mates)", description: "Alcanza el nivel 10 en Mates Rápidas.", icon: "🌟", condition: (stats) => playerStats.math.currentLevel >= 10 }, // Corrected to use playerStats
-            { id: "mindtwist_solved_1", name: "Primer Acertijo Resuelto", description: "Resuelve tu primer acertijo visual.", icon: "💡", condition: (stats) => stats.mindtwist.solvedCount >= 1 },
-            { id: "mindtwist_solved_3", name: "Maestro de Acertijos Jr.", description: "Resuelve 3 acertijos visuales.", icon: "🧠", condition: (stats) => stats.mindtwist.solvedCount >= 3 },
-            { id: "daily_login_3", name: "Visitante Frecuente", description: "Inicia sesión 3 días diferentes.", icon: "📅", condition: (stats) => countUniqueLoginDays(stats) >= 3 }
-        ];
+        const congratulations = [ "¡Bien hecho, {name}! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente trabajo! 🌟 ¡Pasaste al Nivel {level}!", "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera, {name}!", "¡Sigue así, {name}! 🔥 ¡Nivel {level} superado con éxito!", "¡Eres una estrella, {name}! 🌠 ¡Bienvenido al Nivel {level}!", "¡Lo lograste, {name}! 💪 ¡A conquistar el Nivel {level}!" ];
+        const MEDALS = [ { id: "first_game", name: "Primer Juego", description: "Juega tu primera partida de cualquier juego.", icon: "🎮", condition: (stats) => stats.math.totalGamesPlayed > 0 || stats.mindtwist.totalAttempts > 0}, { id: "math_first_correct", name: "Matiniciante", description: "Resuelve tu primer problema de Mates Rápidas.", icon: "➕", condition: (stats) => stats.math.totalCorrect > 0 && stats.math.totalGamesPlayed > 0 }, { id: "mindtwist_first_try", name: "Explorador de Acertijos", description: "Intenta resolver tu primer acertijo visual.", icon: "👀", condition: (stats) => stats.mindtwist.totalAttempts > 0 }, { id: "math_streak_5", name: "Racha de 5 (Mates)", description: "Logra una racha de 5 respuestas correctas en Mates Rápidas.", icon: "🏅", condition: (stats) => stats.math.bestStreak >= 5 }, { id: "math_level_5", name: "Nivel 5 (Mates)", description: "Alcanza el nivel 5 en Mates Rápidas.", icon: "🏆", condition: (stats) => stats.math.currentLevel >= 5 },  { id: "math_level_10", name: "Nivel 10 (Mates)", description: "Alcanza el nivel 10 en Mates Rápidas.", icon: "🌟", condition: (stats) => stats.math.currentLevel >= 10 }, { id: "mindtwist_solved_1", name: "Primer Acertijo Resuelto", description: "Resuelve tu primer acertijo visual.", icon: "💡", condition: (stats) => stats.mindtwist.solvedCount >= 1 }, { id: "mindtwist_solved_3", name: "Maestro de Acertijos Jr.", description: "Resuelve 3 acertijos visuales.", icon: "🧠", condition: (stats) => stats.mindtwist.solvedCount >= 3 }, { id: "daily_login_3", name: "Visitante Frecuente", description: "Inicia sesión 3 días diferentes.", icon: "📅", condition: (stats) => countUniqueLoginDays(stats) >= 3 } ];
         let loginHistory = [];
-
-        function countUniqueLoginDays(stats) {
-            const uniqueDays = new Set(loginHistory);
-            return uniqueDays.size;
-        }
-
-        function playSound(sound, note, duration = '8n', timeOffset = '+0') {
-            if (synthsInitialized && sound) {
-                try {
-                    if (sound instanceof Tone.PolySynth) {
-                        sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
-                    } else if (sound instanceof Tone.NoiseSynth || sound instanceof Tone.MembraneSynth) {
-                        sound.triggerAttackRelease(duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
-                    } else {
-                        sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', '')));
-                    }
-                } catch (e) { console.error("Error playing sound:", e); }
-            }
-        }
+        function countUniqueLoginDays(stats) { const uniqueDays = new Set(loginHistory); return uniqueDays.size; }
+        function playSound(sound, note, duration = '8n', timeOffset = '+0') { if (synthsInitialized && sound) { try { if (sound instanceof Tone.PolySynth) { sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', ''))); } else if (sound instanceof Tone.NoiseSynth || sound instanceof Tone.MembraneSynth) { sound.triggerAttackRelease(duration, Tone.now() + parseFloat(timeOffset.replace('+', ''))); } else { sound.triggerAttackRelease(note, duration, Tone.now() + parseFloat(timeOffset.replace('+', ''))); } } catch (e) { console.error("Error playing sound:", e); } } }
         function playClickSound() { if(synthsInitialized && clickSound) playSound(clickSound, null, '16n'); }
 
         function showScreen(screenId) {
             playClickSound();
-            ['welcome', 'selection', 'math', 'mindtwist'].forEach(id => {
-                const el = document.getElementById(id + '-screen') || document.getElementById(id + '-game-container');
-                if (el) el.style.display = 'none';
-            });
-
-            if (activeGame === 'mindtwist' && mindTwistLevels[playerStats.mindtwist.currentLevel]?.cleanup) {
-                mindTwistLevels[playerStats.mindtwist.currentLevel].cleanup();
-            }
-
+            ['welcome', 'selection', 'math', 'mindtwist'].forEach(id => { const el = document.getElementById(id + '-screen') || document.getElementById(id + '-game-container'); if (el) el.style.display = 'none'; });
+            if (activeGame === 'mindtwist' && playerStats.mindtwist.currentLevel < mindTwistLevels.length && mindTwistLevels[playerStats.mindtwist.currentLevel]?.cleanup) { mindTwistLevels[playerStats.mindtwist.currentLevel].cleanup(); }
             let targetScreen;
             if (screenId === 'welcome') targetScreen = welcomeScreen;
-            else if (screenId === 'selection') {
-                updateSelectionScreenStats();
-                checkDailyBonus();
-                updateMedalsDisplay();
-                updateLeaderboardDisplay();
-                targetScreen = selectionScreen;
-            }
+            else if (screenId === 'selection') { updateSelectionScreenStats(); checkDailyBonus(); updateMedalsDisplay(); updateLeaderboardDisplay(); targetScreen = selectionScreen; }
             else if (screenId === 'math') targetScreen = mathGameContainer;
             else if (screenId === 'mindtwist') targetScreen = mindTwistGameContainer;
-
             if(targetScreen) targetScreen.style.display = 'flex';
         }
 
         function handleStartClick() {
-            initializeAudio();
-            playClickSound();
-            playerName = playerNameInput.value.trim();
+            initializeAudio(); playClickSound(); playerName = playerNameInput.value.trim();
             if (playerName && playerName.length <= 20) {
-                displayPlayerNameSelection.textContent = playerName;
-                mathDisplayPlayerName.textContent = playerName;
-                nameErrorMessage.style.display = 'none';
-                loadPlayerStats(); // Cargar datos ANTES de ir a selección para que el nombre se use en leaderboard, etc.
-                                 // Pero el playerName actual del input tiene prioridad.
-                playerStats.playerName = playerName; // Guardar el nombre actual en stats para persistencia
-
+                displayPlayerNameSelection.textContent = playerName; mathDisplayPlayerName.textContent = playerName; nameErrorMessage.style.display = 'none';
+                loadPlayerStats(); playerStats.playerName = playerName;
                 const today = new Date().toISOString().split('T')[0];
-                if (!playerStats.lastLoginDate || playerStats.lastLoginDate !== today) {
-                    playerStats.lastLoginDate = today;
-                    if (!loginHistory.includes(today)) {
-                        loginHistory.push(today);
-                        if (loginHistory.length > 30) loginHistory.shift();
-                    }
-                }
-                savePlayerStats(); // Guardar nombre y datos de login
-                showScreen('selection');
-                checkAndAwardMedal("first_game"); // Se otorga al llegar a la pantalla de selección por primera vez.
-            } else {
-                if (!playerName) nameErrorMessage.textContent = '¡Tu nombre es esencial para la leyenda!';
-                else if (playerName.length > 20) nameErrorMessage.textContent = '¡Nombre demasiado largo! (Máx. 20)';
-                nameErrorMessage.style.display = 'block';
-            }
+                if (!playerStats.lastLoginDate || playerStats.lastLoginDate !== today) { playerStats.lastLoginDate = today; if (!loginHistory.includes(today)) { loginHistory.push(today); if (loginHistory.length > 30) loginHistory.shift(); } }
+                savePlayerStats(); showScreen('selection'); checkAndAwardMedal("first_game");
+            } else { if (!playerName) nameErrorMessage.textContent = '¡Tu nombre es esencial para la leyenda!'; else if (playerName.length > 20) nameErrorMessage.textContent = '¡Nombre demasiado largo! (Máx. 20)'; nameErrorMessage.style.display = 'block'; }
         }
 
-        function selectGame(gameType) {
-            playClickSound();
-            activeGame = gameType;
-            if (gameType === 'math') {
-                startMathGame();
-                showScreen('math');
-            } else if (gameType === 'mindtwist') {
-                startMindTwistGame();
-                showScreen('mindtwist');
-            }
-        }
-
-        function updateSelectionScreenStats() {
-            summaryMathBestStreak.textContent = playerStats.math.bestStreak;
-            summaryMindtwistSolved.textContent = playerStats.mindtwist.solvedCount;
-            summaryMathTotalCorrect.textContent = playerStats.math.totalCorrect;
-            summaryMathTotalGames.textContent = playerStats.math.totalGamesPlayed;
-        }
+        function selectGame(gameType) { playClickSound(); activeGame = gameType; if (gameType === 'math') { startMathGame(); showScreen('math'); } else if (gameType === 'mindtwist') { startMindTwistGame(); showScreen('mindtwist'); } }
+        function updateSelectionScreenStats() { summaryMathBestStreak.textContent = playerStats.math.bestStreak; summaryMindtwistSolved.textContent = playerStats.mindtwist.solvedCount; summaryMathTotalCorrect.textContent = playerStats.math.totalCorrect; summaryMathTotalGames.textContent = playerStats.math.totalGamesPlayed; }
 
         function startMathGame() {
             playSound(gameStartSound, 'C4', '0.5s');
-            playerStats.math.currentLevel = playerStats.math.currentLevel > 0 ? playerStats.math.currentLevel : 1;
-            playerStats.math.playerLives = INITIAL_LIVES;
-            playerStats.math.correctStreak = 0;
-            playerStats.math.questionsInLevel = 0;
-            updateMathGameDisplay();
-            nextMathProblem();
-            playerStats.math.totalGamesPlayed++;
-            savePlayerStats(); // Guardar al iniciar el juego
-            checkAndAwardMedal("first_game"); // También aquí por si se salta el flujo normal
+            playerStats.math.currentLevel = playerStats.math.currentLevel > 0 ? playerStats.math.currentLevel : 1; playerStats.math.playerLives = INITIAL_LIVES; playerStats.math.correctStreak = 0; playerStats.math.questionsInLevel = 0;
+            const rachaBonusIndex = playerStats.inventory.indexOf("bonus_racha_mates"); if (rachaBonusIndex > -1) { playerStats.math.correctStreak = 1; playerStats.inventory.splice(rachaBonusIndex, 1); showNotification("¡Bonus de racha inicial aplicado!", "event", 2000); }
+            updateMathGameDisplay(); nextMathProblem(); playerStats.math.totalGamesPlayed++; savePlayerStats(); checkAndAwardMedal("first_game");
         }
+        function getMathTimeForCurrentLevel() { let time = MATH_BASE_TIME_PER_QUESTION - (playerStats.math.currentLevel -1) * MATH_TIME_REDUCTION_PER_LEVEL; time = Math.max(time, MATH_MIN_TIME_PER_QUESTION); if (playerStats.math.questionsInLevel === 0) { const tiempoBonusIndex = playerStats.inventory.indexOf("bonus_tiempo_inicio_mates"); if (tiempoBonusIndex > -1) { time += 5; playerStats.inventory.splice(tiempoBonusIndex, 1); showNotification("¡+5s de bonus de tiempo inicial!", "event", 2000); } } return time; }
+        function nextMathProblem() { if (playerStats.math.playerLives <= 0) { gameOverMath(); return; } clearTimeout(mathTimerId); mathTimeLeft = getMathTimeForCurrentLevel(); mathUserAnswerInput.value = ''; mathUserAnswerInput.focus(); mathAnswerExplanationDisplay.style.display = 'none'; mathGameResultDisplay.textContent = ''; mathGameResultDisplay.className = 'result'; mathTimerWrapper.classList.remove('text-red-500'); generateMathProblem(); updateMathGameDisplay(); mathTimerId = setInterval(updateMathTimer, 1000); }
+        function generateMathProblem() { const level = playerStats.math.currentLevel; let num1, num2, operator, problemText; if (level <= 3) { operator = Math.random() < 0.5 ? '+' : '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } else if (level <= 7) { const r = Math.random(); operator = r < 0.4 ? '+' : (r < 0.8 ? '-' : '*'); if (operator === '*') { num1 = Math.floor(Math.random() * 9) + 2; num2 = Math.floor(Math.random() * 9) + 2; } else { num1 = Math.floor(Math.random() * 20 * (level/3)) + 1; num2 = Math.floor(Math.random() * 20 * (level/3)) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } } else if (level <= 12) { const r = Math.random(); operator = r < 0.3 ? '+' : (r < 0.5 ? '-' : (r < 0.85 ? '*' : '/')); if (operator === '*') { num1 = Math.floor(Math.random() * 10) + 5; num2 = Math.floor(Math.random() * 10) + (level > 9 ? 5 : 2); } else if (operator === '/') { num2 = Math.floor(Math.random() * 8) + 2; mathCorrectAnswer = Math.floor(Math.random() * 8) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * 50 * (level/6)) + 10; num2 = Math.floor(Math.random() * 50 * (level/6)) + 10; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } } else { const r = Math.random(); operator = r < 0.4 ? '*' : (r < 0.7 ? '/' : '+'); if (operator === '*') { num1 = Math.floor(Math.random() * 15) + 5; num2 = Math.floor(Math.random() * 15) + 5; } else if (operator === '/') { num2 = Math.floor(Math.random() * 10) + 2; mathCorrectAnswer = Math.floor(Math.random() * 12) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * (50 + level * 5)) + 20; num2 = Math.floor(Math.random() * (50 + level * 5)) + 20; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } } if (operator !== '/') { switch (operator) { case '+': mathCorrectAnswer = num1 + num2; break; case '-': mathCorrectAnswer = num1 - num2; break; case '*': mathCorrectAnswer = num1 * num2; break; } } mathCurrentProblemDetails = {num1, num2, operator}; problemText = `<span>${num1}</span> <span style="color: #667eea;">${operator}</span> <span>${num2}</span> = ?`; mathProblemDisplay.innerHTML = problemText; }
+        function checkMathAnswer() { clearTimeout(mathTimerId); const userAnswer = parseInt(mathUserAnswerInput.value); if (isNaN(userAnswer)) { showMathResult("¡Ingresa un número!", "incorrect"); playerStats.math.playerLives--; playSound(lifeLostSound, 'C3', '0.1s'); setTimeout(nextMathProblem, 1500); return; } if (userAnswer === mathCorrectAnswer) { playerStats.math.correctStreak++; playerStats.math.questionsInLevel++; playerStats.math.totalCorrect++; if (playerStats.math.correctStreak > playerStats.math.bestStreak) { playerStats.math.bestStreak = playerStats.math.correctStreak; showNotification(`¡Nueva mejor racha: ${playerStats.math.bestStreak}!`, "streak", 2500); addToLeaderboard(playerStats.playerName, playerStats.math.bestStreak); } showMathResult("¡Correcto! 🎉", "correct"); playSound(correctSound, 'C5', '0.1s'); checkAndAwardMedal("math_first_correct"); if (playerStats.math.questionsInLevel >= MATH_CORRECT_PER_LEVEL) { levelUpMath(); } else { setTimeout(nextMathProblem, 1000); } } else { playerStats.math.playerLives--; playerStats.math.correctStreak = 0; playerStats.math.totalIncorrect++; showMathResult(`Incorrecto. La respuesta era ${mathCorrectAnswer}.`, "incorrect"); showMathExplanation(); playSound(incorrectSound, 'C3', '0.2s'); playSound(lifeLostSound, 'A2', '0.1s', '+0.1'); if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2500); } } updateMathGameDisplay(); checkAndAwardAllMedals(); savePlayerStats(); }
+        function showMathExplanation() { const {num1, num2, operator} = mathCurrentProblemDetails; let explanation = `<strong>Explicación:</strong> `; switch(operator) { case '+': explanation += `Sumar ${num1} y ${num2} da como resultado <code>${num1} + ${num2} = ${mathCorrectAnswer}</code>.`; break; case '-': explanation += `Restar ${num2} de ${num1} da como resultado <code>${num1} - ${num2} = ${mathCorrectAnswer}</code>.`; break; case '*': explanation += `Multiplicar ${num1} por ${num2} da como resultado <code>${num1} * ${num2} = ${mathCorrectAnswer}</code>.`; break; case '/': explanation += `Dividir ${num1} entre ${num2} da como resultado <code>${num1} / ${num2} = ${mathCorrectAnswer}</code>. (Porque ${num2} * ${mathCorrectAnswer} = ${num1}).`; break; } mathAnswerExplanationDisplay.innerHTML = explanation; mathAnswerExplanationDisplay.style.display = 'block'; }
+        function levelUpMath() { playerStats.math.currentLevel++; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0; showMathResult(getCongratulationsMessage(), "level-up", 2500); playSound(levelUpSound, ['C4', 'E4', 'G4', 'C5'], '0.5s'); if (playerStats.math.currentLevel > MATH_MAX_LEVEL) { showMathResult("¡Has dominado Mates Rápidas!", "correct", 3000); setTimeout(() => showScreen('selection'), 3000); return; } if (playerStats.math.playerLives < INITIAL_LIVES) { playerStats.math.playerLives++; showNotification("+1 Vida por subir de nivel!", "event", 1500); } setTimeout(nextMathProblem, 2500); checkAndAwardAllMedals(); }
+        function levelDownMath() { /* Consideración de diseño: Bajar de nivel puede ser punitivo. */ if (playerStats.math.currentLevel > 1) { playerStats.math.currentLevel--; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0; showMathResult("¡Oh no! Has bajado al Nivel " + playerStats.math.currentLevel, "level-down", 2000); playSound(levelDownSound, null, '0.3s'); } else { showMathResult("¡Cuidado! Estás en el primer nivel.", "incorrect", 2000); } updateMathGameDisplay(); }
+        function updateMathTimer() { mathTimeLeft--; mathTimeLeftDisplay.textContent = mathTimeLeft; if (mathTimeLeft <= 0) { clearTimeout(mathTimerId); showMathResult("¡Se acabó el tiempo! ⏰", "incorrect"); playerStats.math.playerLives--; playerStats.math.correctStreak = 0; playSound(incorrectSound, 'A2', '0.3s'); playSound(lifeLostSound, 'G2', '0.1s', '+0.1'); if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2000); } updateMathGameDisplay(); savePlayerStats(); } if (mathTimeLeft <= 5 && mathTimeLeft > 0) { mathTimerWrapper.classList.add('text-red-500'); } else { mathTimerWrapper.classList.remove('text-red-500'); } }
+        function updateMathGameDisplay() { mathPlayerLivesDisplay.textContent = playerStats.math.playerLives; mathCurrentLevelDisplay.textContent = playerStats.math.currentLevel; mathCorrectStreakDisplay.textContent = playerStats.math.correctStreak; mathCorrectPerLevelDisplay.textContent = MATH_CORRECT_PER_LEVEL; mathBestStreakDisplay.textContent = playerStats.math.bestStreak; mathTimeLeftDisplay.textContent = mathTimeLeft; const progress = playerStats.math.playerLives > 0 ? (playerStats.math.questionsInLevel / MATH_CORRECT_PER_LEVEL) * 100 : 0; mathProgressBarFill.style.width = `${progress}%`; mathProgressBarFill.textContent = `${Math.round(progress)}%`; }
+        function showMathResult(message, type, duration = 1500) { mathGameResultDisplay.textContent = message; mathGameResultDisplay.className = 'result ' + type; mathGameResultDisplay.style.animation = 'none'; mathGameResultDisplay.offsetHeight; mathGameResultDisplay.style.animation = null; if (type === "incorrect" || type === "level-down") { mathGameResultDisplay.classList.add('shake'); } }
+        function getCongratulationsMessage() { const messageTemplate = congratulations[Math.floor(Math.random() * congratulations.length)]; return messageTemplate.replace("{name}", playerStats.playerName).replace("{level}", playerStats.math.currentLevel); } // Use playerStats.playerName
+        function gameOverMath() { clearTimeout(mathTimerId); showMathResult(`¡Juego Terminado! Mejor racha: ${playerStats.math.bestStreak}`, "incorrect", 3000); playSound(levelDownSound, null, '0.5s'); if (playerStats.math.currentLevel > 1) levelDownMath(); if (playerStats.math.bestStreak >= 3 && Math.random() < MATH_GAME_LOOT_BOX_PROBABILITY) { setTimeout(triggerLootBox, 1500); } setTimeout(() => { showScreen('selection'); playerStats.math.correctStreak = 0; playerStats.math.questionsInLevel = 0; }, 3000); savePlayerStats(); }
 
-        function getMathTimeForCurrentLevel() {
-            const time = MATH_BASE_TIME_PER_QUESTION - (playerStats.math.currentLevel -1) * MATH_TIME_REDUCTION_PER_LEVEL;
-            return Math.max(time, MATH_MIN_TIME_PER_QUESTION);
-        }
-
-        function nextMathProblem() {
-            if (playerStats.math.playerLives <= 0) {
-                gameOverMath();
-                return;
-            }
-            clearTimeout(mathTimerId);
-            mathTimeLeft = getMathTimeForCurrentLevel();
-            mathUserAnswerInput.value = '';
-            mathUserAnswerInput.focus();
-            mathAnswerExplanationDisplay.style.display = 'none';
-            mathGameResultDisplay.textContent = '';
-            mathGameResultDisplay.className = 'result';
-            mathTimerWrapper.classList.remove('text-red-500');
-
-
-            generateMathProblem();
-            updateMathGameDisplay();
-            mathTimerId = setInterval(updateMathTimer, 1000);
-        }
-
-        function generateMathProblem() {
-            const level = playerStats.math.currentLevel;
-            let num1, num2, operator, problemText;
-            if (level <= 3) { operator = Math.random() < 0.5 ? '+' : '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; }
-            else if (level <= 7) { const r = Math.random(); operator = r < 0.4 ? '+' : (r < 0.8 ? '-' : '*'); if (operator === '*') { num1 = Math.floor(Math.random() * 9) + 2; num2 = Math.floor(Math.random() * 9) + 2; } else { num1 = Math.floor(Math.random() * 20 * (level/3)) + 1; num2 = Math.floor(Math.random() * 20 * (level/3)) + 1; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
-            else if (level <= 12) { const r = Math.random(); operator = r < 0.3 ? '+' : (r < 0.5 ? '-' : (r < 0.85 ? '*' : '/')); if (operator === '*') { num1 = Math.floor(Math.random() * 10) + 5; num2 = Math.floor(Math.random() * 10) + (level > 9 ? 5 : 2); } else if (operator === '/') { num2 = Math.floor(Math.random() * 8) + 2; mathCorrectAnswer = Math.floor(Math.random() * 8) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * 50 * (level/6)) + 10; num2 = Math.floor(Math.random() * 50 * (level/6)) + 10; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
-            else { const r = Math.random(); operator = r < 0.4 ? '*' : (r < 0.7 ? '/' : '+'); if (operator === '*') { num1 = Math.floor(Math.random() * 15) + 5; num2 = Math.floor(Math.random() * 15) + 5; } else if (operator === '/') { num2 = Math.floor(Math.random() * 10) + 2; mathCorrectAnswer = Math.floor(Math.random() * 12) + 2; num1 = num2 * mathCorrectAnswer; } else { num1 = Math.floor(Math.random() * (50 + level * 5)) + 20; num2 = Math.floor(Math.random() * (50 + level * 5)) + 20; if (operator === '-' && num1 < num2) [num1, num2] = [num2, num1]; } }
-            if (operator !== '/') { switch (operator) { case '+': mathCorrectAnswer = num1 + num2; break; case '-': mathCorrectAnswer = num1 - num2; break; case '*': mathCorrectAnswer = num1 * num2; break; } }
-            mathCurrentProblemDetails = {num1, num2, operator};
-            problemText = `<span>${num1}</span> <span style="color: #667eea;">${operator}</span> <span>${num2}</span> = ?`;
-            mathProblemDisplay.innerHTML = problemText;
-        }
-
-        function checkMathAnswer() {
-            clearTimeout(mathTimerId);
-            const userAnswer = parseInt(mathUserAnswerInput.value);
-            if (isNaN(userAnswer)) { showMathResult("¡Ingresa un número!", "incorrect"); playerStats.math.playerLives--; playSound(lifeLostSound, 'C3', '0.1s'); setTimeout(nextMathProblem, 1500); return; }
-
-            if (userAnswer === mathCorrectAnswer) {
-                playerStats.math.correctStreak++; playerStats.math.questionsInLevel++; playerStats.math.totalCorrect++;
-                if (playerStats.math.correctStreak > playerStats.math.bestStreak) { playerStats.math.bestStreak = playerStats.math.correctStreak; showNotification(`¡Nueva mejor racha: ${playerStats.math.bestStreak}!`, "streak", 2500); addToLeaderboard(playerName, playerStats.math.bestStreak); }
-                showMathResult("¡Correcto! 🎉", "correct"); playSound(correctSound, 'C5', '0.1s');
-                checkAndAwardMedal("math_first_correct");
-                if (playerStats.math.questionsInLevel >= MATH_CORRECT_PER_LEVEL) { levelUpMath(); } else { setTimeout(nextMathProblem, 1000); }
-            } else {
-                playerStats.math.playerLives--; playerStats.math.correctStreak = 0; playerStats.math.totalIncorrect++;
-                showMathResult(`Incorrecto. La respuesta era ${mathCorrectAnswer}.`, "incorrect"); showMathExplanation();
-                playSound(incorrectSound, 'C3', '0.2s'); playSound(lifeLostSound, 'A2', '0.1s', '+0.1');
-                if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2500); }
-            }
-            updateMathGameDisplay(); checkAndAwardAllMedals(); savePlayerStats();
-        }
-
-        function showMathExplanation() {
-            const {num1, num2, operator} = mathCurrentProblemDetails;
-            let explanation = `<strong>Explicación:</strong> `;
-            switch(operator) {
-                case '+': explanation += `Sumar ${num1} y ${num2} da como resultado <code>${num1} + ${num2} = ${mathCorrectAnswer}</code>.`; break;
-                case '-': explanation += `Restar ${num2} de ${num1} da como resultado <code>${num1} - ${num2} = ${mathCorrectAnswer}</code>.`; break;
-                case '*': explanation += `Multiplicar ${num1} por ${num2} da como resultado <code>${num1} * ${num2} = ${mathCorrectAnswer}</code>.`; break;
-                case '/': explanation += `Dividir ${num1} entre ${num2} da como resultado <code>${num1} / ${num2} = ${mathCorrectAnswer}</code>. (Porque ${num2} * ${mathCorrectAnswer} = ${num1}).`; break;
-            }
-            mathAnswerExplanationDisplay.innerHTML = explanation;
-            mathAnswerExplanationDisplay.style.display = 'block';
-        }
-
-        function levelUpMath() {
-            playerStats.math.currentLevel++; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0;
-            showMathResult(getCongratulationsMessage(), "level-up", 2500); playSound(levelUpSound, ['C4', 'E4', 'G4', 'C5'], '0.5s');
-            if (playerStats.math.currentLevel > MATH_MAX_LEVEL) { showMathResult("¡Has dominado Mates Rápidas!", "correct", 3000); setTimeout(() => showScreen('selection'), 3000); return; }
-            if (playerStats.math.playerLives < INITIAL_LIVES) { playerStats.math.playerLives++; showNotification("+1 Vida por subir de nivel!", "event", 1500); }
-            setTimeout(nextMathProblem, 2500); checkAndAwardAllMedals();
-        }
-
-        function levelDownMath() {
-            if (playerStats.math.currentLevel > 1) {
-                playerStats.math.currentLevel--; playerStats.math.questionsInLevel = 0; playerStats.math.correctStreak = 0;
-                showMathResult("¡Oh no! Has bajado al Nivel " + playerStats.math.currentLevel, "level-down", 2000);
-                playSound(levelDownSound, null, '0.3s');
-            } else { showMathResult("¡Cuidado! Estás en el primer nivel.", "incorrect", 2000); }
-            updateMathGameDisplay();
-        }
-
-        function updateMathTimer() {
-            mathTimeLeft--; mathTimeLeftDisplay.textContent = mathTimeLeft;
-            if (mathTimeLeft <= 0) {
-                clearTimeout(mathTimerId); showMathResult("¡Se acabó el tiempo! ⏰", "incorrect");
-                playerStats.math.playerLives--; playerStats.math.correctStreak = 0;
-                playSound(incorrectSound, 'A2', '0.3s'); playSound(lifeLostSound, 'G2', '0.1s', '+0.1');
-                if (playerStats.math.playerLives <= 0) { setTimeout(gameOverMath, 2000); } else { setTimeout(nextMathProblem, 2000); }
-                updateMathGameDisplay(); savePlayerStats();
-            }
-            if (mathTimeLeft <= 5 && mathTimeLeft > 0) { mathTimerWrapper.classList.add('text-red-500'); }
-            else { mathTimerWrapper.classList.remove('text-red-500'); }
-        }
-
-        function updateMathGameDisplay() {
-            mathPlayerLivesDisplay.textContent = playerStats.math.playerLives;
-            mathCurrentLevelDisplay.textContent = playerStats.math.currentLevel;
-            mathCorrectStreakDisplay.textContent = playerStats.math.correctStreak;
-            mathCorrectPerLevelDisplay.textContent = MATH_CORRECT_PER_LEVEL;
-            mathBestStreakDisplay.textContent = playerStats.math.bestStreak;
-            mathTimeLeftDisplay.textContent = mathTimeLeft;
-            const progress = playerStats.math.playerLives > 0 ? (playerStats.math.questionsInLevel / MATH_CORRECT_PER_LEVEL) * 100 : 0;
-            mathProgressBarFill.style.width = `${progress}%`;
-            mathProgressBarFill.textContent = `${Math.round(progress)}%`;
-        }
-
-        function showMathResult(message, type, duration = 1500) {
-            mathGameResultDisplay.textContent = message;
-            mathGameResultDisplay.className = 'result ' + type;
-            mathGameResultDisplay.style.animation = 'none'; mathGameResultDisplay.offsetHeight; mathGameResultDisplay.style.animation = null;
-            if (type === "incorrect" || type === "level-down") { mathGameResultDisplay.classList.add('shake'); }
-        }
-
-        function getCongratulationsMessage() {
-            const messageTemplate = congratulations[Math.floor(Math.random() * congratulations.length)];
-            return messageTemplate.replace("{name}", playerName).replace("{level}", playerStats.math.currentLevel);
-        }
-
-        function gameOverMath() {
-            clearTimeout(mathTimerId);
-            showMathResult(`¡Juego Terminado! Mejor racha: ${playerStats.math.bestStreak}`, "incorrect", 3000);
-            playSound(levelDownSound, null, '0.5s');
-            if (playerStats.math.currentLevel > 1) levelDownMath();
-            if (playerStats.math.bestStreak >= 3 && Math.random() < 0.25) { setTimeout(triggerLootBox, 1500); }
-            setTimeout(() => { showScreen('selection'); playerStats.math.correctStreak = 0; playerStats.math.questionsInLevel = 0; }, 3000);
-            savePlayerStats();
-        }
-
-        function startMindTwistGame() {
-            playSound(gameStartSound, 'D4', '0.5s');
-            mindTwistNextLevelBtn.style.display = 'none';
-            mindTwistFeedbackDisplay.textContent = '';
-            loadMindTwistLevel(playerStats.mindtwist.currentLevel);
-            playerStats.mindtwist.totalAttempts++;
-            savePlayerStats();
-            checkAndAwardMedal("first_game");
-            checkAndAwardMedal("mindtwist_first_try");
-        }
-
-        function loadMindTwistLevel(levelIndex) {
-            if (levelIndex > 0 && mindTwistLevels[levelIndex - 1]?.cleanup) { mindTwistLevels[levelIndex - 1].cleanup(); }
-            mindTwistPuzzleArea.innerHTML = '';
-            if (levelIndex >= mindTwistLevels.length) {
-                mindTwistQuestionDisplay.textContent = "¡Felicidades! Has resuelto todos los acertijos.";
-                mindTwistPuzzleArea.innerHTML = "<p style='font-size:1.8em; font-family: \"Fredoka One\", cursive; color: #ED8936;'>🎉🏆🎉</p>";
-                mindTwistFeedbackDisplay.textContent = `Total resueltos: ${playerStats.mindtwist.solvedCount}`;
-                mindTwistNextLevelBtn.style.display = 'none';
-                playSound(levelUpSound, ['C5', 'E5', 'G5', 'C6'], '0.7s'); return;
-            }
-            const level = mindTwistLevels[levelIndex];
-            mindTwistQuestionDisplay.innerHTML = level.question;
-            level.setup(mindTwistPuzzleArea);
-            mindTwistFeedbackDisplay.textContent = '';
-            mindTwistNextLevelBtn.style.display = 'none';
-        }
-
-        function mindTwistAnswer(isCorrect) {
-            if (isCorrect) {
-                playSound(mindTwistCorrectSound, 'E5', '0.1s');
-                mindTwistFeedbackDisplay.textContent = "¡Correcto! Brillante.";
-                mindTwistFeedbackDisplay.style.color = "#38A169";
-                playerStats.mindtwist.solvedCount++;
-                mindTwistNextLevelBtn.style.display = 'inline-block';
-                checkAndAwardMedal(mindTwistLevels[playerStats.mindtwist.currentLevel].id + "_solved");
-                checkAndAwardAllMedals();
-                if (Math.random() < 0.15) { setTimeout(triggerLootBox, 500); }
-            } else {
-                playSound(mindTwistIncorrectSound, 'D3', '0.2s');
-                mindTwistFeedbackDisplay.textContent = "Hmm, no es eso. ¡Sigue intentando!";
-                mindTwistFeedbackDisplay.style.color = "#E53E3E";
-                mindTwistPuzzleArea.classList.add('shake-animation');
-                setTimeout(() => mindTwistPuzzleArea.classList.remove('shake-animation'), 500);
-            }
-            savePlayerStats();
-        }
+        function startMindTwistGame() { playSound(gameStartSound, 'D4', '0.5s'); mindTwistNextLevelBtn.style.display = 'none'; mindTwistFeedbackDisplay.textContent = ''; loadMindTwistLevel(playerStats.mindtwist.currentLevel); playerStats.mindtwist.totalAttempts++; savePlayerStats(); checkAndAwardMedal("first_game"); checkAndAwardMedal("mindtwist_first_try"); }
+        function loadMindTwistLevel(levelIndex) { if (levelIndex > 0 && playerStats.mindtwist.currentLevel < mindTwistLevels.length && mindTwistLevels[levelIndex - 1]?.cleanup) { mindTwistLevels[levelIndex - 1].cleanup(); } mindTwistPuzzleArea.innerHTML = ''; if (levelIndex >= mindTwistLevels.length) { mindTwistQuestionDisplay.textContent = "¡Felicidades! Has resuelto todos los acertijos."; mindTwistPuzzleArea.innerHTML = "<p style='font-size:1.8em; font-family: \"Fredoka One\", cursive; color: #ED8936;'>🎉🏆🎉</p>"; mindTwistFeedbackDisplay.textContent = `Total resueltos: ${playerStats.mindtwist.solvedCount}`; mindTwistNextLevelBtn.style.display = 'none'; playSound(levelUpSound, ['C5', 'E5', 'G5', 'C6'], '0.7s'); return; } const level = mindTwistLevels[levelIndex]; mindTwistQuestionDisplay.innerHTML = level.question; level.setup(mindTwistPuzzleArea); mindTwistFeedbackDisplay.textContent = ''; mindTwistNextLevelBtn.style.display = 'none'; }
+        function mindTwistAnswer(isCorrect) { if (isCorrect) { playSound(mindTwistCorrectSound, 'E5', '0.1s'); mindTwistFeedbackDisplay.textContent = "¡Correcto! Brillante."; mindTwistFeedbackDisplay.style.color = "#38A169"; playerStats.mindtwist.solvedCount++; mindTwistNextLevelBtn.style.display = 'inline-block'; checkAndAwardAllMedals(); if (Math.random() < MINDTWIST_LOOT_BOX_PROBABILITY) { setTimeout(triggerLootBox, 500); } } else { playSound(mindTwistIncorrectSound, 'D3', '0.2s'); mindTwistFeedbackDisplay.textContent = "Hmm, no es eso. ¡Sigue intentando!"; mindTwistFeedbackDisplay.style.color = "#E53E3E"; mindTwistPuzzleArea.classList.add('shake-animation'); setTimeout(() => mindTwistPuzzleArea.classList.remove('shake-animation'), 500); } savePlayerStats(); }
         const tempStyleSheet = document.createElement("style"); tempStyleSheet.type = "text/css"; tempStyleSheet.innerText = ".shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }"; document.head.appendChild(tempStyleSheet);
-
         function nextMindTwistLevel() { playClickSound(); playerStats.mindtwist.currentLevel++; loadMindTwistLevel(playerStats.mindtwist.currentLevel); savePlayerStats(); }
 
-        function setupMindTwistLevel1(area) {
-            area.innerHTML = `<div id="apple" class="level1-object"></div> <div id="car" class="level1-object"></div> <div id="sun" class="level1-object"></div>`;
-            const sunEl = document.getElementById('sun'); sunEl.style.width = '120px'; sunEl.style.height = '120px'; sunEl.style.right = 'calc(50% - 60px)'; sunEl.style.top = 'calc(50% - 60px)';
-            document.getElementById('apple').onclick = () => mindTwistLevels[0].checkAnswer('apple');
-            document.getElementById('car').onclick = () => mindTwistLevels[0].checkAnswer('car');
-            document.getElementById('sun').onclick = () => mindTwistLevels[0].checkAnswer('sun');
-        }
-        function checkMindTwistLevel1(selectedObject) { mindTwistAnswer(selectedObject === 'sun'); }
+        // Nivel 1: Objeto más grande
+        function setupMindTwistLevel1(area) { area.innerHTML = `<div id="apple" class="level1-object"></div> <div id="car-l1" class="level1-object"></div> <div id="sun-l1" class="level1-object"></div>`; const sunEl = document.getElementById('sun-l1'); sunEl.style.width = '120px'; sunEl.style.height = '120px'; sunEl.style.right = 'calc(50% - 60px)'; sunEl.style.top = 'calc(50% - 60px)'; document.getElementById('apple').onclick = () => mindTwistLevels[0].checkAnswer('apple'); document.getElementById('car-l1').onclick = () => mindTwistLevels[0].checkAnswer('car-l1'); document.getElementById('sun-l1').onclick = () => mindTwistLevels[0].checkAnswer('sun-l1'); }
+        function checkMindTwistLevel1(selectedObject) { mindTwistAnswer(selectedObject === 'sun-l1'); }
         function cleanupMindTwistLevel1() {}
 
-        function setupMindTwistLevel2(area) {
-            area.innerHTML = `<div id="sun-hidden"></div> <div id="cloud"></div> <div id="ice"></div> <div id="car-level2"></div> <div id="road"></div>`;
-            const cloud = document.getElementById('cloud'); const ice = document.getElementById('ice'); const sunHidden = document.getElementById('sun-hidden');
-            let offsetX, offsetY, isDragging = false;
-            mindTwistLevel2Listeners.cloudMousedown = (e) => { isDragging = true; cloud.classList.add('dragging'); const cX = e.clientX || e.touches[0].clientX; const cY = e.clientY || e.touches[0].clientY; offsetX = cX - cloud.offsetLeft; offsetY = cY - cloud.offsetTop; cloud.style.cursor = 'grabbing'; };
-            mindTwistLevel2Listeners.documentMousemove = (e) => { if (!isDragging) return; e.preventDefault(); const cX = e.clientX || e.touches[0].clientX; const cY = e.clientY || e.touches[0].clientY; cloud.style.left = (cX - offsetX) + 'px'; cloud.style.top = (cY - offsetY) + 'px'; sunHidden.style.opacity = '1'; const sunRect = sunHidden.getBoundingClientRect(); const iceRect = ice.getBoundingClientRect(); if (sunRect.left < iceRect.right && sunRect.right > iceRect.left && sunRect.top < iceRect.bottom && sunRect.bottom > iceRect.top && parseFloat(sunHidden.style.opacity) === 1) { ice.style.transition = 'opacity 0.5s ease, transform 0.5s ease'; ice.style.opacity = '0'; ice.style.transform = 'scale(0.5)'; setTimeout(() => { if (ice.parentElement) ice.remove(); mindTwistLevels[1].checkAnswer(); }, 500); } };
-            mindTwistLevel2Listeners.documentMouseup = () => { if (isDragging) { isDragging = false; cloud.classList.remove('dragging'); cloud.style.cursor = 'grab'; } };
-            cloud.addEventListener('mousedown', mindTwistLevel2Listeners.cloudMousedown); document.addEventListener('mousemove', mindTwistLevel2Listeners.documentMousemove); document.addEventListener('mouseup', mindTwistLevel2Listeners.documentMouseup);
-            cloud.addEventListener('touchstart', mindTwistLevel2Listeners.cloudMousedown, { passive: false }); document.addEventListener('touchmove', mindTwistLevel2Listeners.documentMousemove, { passive: false }); document.addEventListener('touchend', mindTwistLevel2Listeners.documentMouseup);
-        }
-        function checkMindTwistLevel2() { const ice = document.getElementById('ice'); const car = document.getElementById('car-level2'); if (!ice || ice.style.opacity === '0') { car.style.left = `calc(50% - 60px + 100px)`; mindTwistAnswer(true); } else { mindTwistAnswer(false); } }
-        function cleanupMindTwistLevel2() { const c = document.getElementById('cloud'); if (c) { c.removeEventListener('mousedown', mindTwistLevel2Listeners.cloudMousedown); c.removeEventListener('touchstart', mindTwistLevel2Listeners.cloudMousedown); } document.removeEventListener('mousemove', mindTwistLevel2Listeners.documentMousemove); document.removeEventListener('mouseup', mindTwistLevel2Listeners.documentMouseup); document.removeEventListener('touchmove', mindTwistLevel2Listeners.documentMousemove); document.removeEventListener('touchend', mindTwistLevel2Listeners.documentMouseup); mindTwistLevel2Listeners = {}; }
+        // Nivel 2: Toca la Forma Diferente
+        function setupMindTwistLevel2_OddOneOut(area) {
+            area.innerHTML = ''; // Limpiar área
+            oddOneOut_shapes = [];
+            const numShapes = 5 + Math.floor(playerStats.mindtwist.solvedCount / 2); // Aumentar formas con progreso
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FED766', '#9B59B6']; // Rojo, Turquesa, Azul, Amarillo, Morado
+            const commonColor = colors[Math.floor(Math.random() * colors.length)];
+            let oddColor;
+            do {
+                oddColor = colors[Math.floor(Math.random() * colors.length)];
+            } while (oddColor === commonColor);
 
+            oddOneOut_correctShapeIndex = Math.floor(Math.random() * numShapes);
+
+            for (let i = 0; i < numShapes; i++) {
+                const shapeDiv = document.createElement('div');
+                shapeDiv.classList.add('odd-one-out-shape');
+                const isCircle = Math.random() > 0.5;
+                if (isCircle) {
+                    shapeDiv.classList.add('circle');
+                }
+                shapeDiv.style.backgroundColor = (i === oddOneOut_correctShapeIndex) ? oddColor : commonColor;
+                shapeDiv.dataset.index = i;
+                shapeDiv.onclick = () => checkMindTwistLevel2_OddOneOut(parseInt(shapeDiv.dataset.index));
+                oddOneOut_shapes.push(shapeDiv);
+                area.appendChild(shapeDiv);
+            }
+        }
+        function checkMindTwistLevel2_OddOneOut(selectedIndex) {
+            mindTwistAnswer(selectedIndex === oddOneOut_correctShapeIndex);
+        }
+        function cleanupMindTwistLevel2_OddOneOut() {
+            oddOneOut_shapes.forEach(shape => {
+                if (shape.parentNode) shape.parentNode.removeChild(shape);
+            });
+            oddOneOut_shapes = [];
+        }
+
+        // Nivel 3: Encuentra la diferencia
         function setupMindTwistLevel3(area) { area.innerHTML = `<div class="image-pair-container"><div class="image-box" id="image-a" style="background-image: url('https://placehold.co/200x200/E8E8E8/B0B0B0?text=Imagen+A&font=lora');"></div><div class="image-box" id="image-b" style="background-image: url('https://placehold.co/200x200/E8E8E8/B0B0B0?text=Imagen+A&font=lora');"></div></div>`; }
         function mindTwistLevel3DifferenceClicked(event) { event.stopPropagation(); mindTwistLevels[2].checkAnswer('word'); }
         function checkMindTwistLevel3(clickedItem) { mindTwistAnswer(clickedItem === 'word'); }
         function cleanupMindTwistLevel3() {}
 
-        function triggerLootBox() {
-            playSound(lootBoxSound, ['C4', 'E4', 'G4'], '0.4s');
-            lootBoxModal.classList.add('visible');
-            lootBoxRewardText.textContent = "Abriendo...";
-            setTimeout(() => {
-                const rewards = ["+1 Vida Extra (Mates)", "+5 Segundos extra (Mates Próx. Nivel)", "Pista para Acertijo (Próximamente)", "Doble XP por 3 problemas (Mates)"];
-                const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
-                lootBoxRewardText.textContent = `¡Has ganado: ${randomReward}!`;
-                if (randomReward.includes("Vida Extra") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; showNotification("+1 Vida de la caja!", "event", 2000); }
-                else if (randomReward.includes("Segundos extra")) { playerStats.inventory.push("bonus_tiempo_mates"); showNotification("¡Bonus de tiempo guardado!", "event", 2000); }
-                updateMathGameDisplay(); savePlayerStats();
-            }, 1500);
-        }
+        function triggerLootBox() { playSound(lootBoxSound, ['C4', 'E4', 'G4'], '0.4s'); lootBoxModal.classList.add('visible'); lootBoxRewardText.textContent = "Abriendo..."; setTimeout(() => { const rewards = ["+1 Vida Extra (Mates)", "Bonus de Racha (Mates)", "Bonus de Tiempo Inicial (Mates)"]; const randomReward = rewards[Math.floor(Math.random() * rewards.length)]; lootBoxRewardText.textContent = `¡Has ganado: ${randomReward}!`; let notificationMsg = `¡Recompensa obtenida: ${randomReward}!`; if (randomReward.includes("Vida Extra") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; } else if (randomReward.includes("Racha")) { playerStats.inventory.push("bonus_racha_mates"); notificationMsg = "¡Bonus de Racha añadido a tu inventario!"; } else if (randomReward.includes("Tiempo Inicial")) { playerStats.inventory.push("bonus_tiempo_inicio_mates"); notificationMsg = "¡Bonus de Tiempo Inicial añadido!"; } showNotification(notificationMsg, "event", 2500); updateMathGameDisplay(); savePlayerStats(); }, 1500); }
         function closeLootBox() { playClickSound(); lootBoxModal.classList.remove('visible'); }
-
-        function showNotification(message, type = 'success', duration = 3000) {
-            notificationDisplay.textContent = message;
-            notificationDisplay.className = 'notification show ' + type;
-            setTimeout(() => { notificationDisplay.classList.remove('show'); }, duration);
-        }
-
-        const MAX_LEADERBOARD_ENTRIES = 5;
-        let leaderboardData = [];
-        function updateLeaderboardDisplay() {
-            leaderboardList.innerHTML = '';
-            const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.score - a.score);
-            const displayEntries = sortedLeaderboard.slice(0, MAX_LEADERBOARD_ENTRIES);
-            if (displayEntries.length === 0) { leaderboardList.innerHTML = '<li class="leaderboard-item" style="text-align:center; color:#888;">Aún no hay puntajes.</li>'; return; }
-            displayEntries.forEach(entry => {
-                const li = document.createElement('li'); li.classList.add('leaderboard-item');
-                if (entry.name === playerName) { li.classList.add('you'); } // playerName es el nombre actual del input
-                li.innerHTML = `<strong>${entry.name}</strong> <span>${entry.score}</span>`;
-                leaderboardList.appendChild(li);
-            });
-        }
-        function addToLeaderboard(name, score) {
-            const existingEntryIndex = leaderboardData.findIndex(entry => entry.name === name);
-            if (existingEntryIndex !== -1) { if (score > leaderboardData[existingEntryIndex].score) { leaderboardData[existingEntryIndex].score = score; } else { return; } }
-            else { leaderboardData.push({ name, score }); }
-            leaderboardData.sort((a, b) => b.score - a.score);
-            if (leaderboardData.length > MAX_LEADERBOARD_ENTRIES * 2) { leaderboardData = leaderboardData.slice(0, MAX_LEADERBOARD_ENTRIES * 2); }
-            updateLeaderboardDisplay(); savePlayerStats();
-        }
-
-        function updateMedalsDisplay() {
-            medalsList.innerHTML = '';
-            MEDALS.forEach(medal => {
-                const isUnlocked = playerStats.medals.includes(medal.id);
-                const medalDiv = document.createElement('div'); medalDiv.classList.add('medal-item'); medalDiv.textContent = medal.icon;
-                const tooltipSpan = document.createElement('span'); tooltipSpan.classList.add('medal-tooltip'); tooltipSpan.textContent = `${medal.name}${isUnlocked ? '' : ' (Bloqueada)'} - ${medal.description}`;
-                medalDiv.appendChild(tooltipSpan);
-                if (!isUnlocked) { medalDiv.classList.add('locked'); }
-                medalsList.appendChild(medalDiv);
-            });
-        }
-        function checkAndAwardMedal(medalId) {
-            const medal = MEDALS.find(m => m.id === medalId);
-            if (medal && !playerStats.medals.includes(medalId) && medal.condition(playerStats)) {
-                playerStats.medals.push(medalId);
-                showNotification(`¡Medalla Desbloqueada: ${medal.name} ${medal.icon}!`, 'medal', 4000);
-                playSound(medalSound, ['C5', 'G5', 'E5'], '0.4s');
-                updateMedalsDisplay(); savePlayerStats();
-            }
-        }
+        function showNotification(message, type = 'success', duration = 3000) { notificationDisplay.textContent = message; notificationDisplay.className = 'notification show ' + type; setTimeout(() => { notificationDisplay.classList.remove('show'); }, duration); }
+        const MAX_LEADERBOARD_ENTRIES = 5; let leaderboardData = [];
+        function updateLeaderboardDisplay() { leaderboardList.innerHTML = ''; const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.score - a.score); const displayEntries = sortedLeaderboard.slice(0, MAX_LEADERBOARD_ENTRIES); if (displayEntries.length === 0) { leaderboardList.innerHTML = '<li class="leaderboard-item" style="text-align:center; color:#888;">Aún no hay puntajes.</li>'; return; } displayEntries.forEach(entry => { const li = document.createElement('li'); li.classList.add('leaderboard-item'); if (entry.name === playerStats.playerName) { li.classList.add('you'); } li.innerHTML = `<strong>${entry.name}</strong> <span>${entry.score}</span>`; leaderboardList.appendChild(li); }); }
+        function addToLeaderboard(name, score) { const existingEntryIndex = leaderboardData.findIndex(entry => entry.name === name); if (existingEntryIndex !== -1) { if (score > leaderboardData[existingEntryIndex].score) { leaderboardData[existingEntryIndex].score = score; } else { return; } } else { leaderboardData.push({ name, score }); } leaderboardData.sort((a, b) => b.score - a.score); if (leaderboardData.length > MAX_LEADERBOARD_ENTRIES * 2) { leaderboardData = leaderboardData.slice(0, MAX_LEADERBOARD_ENTRIES * 2); } updateLeaderboardDisplay(); savePlayerStats(); }
+        function updateMedalsDisplay() { medalsList.innerHTML = ''; MEDALS.forEach(medal => { const isUnlocked = playerStats.medals.includes(medal.id); const medalDiv = document.createElement('div'); medalDiv.classList.add('medal-item'); medalDiv.textContent = medal.icon; const tooltipSpan = document.createElement('span'); tooltipSpan.classList.add('medal-tooltip'); tooltipSpan.textContent = `${medal.name}${isUnlocked ? '' : ' (Bloqueada)'} - ${medal.description}`; medalDiv.appendChild(tooltipSpan); if (!isUnlocked) { medalDiv.classList.add('locked'); } medalsList.appendChild(medalDiv); }); }
+        function checkAndAwardMedal(medalId) { const medal = MEDALS.find(m => m.id === medalId); if (medal && !playerStats.medals.includes(medalId) && medal.condition(playerStats)) { playerStats.medals.push(medalId); showNotification(`¡Medalla Desbloqueada: ${medal.name} ${medal.icon}!`, 'medal', 4000); playSound(medalSound, ['C5', 'G5', 'E5'], '0.4s'); updateMedalsDisplay(); savePlayerStats(); } }
         function checkAndAwardAllMedals() { MEDALS.forEach(medal => { if (!playerStats.medals.includes(medal.id) && medal.condition(playerStats)) { checkAndAwardMedal(medal.id); } }); }
-
-        function checkDailyBonus() {
-            const today = new Date(); const todayDay = today.getDate(); const lastBonusDay = playerStats.dailyBonusDay;
-            if (!lastBonusDay || lastBonusDay !== todayDay) {
-                dailyBonusCardContainer.style.display = 'block'; // Mostrar la tarjeta
-                dailyBonusContainer.style.display = 'block'; // Mostrar el contenido del bonus
-                const bonusOptions = ["+1 Vida (Mates)", "Racha +1 (Mates)", "Inicio con +3s (Mates)"];
-                const randomBonus = bonusOptions[Math.floor(Math.random() * bonusOptions.length)];
-                dailyBonusMessage.textContent = `¡Tu recompensa de hoy es: ${randomBonus}!`;
-                dailyBonusContainer.dataset.pendingBonus = randomBonus;
-            } else {
-                dailyBonusCardContainer.style.display = 'none';
-                dailyBonusContainer.style.display = 'none';
-            }
-        }
-        function collectDailyBonus() {
-            playClickSound(); const pendingBonus = dailyBonusContainer.dataset.pendingBonus;
-            if (pendingBonus) {
-                showNotification(`¡Bonificación reclamada: ${pendingBonus}!`, 'event', 3000);
-                playSound(dailyBonusSound, ['D4', 'F#4', 'A4'], '0.5s');
-                if (pendingBonus.includes("Vida") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; }
-                else if (pendingBonus.includes("Racha")) { playerStats.inventory.push("bonus_racha_mates"); } // Guardar como item de inventario
-                else if (pendingBonus.includes("+3s")) { playerStats.inventory.push("bonus_tiempo_inicio_mates"); }
-
-                playerStats.dailyBonusDay = new Date().getDate();
-                dailyBonusCardContainer.style.display = 'none'; // Ocultar la tarjeta después de reclamar
-                dailyBonusContainer.style.display = 'none';
-                delete dailyBonusContainer.dataset.pendingBonus;
-                updateMathGameDisplay(); savePlayerStats();
-            }
-        }
-
-        function savePlayerStats() {
-            try {
-                const dataToSave = { playerName: playerStats.playerName, stats: playerStats, leaderboard: leaderboardData, loginHist: loginHistory };
-                localStorage.setItem('mentalChallengesGameData_v2', JSON.stringify(dataToSave)); // Changed key for new structure
-            } catch (e) { console.error("Error saving data:", e); showNotification("Error al guardar progreso.", "error", 5000); }
-        }
-        function loadPlayerStats() {
-            try {
-                const savedData = localStorage.getItem('mentalChallengesGameData_v2'); // Changed key
-                if (savedData) {
-                    const parsedData = JSON.parse(savedData);
-                    // Prioritize playerName from input if it's the first load after input
-                    // but use saved playerName if input is empty (e.g. page refresh)
-                    const currentInputName = playerNameInput.value.trim();
-                    playerName = currentInputName || parsedData.playerName || ''; // Use current input, then saved, then default
-
-                    playerStats = { ...playerStats, ...parsedData.stats };
-                    if (parsedData.stats.math) playerStats.math = { ...playerStats.math, ...parsedData.stats.math };
-                    if (parsedData.stats.mindtwist) playerStats.mindtwist = { ...playerStats.mindtwist, ...parsedData.stats.mindtwist };
-                    playerStats.inventory = parsedData.stats.inventory || [];
-                    playerStats.medals = parsedData.stats.medals || [];
-                    playerStats.playerName = playerName; // Ensure playerStats also has the correct name
-
-                    leaderboardData = parsedData.leaderboard || [];
-                    loginHistory = parsedData.loginHist || [];
-
-                    if (playerName) { // If a name is now established (either from input or load)
-                        playerNameInput.value = playerName;
-                        displayPlayerNameSelection.textContent = playerName;
-                        mathDisplayPlayerName.textContent = playerName;
-                    }
-                    updateLeaderboardDisplay(); updateMedalsDisplay(); checkAndAwardAllMedals();
-                }
-            } catch (e) { console.error("Error loading data:", e); showNotification("Error al cargar progreso.", "error", 5000); }
-        }
-
+        function checkDailyBonus() { const today = new Date(); const todayDay = today.getDate(); const lastBonusDay = playerStats.dailyBonusDay; if (!lastBonusDay || lastBonusDay !== todayDay) { dailyBonusCardContainer.style.display = 'block'; dailyBonusContainer.style.display = 'block'; const bonusOptions = ["+1 Vida (Mates)", "Bonus de Racha (Mates)", "Bonus de Tiempo Inicial (Mates)"]; const randomBonus = bonusOptions[Math.floor(Math.random() * bonusOptions.length)]; dailyBonusMessage.textContent = `¡Tu recompensa de hoy es: ${randomBonus}!`; dailyBonusContainer.dataset.pendingBonus = randomBonus; } else { dailyBonusCardContainer.style.display = 'none'; dailyBonusContainer.style.display = 'none'; } }
+        function collectDailyBonus() { playClickSound(); const pendingBonus = dailyBonusContainer.dataset.pendingBonus; if (pendingBonus) {  let notificationMsg = `¡Bonificación reclamada: ${pendingBonus}!`; playSound(dailyBonusSound, ['D4', 'F#4', 'A4'], '0.5s'); if (pendingBonus.includes("Vida") && playerStats.math.playerLives < INITIAL_LIVES + 2) { playerStats.math.playerLives++; } else if (pendingBonus.includes("Racha")) { playerStats.inventory.push("bonus_racha_mates"); notificationMsg = "¡Bonus de Racha añadido a tu inventario!"; } else if (pendingBonus.includes("Tiempo Inicial")) { playerStats.inventory.push("bonus_tiempo_inicio_mates"); notificationMsg = "¡Bonus de Tiempo Inicial añadido!"; } showNotification(notificationMsg, 'event', 3000); playerStats.dailyBonusDay = new Date().getDate(); dailyBonusCardContainer.style.display = 'none'; dailyBonusContainer.style.display = 'none'; delete dailyBonusContainer.dataset.pendingBonus; updateMathGameDisplay(); savePlayerStats(); } }
+        function savePlayerStats() { try { const dataToSave = { playerName: playerStats.playerName, stats: playerStats, leaderboard: leaderboardData, loginHist: loginHistory }; localStorage.setItem('mentalChallengesGameData_v2', JSON.stringify(dataToSave)); } catch (e) { console.error("Error saving data:", e); showNotification("Error al guardar progreso.", "error", 5000); } }
+        function loadPlayerStats() { try { const savedData = localStorage.getItem('mentalChallengesGameData_v2'); if (savedData) { const parsedData = JSON.parse(savedData); const currentInputName = playerNameInput.value.trim(); playerName = currentInputName || parsedData.playerName || ''; playerStats = { ...playerStats, ...parsedData.stats }; if (parsedData.stats.math) playerStats.math = { ...playerStats.math, ...parsedData.stats.math }; if (parsedData.stats.mindtwist) playerStats.mindtwist = { ...playerStats.mindtwist, ...parsedData.stats.mindtwist }; playerStats.inventory = parsedData.stats.inventory || []; playerStats.medals = parsedData.stats.medals || []; playerStats.playerName = playerName; leaderboardData = parsedData.leaderboard || []; loginHistory = parsedData.loginHist || []; if (playerName) { playerNameInput.value = playerName; displayPlayerNameSelection.textContent = playerName; mathDisplayPlayerName.textContent = playerName; } updateLeaderboardDisplay(); updateMedalsDisplay(); checkAndAwardAllMedals(); } } catch (e) { console.error("Error loading data:", e); showNotification("Error al cargar progreso.", "error", 5000); } }
         mathUserAnswerInput.addEventListener('keypress', function(event) { if (event.key === 'Enter') { checkMathAnswer(); } });
-        window.onload = () => {
-            loadPlayerStats();
-            showScreen('welcome');
-        };
+        window.onload = () => { loadPlayerStats(); showScreen('welcome'); };
     </script>
 </body>
 </html>
