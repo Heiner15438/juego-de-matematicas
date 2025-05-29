@@ -96,6 +96,32 @@
         .selection-card strong { color: #3d4a78; font-weight: 700; }
         .selection-card ul { list-style: none; padding: 0; }
         .selection-card .leaderboard-list, .selection-card .medals-list-container { margin-top: 10px; }
+        .selection-card .leaderboard-list li.leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px dotted #e2e8f0; }
+        .selection-card .leaderboard-list li.leaderboard-item:last-child { border-bottom: none; }
+        .selection-card .leaderboard-list li.leaderboard-item.you { background-color: #EBF4FF; border-radius: 5px; padding: 5px 8px; font-weight: bold; }
+        .selection-card .leaderboard-list strong { color: #5A67D8; }
+
+        .selection-card .medals-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .selection-card .medal-item { font-size: 2.2em; position: relative; cursor: help; filter: grayscale(0%); transition: filter 0.3s ease-out; }
+        .selection-card .medal-item.locked { filter: grayscale(100%); opacity: 0.6; }
+        .selection-card .medal-item .medal-tooltip {
+            visibility: hidden; opacity: 0;
+            background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 8px 12px;
+            position: absolute; z-index: 1; bottom: 125%; left: 50%; transform: translateX(-50%);
+            white-space: nowrap; font-size: 0.8em; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: opacity 0.3s;
+        }
+        .selection-card .medal-item:hover .medal-tooltip { visibility: visible; opacity: 1; }
+
+        .daily-bonus-container {
+            padding: 15px; border-radius: 12px; background-color: #FFF7ED; border: 2px dashed #F6AD55;
+            margin-top: 15px; text-align: center;
+        }
+        .daily-bonus-container h4 { font-family: 'Fredoka One', cursive; color: #D69E2E; font-size: 1.5em; margin-bottom: 10px;}
+        .daily-bonus-container p { color: #8B5E00; font-size: 1.1em; margin-bottom: 15px; }
+        .daily-bonus-container button { background-color: #F6AD55; margin-top: 0; }
+        .daily-bonus-container button:hover { background-color: #ED8936; }
+
 
         #math-game-container, #simon-game-container, #mind-twist-game-v2-container, #number-memory-game-container { display: none; flex-direction: column; align-items: center; width: 100%; animation: zoomIn 0.4s ease-out; }
         .game-stats { display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 18px; font-size: 1.05em; color: #718096; padding: 8px 12px; background-color: #f8f9fa; border-radius:10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
@@ -227,10 +253,10 @@
 
         #number-memory-game-container .nm-game-board {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, 1fr); /* Default, will be overridden by JS for 3x3 */
             gap: 10px;
             margin: 25px auto;
-            max-width: 360px;
+            max-width: 360px; /* Adjust based on grid size */
         }
         #number-memory-game-container .nm-number-card {
             aspect-ratio: 1;
@@ -254,13 +280,14 @@
             background: #A3BFFA;
             color: #2D3748;
         }
-        #number-memory-game-container .nm-number-card.matched {
+        /* 'matched' class is more for pair-matching games, removed from description for clarity in this game */
+        /* #number-memory-game-container .nm-number-card.matched {
             background: #68D391;
             transform: scale(1.05);
-        }
+        } */
         #number-memory-game-container .nm-number-card.hidden {
             background: #CBD5E0;
-            color: transparent;
+            color: transparent; /* Makes the number invisible */
             /* pointer-events: none; No deshabilitar eventos aquí para que el click funcione luego */
         }
         #number-memory-game-container .nm-number-card:disabled {
@@ -271,7 +298,7 @@
 
         #number-memory-game-container .nm-number-card.pulse-effect {
             animation: pulseBlue 0.6s ease-in-out;
-            background-color: #4299e1 !important;
+            background-color: #4299e1 !important; /* Override background for effect */
         }
         @keyframes pulseBlue { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
@@ -282,14 +309,87 @@
 
 
         /* Loot Box, Leaderboard, Medals, Daily Bonus, Notifications, Animaciones (Se mantienen como están) */
-        /* ... (estilos sin cambios) ... */
+        .loot-box-container {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            background-color: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1000; text-align: center; max-width: 380px; width: 90%;
+            display: flex; flex-direction: column; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease-out;
+            border: 4px solid #FFD700;
+        }
+        .loot-box-container.visible {
+            opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1);
+        }
+        .loot-box-container h3 { font-family: 'Fredoka One', cursive; color: #D4AF37; font-size: 2em; margin-bottom: 15px; }
+        .loot-box-icon { font-size: 5em; margin-bottom: 15px; animation: bounce 1s infinite alternate; }
+        .loot-box-reward { font-size: 1.2em; color: #4A5568; margin-bottom: 25px; font-weight: 600; min-height: 1.5em; }
+        .loot-box-container button { background-color: #FFD700; color: #333; font-weight: bold; }
+        .loot-box-container button:hover { background-color: #E6B800; }
+
+        .notification {
+            position: fixed; top: 20px; right: 20px;
+            background-color: #333; color: white; padding: 12px 20px;
+            border-radius: 10px; z-index: 1001; opacity: 0; visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(-20px);
+            font-size: 0.95em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+        .notification.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .notification.success { background-color: #48BB78; }
+        .notification.error { background-color: #E53E3E; }
+        .notification.event { background-color: #4299E1; }
+        .notification.streak { background-color: #ED8936; }
+        .notification.medal { background-color: #9F7AEA; }
+
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 211, 141, 0.7); } 70% { transform: scale(1.08); box-shadow: 0 0 0 15px rgba(251, 211, 141, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 211, 141, 0); } }
+        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         /* Estilos Responsivos */
         @media (max-width: 700px) {
-            /* ... (ajustes generales responsivos) ... */
+            .container {
+                padding: 20px;
+                min-height: auto;
+            }
+            .welcome-screen h1 { font-size: 2.2em; }
+            .selection-screen h2 { font-size: 1.8em; }
+            .selection-grid { grid-template-columns: 1fr; }
+            #math-game-container .problem { font-size: 1.8em; padding: 10px; }
+            #math-game-container .input-area { flex-direction: column; }
+            #math-game-container input[type="number"] { width: 80%; max-width: 250px; margin: 10px 0; }
+            #math-game-container .input-area button { margin-left: 0; margin-top: 10px;}
+            #mind-twist-game-v2-container .game-title { font-size: 1.8em; }
+            #mind-twist-game-v2-container .riddle-text { font-size: 1.1em; }
+            #mind-twist-game-v2-container .options-grid { grid-template-columns: 1fr; }
+            #mind-twist-game-v2-container .option-button { font-size: 1.1em; }
+            #simon-pads-area { width: 180px; height: 180px; gap: 10px; }
+            #number-memory-game-container .nm-game-board { max-width: 300px; }
+            #number-memory-game-container .nm-number-card { font-size: 1.5em; }
         }
          @media (max-width: 480px) {
-            /* ... (ajustes generales responsivos más pequeños) ... */
+            body { padding: 10px; }
+            .container { padding: 15px; border-radius: 15px; }
+            .welcome-screen h1 { font-size: 2em; }
+            .selection-screen h2 { font-size: 1.6em; }
+            .selection-screen .game-selection-buttons button { min-width: unset; width: 90%; }
+            .game-stats { font-size: 0.9em; flex-direction: column; gap: 5px; margin-bottom: 15px; }
+            .game-stats > div { width: 100%; }
+            #math-game-container .problem { font-size: 1.6em; }
+            #math-game-container input[type="number"] { width: 95%; }
+            #mind-twist-game-v2-container .game-title { font-size: 1.6em; }
+            #mind-twist-game-v2-container .control-button { font-size: 0.8em; padding: 8px 12px; margin: 5px; }
+            #simon-pads-area { width: 150px; height: 150px; }
+            #number-memory-game-container .nm-info-card { padding: 8px; font-size: 0.9em;}
+            #number-memory-game-container .nm-info-value { font-size: 1.2em;}
+            #number-memory-game-container .nm-game-board { max-width: 250px; }
+            #number-memory-game-container .nm-number-card { font-size: 1.3em; }
         }
     </style>
 </head>
@@ -566,18 +666,56 @@
 
         // Loot Box & Medals
         const MATH_GAME_LOOT_BOX_PROBABILITY = 0.25; const MINDTWIST_V2_LOOT_BOX_PROBABILITY = 0.20; const SIMON_LOOT_BOX_PROBABILITY = 0.20; const NUMBER_MEMORY_LOOT_BOX_PROBABILITY = 0.18;
-        const MEDALS = [ /* ... (Medallas como antes, incluyendo las de numberMemory) ... */  { id: "first_game", name: "Primer Juego", description: "Juega tu primera partida de cualquier juego.", icon: "🎮", condition: (stats) => stats.math.totalGamesPlayed > 0 || stats.mindtwistV2.totalAttempts > 0 || stats.simon.totalGamesPlayed > 0 || stats.numberMemory.gamesPlayed > 0}, { id: "math_first_correct", name: "Matiniciante", description: "Resuelve tu primer problema de Mates Rápidas.", icon: "➕", condition: (stats) => stats.math.totalCorrect > 0 && stats.math.totalGamesPlayed > 0 }, { id: "mindtwist_v2_first_try", name: "Explorador V2", description: "Intenta resolver tu primer acertijo visual V2.", icon: "🧐", condition: (stats) => stats.mindtwistV2.totalAttempts > 0 }, { id: "mindtwist_v2_solved_1", name: "Acertijo V2 Resuelto", description: "Resuelve tu primer acertijo visual V2.", icon: "💡", condition: (stats) => stats.mindtwistV2.solvedCount >= 1 }, { id: "simon_first_game", name: "Maestro Simón Jr.", description: "Juega tu primera partida de Secuencia de Colores.", icon: "🎨", condition: (stats) => stats.simon.totalGamesPlayed > 0}, { id: "nm_first_game", name: "Numerólogo Inicial", description: "Juega tu primera partida de Memoria de Números.", icon: "💯", condition: (stats) => stats.numberMemory.gamesPlayed > 0}, { id: "nm_score_100", name: "Cien Puntos Numéricos", description: "Alcanza 100 puntos en Memoria de Números.", icon: "📈", condition: (stats) => stats.numberMemory.highestScore >= 100}, { id: "math_streak_5", name: "Racha de 5 (Mates)", description: "Logra una racha de 5 respuestas correctas en Mates Rápidas.", icon: "🏅", condition: (stats) => stats.math.bestStreak >= 5 }, { id: "math_level_5", name: "Nivel 5 (Mates)", description: "Alcanza el nivel 5 en Mates Rápidas.", icon: "🏆", condition: (stats) => stats.math.currentLevel >= 5 }, { id: "math_level_10", name: "Nivel 10 (Mates)", description: "Alcanza el nivel 10 en Mates Rápidas.", icon: "🌟", condition: (stats) => stats.math.currentLevel >= 10 }, { id: "simon_score_50", name: "Simón Puntuador", description: "Alcanza 50 puntos en Secuencia de Colores.", icon: "🎯", condition: (stats) => stats.simon.highestScore >= 50}, { id: "simon_sequence_5", name: "Memoria Prodigiosa", description: "Repite una secuencia de 5 colores en Simón.", icon: "🧠", condition: (stats) => stats.simon.longestSequence >= 5}, { id: "daily_login_3", name: "Visitante Frecuente", description: "Inicia sesión 3 días diferentes.", icon: "📅", condition: (stats) => countUniqueLoginDays(stats) >= 3 } ];
+        const MEDALS = [ /* ... (Medallas como antes, incluyendo las de numberMemory) ... */
+            { id: "first_game", name: "Primer Juego", description: "Juega tu primera partida de cualquier juego.", icon: "🎮", condition: (stats) => stats.math.totalGamesPlayed > 0 || stats.mindtwistV2.totalAttempts > 0 || stats.simon.totalGamesPlayed > 0 || stats.numberMemory.gamesPlayed > 0},
+            { id: "math_first_correct", name: "Matiniciante", description: "Resuelve tu primer problema de Mates Rápidas.", icon: "➕", condition: (stats) => stats.math.totalCorrect > 0 && stats.math.totalGamesPlayed > 0 },
+            { id: "mindtwist_v2_first_try", name: "Explorador V2", description: "Intenta resolver tu primer acertijo visual V2.", icon: "🧐", condition: (stats) => stats.mindtwistV2.totalAttempts > 0 },
+            { id: "mindtwist_v2_solved_1", name: "Acertijo V2 Resuelto", description: "Resuelve tu primer acertijo visual V2.", icon: "💡", condition: (stats) => stats.mindtwistV2.solvedCount >= 1 },
+            { id: "simon_first_game", name: "Maestro Simón Jr.", description: "Juega tu primera partida de Secuencia de Colores.", icon: "🎨", condition: (stats) => stats.simon.totalGamesPlayed > 0},
+            { id: "nm_first_game", name: "Numerólogo Inicial", description: "Juega tu primera partida de Memoria de Números.", icon: "💯", condition: (stats) => stats.numberMemory.gamesPlayed > 0},
+            { id: "nm_score_100", name: "Cien Puntos Numéricos", description: "Alcanza 100 puntos en Memoria de Números.", icon: "📈", condition: (stats) => stats.numberMemory.highestScore >= 100},
+            { id: "math_streak_5", name: "Racha de 5 (Mates)", description: "Logra una racha de 5 respuestas correctas en Mates Rápidas.", icon: "🏅", condition: (stats) => stats.math.bestStreak >= 5 },
+            { id: "math_level_5", name: "Nivel 5 (Mates)", description: "Alcanza el nivel 5 en Mates Rápidas.", icon: "🏆", condition: (stats) => stats.math.currentLevel >= 5 },
+            { id: "math_level_10", name: "Nivel 10 (Mates)", description: "Alcanza el nivel 10 en Mates Rápidas.", icon: "🌟", condition: (stats) => stats.math.currentLevel >= 10 },
+            { id: "simon_score_50", name: "Simón Puntuador", description: "Alcanza 50 puntos en Secuencia de Colores.", icon: "🎯", condition: (stats) => stats.simon.highestScore >= 50},
+            { id: "simon_sequence_5", name: "Memoria Prodigiosa", description: "Repite una secuencia de 5 colores en Simón.", icon: "🧠", condition: (stats) => stats.simon.longestSequence >= 5},
+            { id: "daily_login_3", name: "Visitante Frecuente", description: "Inicia sesión 3 días diferentes.", icon: "📅", condition: (stats) => countUniqueLoginDays(stats) >= 3 }
+        ];
 
         let mathCurrentProblemDetails = {};
         // --- Audio ---
         let synthsInitialized = false;
         let correctSound, incorrectSound, levelUpSound, gameStartSound, levelDownSound, lifeLostSound, mindTwistV2CorrectSound, mindTwistV2IncorrectSound, lootBoxSound, dailyBonusSound, medalSound, clickSound, timerTickSound, simonPadSounds = {}, nmCardClickSound, nmSequenceHighlightSound, nmErrorSound;
 
-        async function initializeAudio() { if (synthsInitialized || (Tone.context && Tone.context.state === 'running')) return; try { await Tone.start(); console.log("AudioContext started successfully!"); correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination(); incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination(); levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination(); gameStartSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -8 }).toDestination(); levelDownSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.3 }, volume: -10 }).toDestination(); lifeLostSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -12 }).toDestination(); mindTwistV2CorrectSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 }, volume: -15 }).toDestination(); mindTwistV2IncorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -18 }).toDestination(); lootBoxSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.05, decay: 0.4, sustain: 0.1, release: 0.5 }, volume: -7 }).toDestination(); dailyBonusSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -6 }).toDestination(); medalSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -8 }).toDestination(); clickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.2, sustain: 0 } }).toDestination(); timerTickSound = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 1.5, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -25 }).toDestination(); simonPadSounds.red = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination(); simonPadSounds.green = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination(); simonPadSounds.blue = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination(); simonPadSounds.yellow = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination();
-            nmCardClickSound = new Tone.Synth({ oscillator: {type: "triangle"}, envelope: {attack: 0.005, decay: 0.05, sustain: 0.01, release: 0.1}, volume: -18}).toDestination();
-            nmSequenceHighlightSound = new Tone.Synth({oscillator: {type: "sine"}, envelope: {attack: 0.01, decay:0.1, sustain:0.02, release: 0.1}, volume: -15}).toDestination();
-            nmErrorSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }, volume: -15 }).toDestination();
-            synthsInitialized = true; } catch (e) { console.error("Error initializing AudioContext or synths:", e); }
+        async function initializeAudio() {
+             if (synthsInitialized || (Tone.context && Tone.context.state === 'running')) return;
+             try {
+                await Tone.start();
+                console.log("AudioContext started successfully!");
+                correctSound = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 } }).toDestination();
+                incorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -10 }).toDestination();
+                levelUpSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -5 }).toDestination();
+                gameStartSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -8 }).toDestination();
+                levelDownSound = new Tone.NoiseSynth({ noise: { type: 'brown' }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.3 }, volume: -10 }).toDestination();
+                lifeLostSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 }, volume: -12 }).toDestination();
+                mindTwistV2CorrectSound = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 }, volume: -15 }).toDestination();
+                mindTwistV2IncorrectSound = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.2, sustain: 0, release: 0.2 }, volume: -18 }).toDestination();
+                lootBoxSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.05, decay: 0.4, sustain: 0.1, release: 0.5 }, volume: -7 }).toDestination();
+                dailyBonusSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.3, sustain: 0.1, release: 0.5 }, volume: -6 }).toDestination();
+                medalSound = new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square" }, envelope: { attack: 0.02, decay: 0.3, sustain: 0.1, release: 0.4 }, volume: -8 }).toDestination();
+                clickSound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.2, sustain: 0 } }).toDestination();
+                timerTickSound = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 1.5, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }, volume: -25 }).toDestination();
+                simonPadSounds.red = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination();
+                simonPadSounds.green = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination();
+                simonPadSounds.blue = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination();
+                simonPadSounds.yellow = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.01, release: 0.1 }, volume: -12 }).toDestination();
+                nmCardClickSound = new Tone.Synth({ oscillator: {type: "triangle"}, envelope: {attack: 0.005, decay: 0.05, sustain: 0.01, release: 0.1}, volume: -18}).toDestination();
+                nmSequenceHighlightSound = new Tone.Synth({oscillator: {type: "sine"}, envelope: {attack: 0.01, decay:0.1, sustain:0.02, release: 0.1}, volume: -15}).toDestination();
+                nmErrorSound = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }, volume: -15 }).toDestination();
+                synthsInitialized = true;
+             } catch (e) {
+                console.error("Error initializing AudioContext or synths:", e);
+             }
         }
         const congratulations = [ /* ... */ "¡Bien hecho, {name}! 🎉 ¡Nivel {level} desbloqueado!", "¡Excelente trabajo! 🌟 ¡Pasaste al Nivel {level}!", "¡Fantástico, {name}! 🚀 ¡Ya estás en el Nivel {level}!", "¡Increíble! ✨ ¡El Nivel {level} te espera, {name}!", "¡Sigue así, {name}! 🔥 ¡Nivel {level} superado con éxito!", "¡Eres una estrella, {name}! 🌠 ¡Bienvenido al Nivel {level}!", "¡Lo lograste, {name}! 💪 ¡A conquistar el Nivel {level}!" ];
 
@@ -589,23 +727,45 @@
 
         function showScreen(screenId) {
             playClickSound();
-            ['welcome', 'selection', 'math', 'mind-twist-game-v2-container', 'simon', 'number-memory-game-container'].forEach(id => {
-                const el = document.getElementById(id.endsWith('-container') ? id : (id + '-screen')) || document.getElementById(id + '-game-container');
+            // Oculta todas las pantallas
+            [welcomeScreen, selectionScreen, mathGameContainer, mindTwistGameV2Container, simonGameContainer, numberMemoryGameContainer].forEach(el => {
                 if (el) el.style.display = 'none';
             });
-            clearTimeout(mathTimerId); clearTimeout(mtV2_timerId);
-            if (simonGameActive) { simonGameActive = false; simonStartButton.disabled = false; Object.values(simonPadElements).forEach(pad => pad.disabled = true); }
-            if (nmGameInstance && nmGameInstance.gameActive && activeGame === 'numberMemory') { // Solo pausar si se sale de este juego específico
+            // Limpia temporizadores de los juegos activos
+            clearTimeout(mathTimerId);
+            clearTimeout(mtV2_timerId);
+            if (simonGameActive) {
+                simonGameActive = false;
+                simonStartButton.disabled = false;
+                Object.values(simonPadElements).forEach(pad => pad.disabled = true);
+            }
+            if (nmGameInstance && nmGameInstance.gameActive) { // Solo pausar si se sale de este juego específico
                  nmGameInstance.pauseGameForScreenChange?.();
             }
 
             let targetScreen;
-            if (screenId === 'welcome') { targetScreen = welcomeScreen; playerNameInput.value = ''; playerPasswordInput.value = ''; authErrorMessage.style.display = 'none';
-            } else if (screenId === 'selection') { if (!currentLoggedInPlayer) { showScreen('welcome'); return; } updateSelectionScreenStats(); checkDailyBonus(); updateMedalsDisplay(); updateLeaderboardDisplay(); targetScreen = selectionScreen;
-            } else if (screenId === 'math') targetScreen = mathGameContainer;
-            else if (screenId === 'mindtwist_v2') targetScreen = mindTwistGameV2Container;
-            else if (screenId === 'simon') targetScreen = simonGameContainer;
-            else if (screenId === 'numberMemory') targetScreen = numberMemoryGameContainer;
+            if (screenId === 'welcome') {
+                targetScreen = welcomeScreen;
+                playerNameInput.value = '';
+                playerPasswordInput.value = '';
+                authErrorMessage.style.display = 'none';
+            } else if (screenId === 'selection') {
+                if (!currentLoggedInPlayer) { showScreen('welcome'); return; }
+                updateSelectionScreenStats();
+                checkDailyBonus();
+                updateMedalsDisplay();
+                updateLeaderboardDisplay();
+                targetScreen = selectionScreen;
+            } else if (screenId === 'math') {
+                targetScreen = mathGameContainer;
+            } else if (screenId === 'mindtwist_v2') {
+                targetScreen = mindTwistGameV2Container;
+            } else if (screenId === 'simon') {
+                targetScreen = simonGameContainer;
+            } else if (screenId === 'numberMemory') {
+                targetScreen = numberMemoryGameContainer;
+            }
+
             if(targetScreen) targetScreen.style.display = 'flex';
             activeGame = screenId; // Actualizar juego activo después de cambiar
         }
@@ -692,7 +852,7 @@
                 this.score = 0;
                 this.gameActive = false;
                 this.showingSequence = false;
-                this.gridSize = 4;
+                this.gridSize = 4; // Default for medium/hard/expert
                 this.difficulty = this.userStats.numberMemory.currentDifficulty || 'medium';
                 this.maxLevel = NM_MAX_LEVEL;
 
@@ -705,6 +865,7 @@
                 const cardCount = cardCountConfig[this.difficulty] || 16;
                 this.gridSize = Math.sqrt(cardCount);
                 nmGameBoardElem.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
+                nmGameBoardElem.style.maxWidth = `${this.gridSize * (60 + 10)}px`; // Card size + gap
                 this.createGameBoard();
                 this.updateDisplay();
             }
@@ -714,7 +875,7 @@
                 const totalNumbers = this.gridSize * this.gridSize;
                 for (let i = 1; i <= totalNumbers; i++) {
                     const card = document.createElement('button');
-                    card.className = 'nm-number-card hidden';
+                    card.className = 'nm-number-card hidden'; // Start hidden
                     card.textContent = i;
                     card.dataset.number = i;
                     // El listener se añade una vez, la lógica de habilitar/deshabilitar controlará la interacción
@@ -726,7 +887,7 @@
 
             bindEvents() {
                 nmStartBtn.onclick = () => this.startGame();
-                nmShowSequenceBtn.onclick = () => this.showSequenceVisual();
+                nmShowSequenceBtn.onclick = () => this.showSequenceVisual(true); // Forced show
                 nmResetBtn.onclick = () => this.resetGame();
                 nmDifficultySelect.onchange = () => this.changeDifficulty();
             }
@@ -743,7 +904,7 @@
                 let length = baseLengths[this.difficulty];
                 // Incrementar longitud cada 2 niveles, hasta un máximo de (gridSize*gridSize - 2) o similar para que sea desafiante pero posible
                 length += Math.floor((this.level -1) / 2);
-                return Math.min(length, (this.gridSize * this.gridSize) -1 ); // No más largo que el tablero
+                return Math.min(length, (this.gridSize * this.gridSize) - 2 ); // No más largo que el tablero - 2 para que siempre haya al menos dos que no se muestran
             }
 
             startGame() {
@@ -757,10 +918,12 @@
                 this.gameActive = true;
                 nmStartBtn.style.display = 'none';
                 nmShowSequenceBtn.style.display = 'inline-block';
+                this.hideAllCards(); // Ensure all cards are hidden
                 this.nextLevel(); // Iniciar el primer nivel
             }
 
             nextLevel() {
+                if (!this.gameActive) return; // Prevent starting next level if game is over
                 if (this.level > this.maxLevel) {
                     this.gameComplete();
                     return;
@@ -787,41 +950,69 @@
             generateSequence() {
                 const sequenceLength = this.getSequenceLength();
                 this.sequence = [];
-                const maxNumber = this.gridSize * this.gridSize;
-                for (let i = 0; i < sequenceLength; i++) {
-                    this.sequence.push(Math.floor(Math.random() * maxNumber) + 1);
+                const allNumbers = Array.from({ length: this.gridSize * this.gridSize }, (_, i) => i + 1);
+                // Shuffle all numbers and pick from the beginning
+                for (let i = allNumbers.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
                 }
+                this.sequence = allNumbers.slice(0, sequenceLength);
                 this.playerSequence = [];
             }
 
-            async showSequenceVisual() { // Cambiado a async/await
+            async showSequenceVisual(forceShow = false) { // Cambiado a async/await
+                if (!this.gameActive && !forceShow) return; // Only proceed if game is active or forced
                 this.showingSequence = true;
                 this.disableCardClicks();
                 nmSequenceDisplayElem.textContent = `Secuencia: ${this.sequence.join(' → ')}`;
+                this.hideAllCards(); // Ensure all are hidden before showing sequence
                 await this.wait(500); // Pausa antes de mostrar
 
                 for (let i = 0; i < this.sequence.length; i++) {
-                    if (!this.gameActive && !this.showingSequence) break; // Salir si el juego se detuvo
+                    if (!this.gameActive && !forceShow) break; // Salir si el juego se detuvo
                     this.highlightCard(this.sequence[i]);
                     playSound(nmSequenceHighlightSound, 'C5', '0.1s');
-                    await this.wait(800);
+                    await this.wait(800); // Duration card is visible
                     this.unhighlightCard(this.sequence[i]);
-                    if (i < this.sequence.length - 1) await this.wait(300);
+                    if (i < this.sequence.length - 1) await this.wait(300); // Delay between flashes
                 }
 
                 if (this.gameActive) { // Solo continuar si el juego no se detuvo
-                    await this.wait(500);
+                    await this.wait(500); // Pause before player's turn
                     nmSequenceDisplayElem.textContent = '';
                     this.showingSequence = false;
                     this.enableCardClicks();
                     this.showMessage('¡Ahora repite la secuencia seleccionando las tarjetas!', 'info');
+                } else if (forceShow) { // If force show (e.g. from show sequence button), just reset afterwards
+                    await this.wait(500);
+                    nmSequenceDisplayElem.textContent = '';
+                    this.showingSequence = false;
+                    this.disableCardClicks(); // Keep disabled if game is not active
                 }
             }
-            hideAllCards() { const cards = nmGameBoardElem.querySelectorAll('.nm-number-card'); cards.forEach(card => card.classList.add('hidden'));}
+            hideAllCards() {
+                const cards = nmGameBoardElem.querySelectorAll('.nm-number-card');
+                cards.forEach(card => {
+                    card.classList.remove('flipped', 'pulse-effect');
+                    card.classList.add('hidden');
+                });
+            }
             disableCardClicks() { Array.from(nmGameBoardElem.children).forEach(c => c.disabled = true); }
             enableCardClicks() { Array.from(nmGameBoardElem.children).forEach(c => c.disabled = false); }
-            highlightCard(number) { const card = nmGameBoardElem.querySelector(`[data-number="${number}"]`); if (card) { card.classList.remove('hidden'); card.classList.add('pulse-effect');}}
-            unhighlightCard(number) { const card = nmGameBoardElem.querySelector(`[data-number="${number}"]`); if (card) { card.classList.remove('pulse-effect'); card.classList.add('hidden');}}
+            highlightCard(number) {
+                const card = nmGameBoardElem.querySelector(`[data-number="${number}"]`);
+                if (card) {
+                    card.classList.remove('hidden');
+                    card.classList.add('pulse-effect');
+                }
+            }
+            unhighlightCard(number) {
+                const card = nmGameBoardElem.querySelector(`[data-number="${number}"]`);
+                if (card) {
+                    card.classList.remove('pulse-effect');
+                    card.classList.add('hidden');
+                }
+            }
 
             handleCardClick(number) {
                 if (!this.gameActive || this.showingSequence) return;
@@ -831,12 +1022,7 @@
                 if(card) {
                     card.classList.remove('hidden'); // Muestra el número
                     card.classList.add('flipped'); // Estilo de "volteada"
-                    setTimeout(() => { // Ocultar de nuevo después de un momento si no es parte de la secuencia final
-                        if (!this.playerSequence.includes(parseInt(card.dataset.number)) || this.playerSequence.length !== this.sequence.length) {
-                           // card.classList.add('hidden'); // Opcional: ocultar si no es el final
-                           // card.classList.remove('flipped');
-                        }
-                    }, 600);
+                    // No ocultar de nuevo, el estado se maneja al pasar de nivel o terminar
                 }
 
                 this.playerSequence.push(number);
@@ -854,7 +1040,7 @@
 
             levelComplete() {
                 playSound(correctSound, 'G5', '0.2s');
-                this.score += this.level * (this.sequence.length * 2); // Puntuación ajustada
+                this.score += this.level * (this.sequence.length * 2); // Puntuación ajustada para más progreso
                 this.level++;
                 if (this.level > this.userStats.numberMemory.highestLevelReached) {
                     this.userStats.numberMemory.highestLevelReached = this.level;
@@ -867,6 +1053,7 @@
                 this.updateDisplay();
                 this.showMessage(`¡Nivel ${this.level - 1} completado!`, 'success');
                 this.disableCardClicks();
+                this.hideAllCards(); // Hide cards after correct sequence
                 setTimeout(() => this.nextLevel(), 2000);
             }
 
@@ -896,7 +1083,7 @@
                 this.difficulty = nmDifficultySelect.value;
                 this.userStats.numberMemory.currentDifficulty = this.difficulty;
 
-                this.initializeGame(); // Recrea el tablero con la dificultad actual
+                this.initializeGame(); // Recrea el tablero con la nueva dificultad
                 nmStartBtn.style.display = 'inline-block';
                 nmShowSequenceBtn.style.display = 'none';
                 nmStartBtn.textContent = 'Comenzar';
@@ -912,6 +1099,7 @@
                  // pero sí hay que asegurarse que los botones se deshabiliten
                 this.disableCardClicks();
                 this.hideMessage(); // Limpiar mensajes
+                this.hideAllCards(); // Ensure cards are hidden on exit
             }
 
             updateDisplay() {
@@ -936,8 +1124,8 @@
                 nmGameInstance = new MemoryNumbersGame(userStats, saveAllUsersData, checkAndAwardMedal, addToLeaderboard);
             } else {
                 nmGameInstance.userStats = userStats; // Actualizar referencia por si cambió el usuario
+                nmGameInstance.difficulty = userStats.numberMemory.currentDifficulty || 'medium'; // Cargar dificultad guardada
             }
-            nmGameInstance.difficulty = userStats.numberMemory.currentDifficulty || 'medium'; // Cargar dificultad guardada
             nmGameInstance.resetGame(); // Asegura que el juego está en un estado inicial limpio
             // El botón "Comenzar" dentro del juego iniciará la lógica del primer nivel
             // Ya no es necesario simular el clic aquí, el usuario lo hará.
@@ -970,10 +1158,18 @@
         function checkDailyBonus() { const userStats = getUserStats(); if (!userStats) return; const today = new Date(); const todayDay = today.getDate(); const lastBonusDay = userStats.dailyBonusDay; if (!lastBonusDay || lastBonusDay !== todayDay) { dailyBonusCardContainer.style.display = 'block'; dailyBonusContainer.style.display = 'block'; const bonusOptions = ["+1 Vida (Mates)", "Bonus de Racha (Mates)", "Bonus de Tiempo Inicial (Mates)"]; const randomBonus = bonusOptions[Math.floor(Math.random() * bonusOptions.length)]; dailyBonusMessage.textContent = `¡Tu recompensa de hoy es: ${randomBonus}!`; dailyBonusContainer.dataset.pendingBonus = randomBonus; } else { dailyBonusCardContainer.style.display = 'none'; dailyBonusContainer.style.display = 'none'; } }
         function collectDailyBonus() { playClickSound(); const userStats = getUserStats(); const pendingBonus = dailyBonusContainer.dataset.pendingBonus; if (pendingBonus) { let notificationMsg = `¡Bonificación reclamada: ${pendingBonus}!`; playSound(dailyBonusSound, ['D4', 'F#4', 'A4'], '0.5s'); if (pendingBonus.includes("Vida") && userStats.math.playerLives < INITIAL_LIVES + 2) { userStats.math.playerLives++; } else if (pendingBonus.includes("Racha")) { userStats.inventory.push("bonus_racha_mates"); notificationMsg = "¡Bonus de Racha añadido a tu inventario!"; } else if (pendingBonus.includes("Tiempo Inicial")) { userStats.inventory.push("bonus_tiempo_inicio_mates"); notificationMsg = "¡Bonus de Tiempo Inicial añadido!"; } showNotification(notificationMsg, 'event', 3000); userStats.dailyBonusDay = new Date().getDate(); dailyBonusCardContainer.style.display = 'none'; dailyBonusContainer.style.display = 'none'; delete dailyBonusContainer.dataset.pendingBonus; if (activeGame === 'math') updateMathGameDisplay(); saveAllUsersData(); } }
 
-        const SAVE_KEY = 'mentalChallengesUserData_v7_numberMemory';
+        const SAVE_KEY = 'mentalChallengesUserData_v7_numberMemory'; // Clave de guardado actualizada
         function saveAllUsersData() { try { const dataToSave = { users: allUsersData, leaderboard: globalLeaderboard }; localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave)); } catch (e) { console.error("Error saving data:", e); showNotification("Error al guardar progreso.", "error", 5000); } }
         function loadAllUsersData() { try { const savedData = localStorage.getItem(SAVE_KEY); if (savedData) { const parsedData = JSON.parse(savedData); allUsersData = parsedData.users || {}; globalLeaderboard = parsedData.leaderboard || { math: [], simon: [], numberMemory: [] }; Object.values(allUsersData).forEach(userData => { if(!userData.stats) userData.stats = defaultPlayerStats(); // Parche por si faltan stats
-            if (!userData.stats.mindtwistV2) { userData.stats.mindtwistV2 = defaultPlayerStats().mindtwistV2;} if (!userData.stats.numberMemory) { userData.stats.numberMemory = defaultPlayerStats().numberMemory;} });} else { allUsersData = {}; globalLeaderboard = { math: [], simon: [], numberMemory: [] }; } } catch (e) { console.error("Error loading data:", e); showNotification("Error al cargar datos guardados.", "error", 5000); allUsersData = {}; globalLeaderboard = { math: [], simon: [], numberMemory: [] }; } }
+            if (!userData.stats.mindtwistV2) { userData.stats.mindtwistV2 = defaultPlayerStats().mindtwistV2;}
+            if (!userData.stats.numberMemory) { userData.stats.numberMemory = defaultPlayerStats().numberMemory;}
+            // Actualizar la estructura de las medallas para usuarios existentes si no tienen las nuevas
+            MEDALS.forEach(medal => {
+                if (medal.condition && !userData.stats.medals.includes(medal.id) && medal.condition(userData.stats)) {
+                    userData.stats.medals.push(medal.id); // Otorgar medallas retroactivamente
+                }
+            });
+        });} else { allUsersData = {}; globalLeaderboard = { math: [], simon: [], numberMemory: [] }; } } catch (e) { console.error("Error loading data:", e); showNotification("Error al cargar datos guardados.", "error", 5000); allUsersData = {}; globalLeaderboard = { math: [], simon: { }, numberMemory: { } }; } }
 
         mathUserAnswerInput.addEventListener('keypress', function(event) { if (event.key === 'Enter') { checkMathAnswer(); } });
         Object.values(simonPadElements).forEach(pad => {
